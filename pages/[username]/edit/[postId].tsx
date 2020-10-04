@@ -1,3 +1,10 @@
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(
+  (): any => import('react-draft-wysiwyg').then(mod => mod.Editor),
+  { ssr: false }
+)
+
 export default function EditPost(props: any) {
   return (
     <div>
@@ -5,6 +12,8 @@ export default function EditPost(props: any) {
       <label>Username: {props.username}</label>
       <br />
       <label>Post ID: {props.postId}</label>
+      <hr />
+      <Editor />
     </div>
   )
 }
