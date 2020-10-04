@@ -1,4 +1,4 @@
-export default function EditPost(props) {
+export default function EditPost(props: any) {
   return (
     <div>
       <h1>Draft</h1>
