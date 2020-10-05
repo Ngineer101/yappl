@@ -1,27 +1,46 @@
-import Sequelize, { DataTypes, Model } from "sequelize";
-import sequelize from './sequelize';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+  CreateDateColumn,
+  PrimaryGeneratedColumn
+} from 'typeorm';
+import { Publication } from './publication';
 
-class User extends Model { }
+@Entity('users')
+export class User {
 
-User.init({
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    primaryKey: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  authorName: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-}, {
-  sequelize,
-  modelName: 'User',
-  indexes: [{ unique: true, fields: ['email'] }]
-})
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-export default User
+  @Column({ type: 'varchar', nullable: true })
+  name: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
+  email: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  passwordHash: string | undefined;
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  emailVerified: Date | undefined;
+
+  @Column({ type: 'varchar', nullable: true })
+  image: string | undefined;
+
+  @OneToMany(type => Publication, publication => publication.user)
+  publications: Publication[] | undefined;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+  createdAt: Date | undefined;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+  updatedAt: Date | undefined;
+
+  constructor(id: string, name: string, email: string) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+  }
+}

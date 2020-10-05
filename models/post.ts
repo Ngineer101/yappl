@@ -1,28 +1,53 @@
-import Sequelize, { DataTypes, Model } from "sequelize";
-import sequelize from './sequelize';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn
+} from 'typeorm';
+import { Publication } from './publication';
 
-class Post extends Model { }
+@Entity('posts')
+export class Post {
 
-Post.init({
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    primaryKey: true,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  subtitle: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  canonicalUrl: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: false, unique: false })
+  title: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  subtitle: string;
+
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  canonicalUrl: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  htmlContent: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  textContent: string;
+
+  @Column({ type: 'bool', default: false })
+  isPublished: boolean;
+
+  @ManyToOne(type => Publication, publication => publication.posts)
+  publication: Publication | undefined;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+  createdAt: Date | undefined;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+  updatedAt: Date | undefined;
+
+  constructor(id: string, title: string, subtitle: string, canonicalUrl: string, htmlContent: string, textContent: string, isPublished: boolean) {
+    this.id = id;
+    this.title = title;
+    this.subtitle = subtitle;
+    this.canonicalUrl = canonicalUrl;
+    this.htmlContent = htmlContent;
+    this.textContent = textContent;
+    this.isPublished = isPublished;
   }
-}, {
-  sequelize,
-  modelName: 'Post',
-  indexes: [{ unique: true, fields: ['title'] }]
-})
+}
