@@ -15,10 +15,13 @@ export class User {
   id: string;
 
   @Column({ type: 'varchar', nullable: true })
-  name: string;
+  name: string | undefined;
 
-  @Column({ type: 'varchar', unique: true, nullable: false })
-  email: string;
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  email: string | undefined;
+
+  @Column({ type: 'string', unique: true, nullable: false })
+  username: string;
 
   @Column({ type: 'varchar', nullable: true })
   passwordHash: string | undefined;
@@ -38,9 +41,8 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
   updatedAt: Date | undefined;
 
-  constructor(id: string, name: string, email: string) {
+  constructor(id: string, username: string) {
     this.id = id;
-    this.name = name;
-    this.email = email;
+    this.username = username;
   }
 }

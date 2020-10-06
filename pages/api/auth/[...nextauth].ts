@@ -41,6 +41,11 @@ const options = {
               primary: true,
               generated: 'uuid'
             },
+            username: {
+              type: 'string',
+              nullable: false,
+              unique: true,
+            },
             passwordHash: {
               type: 'varchar',
               nullable: true,
