@@ -23,7 +23,7 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   passwordHash: string | undefined;
 
-  @Column({ type: 'timestamp with time zone', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   emailVerified: Date | undefined;
 
   @Column({ type: 'varchar', nullable: true })
@@ -32,10 +32,10 @@ export class User {
   @OneToMany(type => Publication, publication => publication.user)
   publications: Publication[] | undefined;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+  @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date | undefined;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
   updatedAt: Date | undefined;
 
   constructor(id: string, name: string, email: string) {

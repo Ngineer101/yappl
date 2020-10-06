@@ -29,16 +29,16 @@ export class Post {
   @Column({ type: 'varchar', nullable: true })
   textContent: string;
 
-  @Column({ type: 'bool', default: false })
+  @Column({ type: 'integer', default: false })
   isPublished: boolean;
 
   @ManyToOne(type => Publication, publication => publication.posts)
   publication: Publication | undefined;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
+  @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: Date | undefined;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
   updatedAt: Date | undefined;
 
   constructor(id: string, title: string, subtitle: string, canonicalUrl: string, htmlContent: string, textContent: string, isPublished: boolean) {
