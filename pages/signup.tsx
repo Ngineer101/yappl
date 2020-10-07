@@ -39,7 +39,7 @@ const submitForm = (evt: FormEvent<HTMLFormElement>, username: string, password:
   })
     .then(response => {
       if (response.status > 199 && response.status < 300) {
-        window.location.href = `${window.location.origin}/publication-setup`;
+        window.location.href = `${window.location.origin}/publication/setup/${response.data}`;
       } else {
         // TODO: Handle error
       }
