@@ -31,10 +31,10 @@ export class Publication {
   @OneToMany(type => Post, post => post.publication)
   posts: Post[] | undefined;
 
-  @CreateDateColumn({ name: 'created_at', type: 'datetime' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date | undefined;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
   constructor(id: string, name: string, description: string, userId: string) {

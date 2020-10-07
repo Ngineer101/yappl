@@ -3,8 +3,8 @@ import { createConnection } from 'typeorm';
 import { User, Post, Publication } from '../models';
 
 export const dbConnection = createConnection({
-  type: 'sqlite',
-  database: process.env.SQLITE_DATABASE || "defaultDb",
+  type: 'postgres',
+  url: process.env.POSTGRES_DATABASE || "defaultDb",
   entities: [
     Post,
     Publication,

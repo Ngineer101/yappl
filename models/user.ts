@@ -20,13 +20,13 @@ export class User {
   @Column({ type: 'varchar', unique: true, nullable: true })
   email: string | undefined;
 
-  @Column({ type: 'string', unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   username: string;
 
   @Column({ type: 'varchar', nullable: true })
   passwordHash: string | undefined;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   emailVerified: Date | undefined;
 
   @Column({ type: 'varchar', nullable: true })
@@ -35,14 +35,10 @@ export class User {
   @OneToMany(type => Publication, publication => publication.user)
   publications: Publication[] | undefined;
 
-  @CreateDateColumn({ name: 'created_at', type: 'datetime' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date | undefined;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'datetime' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(id: string, username: string) {
-    this.id = id;
-    this.username = username;
-  }
 }

@@ -23,10 +23,10 @@ const options = {
       }
     }),
   ],
-  database: process.env.DATABASE_URL,
+  database: process.env.POSTGRES_DATABASE,
   adapter: Adapters.TypeORM.Adapter({
-    type: 'sqlite',
-    database: process.env.SQLITE_DATABASE || "defaultDb",
+    type: 'postgres',
+    database: process.env.POSTGRES_DATABASE || "",
   }, {
     models: {
       User: {
