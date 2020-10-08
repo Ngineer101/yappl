@@ -26,7 +26,11 @@ const options = {
   database: process.env.POSTGRES_DATABASE,
   adapter: Adapters.TypeORM.Adapter({
     type: 'postgres',
-    database: process.env.POSTGRES_DATABASE || "",
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT || ""),
+    username: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DATABASE_NAME
   }, {
     models: {
       User: {
@@ -42,7 +46,7 @@ const options = {
               generated: 'uuid'
             },
             username: {
-              type: 'string',
+              type: 'varchar',
               nullable: false,
               unique: true,
             },
