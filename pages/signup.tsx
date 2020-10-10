@@ -38,13 +38,10 @@ const submitForm = (evt: FormEvent<HTMLFormElement>, username: string, password:
     password,
   })
     .then(response => {
-      if (response.status > 199 && response.status < 300) {
-        window.location.href = `${window.location.origin}/publication/setup/${response.data}`;
-      } else {
-        // TODO: Handle error
-      }
+      window.location.href = `${window.location.origin}/publication/setup/${response.data}`;
     })
     .catch(error => {
+      console.log(error.response.data);
       // TODO: Handle error
     });
 }
