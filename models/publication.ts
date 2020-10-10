@@ -28,7 +28,7 @@ export class Publication {
   @ManyToOne(type => User, user => user.publications)
   user: User | undefined;
 
-  @OneToMany(type => Post, post => post.publication)
+  @OneToMany(type => Post, post => post.publication, { cascade: true })
   posts: Post[] | undefined;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
@@ -37,8 +37,7 @@ export class Publication {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(id: string, name: string, description: string, userId: string) {
-    this.id = id;
+  constructor(name: string, description: string, userId: string) {
     this.name = name;
     this.description = description;
     this.userId = userId;

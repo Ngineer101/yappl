@@ -41,13 +41,15 @@ export class Post {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(id: string, title: string, subtitle: string, canonicalUrl: string, htmlContent: string, textContent: string, isPublished: boolean) {
-    this.id = id;
+  constructor(title: string, subtitle: string, canonicalUrl: string, htmlContent: string, textContent: string, isPublished: boolean,
+    createdDate: Date | undefined, updatedDate: Date | undefined) {
     this.title = title;
     this.subtitle = subtitle;
     this.canonicalUrl = canonicalUrl;
     this.htmlContent = htmlContent;
     this.textContent = textContent;
     this.isPublished = isPublished;
+    this.createdAt = createdDate;
+    this.updatedAt = updatedDate;
   }
 }

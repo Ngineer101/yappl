@@ -32,7 +32,7 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   image: string | undefined;
 
-  @OneToMany(type => Publication, publication => publication.user)
+  @OneToMany(type => Publication, publication => publication.user, { cascade: true })
   publications: Publication[] | undefined;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
