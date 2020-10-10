@@ -20,9 +20,16 @@ export default async function PublicationImportHandler(req: NextApiRequest, res:
       if (publication) {
         const connection = await dbConnection('publication');
         const publicationRepository = connection.getRepository(Publication);
-        await publicationRepository.save(publication);
-        await connection.close();
-        res.status(200).end(publication.id);
+        const existingPublication = await publicationRepository.findOne({ name: publication.name });
+        if (!existingPublication) {
+          await publicationRepository.save(publication);
+          await connection.close();
+          res.status(200).end(publication.id);
+          break;
+        }
+
+        await connection.close()
+        res.status(400).end('A publication with this name already exists');
         break;
       }
 
@@ -48,6 +55,7 @@ async function getPublication(source: 'substack' | 'ghost', rssFeedUrl: string, 
           i.title,
           i.description,
           i.guid,
+          '', // TODO: Add slug value
           i["content:encoded"],
           '',
           true,
