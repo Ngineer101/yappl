@@ -3,6 +3,8 @@ import NextAuth from 'next-auth'
 import Adapters from 'next-auth/adapters';
 import Providers from 'next-auth/providers'
 import { User } from '../../../models';
+import { dbConnection } from '../../../repository';
+import bcrypt from 'bcrypt';
 
 const options = {
   providers: [
@@ -12,14 +14,24 @@ const options = {
         username: { label: "Username", type: "text", placeholder: "Username" },
         password: { label: "Password", type: "password", placeholder: "Password" }
       },
-      authorize: async (credentials) => {
-        // TODO: Add logic here to look up the user from the credentials supplied
-        const user = {};
-        if (user) {
-          return Promise.resolve(user)
-        } else {
-          return Promise.resolve(null)
+      authorize: async (credentials: { username: string, password: string }) => {
+        const connection = await dbConnection('auth');
+        const existingUser = await connection.getRepository(User).findOne({ username: credentials.username });
+        await connection.close();
+
+        if (!existingUser) {
+          return Promise.resolve(null);
         }
+
+        const passwordsMatch = bcrypt.compareSync(credentials.password, existingUser.passwordHash || "");
+        if (!passwordsMatch) {
+          return Promise.resolve(null);
+        }
+
+        return Promise.resolve({
+          id: existingUser.id,
+          name: existingUser.username
+        });
       }
     }),
   ],
