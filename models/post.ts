@@ -35,6 +35,9 @@ export class Post {
   @Column({ type: 'bool', default: false })
   isPublished: boolean;
 
+  @Column({ type: 'varchar', nullable: false })
+  source: 'substack' | 'scribeapp';
+
   @ManyToOne(type => Publication, publication => publication.posts)
   publication: Publication | undefined;
 
@@ -51,6 +54,7 @@ export class Post {
     htmlContent: string,
     textContent: string,
     isPublished: boolean,
+    source: 'substack' | 'scribeapp',
     createdDate: Date | undefined,
     updatedDate: Date | undefined
   ) {
@@ -61,6 +65,7 @@ export class Post {
     this.htmlContent = htmlContent;
     this.textContent = textContent;
     this.isPublished = isPublished;
+    this.source = source;
     this.createdAt = createdDate;
     this.updatedAt = updatedDate;
   }

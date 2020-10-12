@@ -41,7 +41,7 @@ export default async function PublicationImportHandler(req: NextApiRequest, res:
   }
 }
 
-async function getPublication(source: 'substack' | 'ghost', rssFeedUrl: string, userId: string): Promise<Publication | null> {
+async function getPublication(source: 'substack' | 'scribeapp', rssFeedUrl: string, userId: string): Promise<Publication | null> {
   // TODO: Check source
   const response = await axios.get(rssFeedUrl);
   if (response.data) {
@@ -59,6 +59,7 @@ async function getPublication(source: 'substack' | 'ghost', rssFeedUrl: string, 
           i["content:encoded"],
           '',
           true,
+          source,
           i.pubDate,
           i.pubDate));
 
