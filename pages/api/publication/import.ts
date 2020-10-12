@@ -3,6 +3,7 @@ import { Publication, Post } from "../../../models";
 import { dbConnection } from '../../../repository';
 import xmlParser from 'fast-xml-parser';
 import axios from 'axios';
+import url from 'url';
 
 export default async function PublicationImportHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -51,17 +52,20 @@ async function getPublication(source: 'substack' | 'scribeapp', rssFeedUrl: stri
       if (channel) {
         const title = channel.title;
         const description = channel.description;
-        const posts = channel.item.map(i => new Post(
-          i.title,
-          i.description,
-          i.guid,
-          '', // TODO: Add slug value
-          i["content:encoded"],
-          '',
-          true,
-          source,
-          i.pubDate,
-          i.pubDate));
+        const posts = channel.item.map(i => {
+          const postUrl = url.parse(i.guid);
+          return new Post(
+            i.title,
+            i.description,
+            i.guid,
+            postUrl.pathname || i.guid,
+            i["content:encoded"],
+            i["content:encoded"],
+            true,
+            source,
+            i.pubDate,
+            i.pubDate)
+        });
 
         let publication = new Publication(title, description, userId);
         publication.posts = posts;
