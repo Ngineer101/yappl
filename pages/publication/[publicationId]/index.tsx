@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { Publication } from "../../models";
+import { Publication } from "../../../models";
 import axios from 'axios';
 
 export default function PublicationPage(props: any) {
