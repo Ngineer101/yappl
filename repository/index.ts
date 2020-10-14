@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
-import { User, Post, Publication } from '../models';
+import {
+  User,
+  Post,
+  Publication,
+  Member,
+} from '../models';
 
 export const dbConnection = (connectionName: string) => createConnection({
   name: connectionName,
@@ -10,6 +15,7 @@ export const dbConnection = (connectionName: string) => createConnection({
     Post,
     Publication,
     User,
+    Member,
   ],
   synchronize: true,
 });

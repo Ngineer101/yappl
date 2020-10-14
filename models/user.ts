@@ -4,7 +4,8 @@ import {
   OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  Index
 } from 'typeorm';
 import { Publication } from './publication';
 
@@ -17,9 +18,11 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   name: string | undefined;
 
+  @Index()
   @Column({ type: 'varchar', unique: true, nullable: true })
   email: string | undefined;
 
+  @Index()
   @Column({ type: 'varchar', unique: true, nullable: false })
   username: string;
 

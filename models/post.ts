@@ -4,7 +4,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  CreateDateColumn
+  CreateDateColumn,
+  Index
 } from 'typeorm';
 import { Publication } from './publication';
 
@@ -23,6 +24,7 @@ export class Post {
   @Column({ type: 'varchar', nullable: false, unique: true })
   canonicalUrl: string;
 
+  @Index()
   @Column({ type: 'varchar', nullable: true, unique: true })
   slug: string;
 
