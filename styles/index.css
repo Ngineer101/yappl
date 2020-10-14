@@ -11,3 +11,25 @@
 /* Stop purging. */
 
 /* Your own custom utilities */
+
+body, #__next {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+}
+
+main {
+  flex: 1;
+}
+
+form {
+  @apply flex flex-col
+}
+
+.btn-default {
+  @apply border-2 border-black px-4 py-2 bg-white;
+}
+
+.btn-default:hover {
+  @apply bg-black text-white;
+}
