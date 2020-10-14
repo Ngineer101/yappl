@@ -61,6 +61,7 @@ async function getPublication(source: 'substack' | 'scribeapp', rssFeedUrl: stri
             postUrl.pathname || i.guid,
             i["content:encoded"],
             i["content:encoded"],
+            i["dc:creator"],
             true,
             source,
             i.pubDate,

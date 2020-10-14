@@ -32,6 +32,9 @@ export class Post {
   @Column({ type: 'varchar', nullable: true })
   textContent: string;
 
+  @Column({ type: 'varchar', nullable: false })
+  authorName: string;
+
   @Column({ type: 'bool', default: false })
   isPublished: boolean;
 
@@ -53,6 +56,7 @@ export class Post {
     slug: string,
     htmlContent: string,
     textContent: string,
+    authorName: string,
     isPublished: boolean,
     source: 'substack' | 'scribeapp',
     createdDate: Date | undefined,
@@ -64,6 +68,7 @@ export class Post {
     this.slug = slug;
     this.htmlContent = htmlContent;
     this.textContent = textContent;
+    this.authorName = authorName;
     this.isPublished = isPublished;
     this.source = source;
     this.createdAt = createdDate;

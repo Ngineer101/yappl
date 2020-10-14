@@ -28,7 +28,7 @@ export class Publication {
   @ManyToOne(type => User, user => user.publications)
   user: User | undefined;
 
-  @OneToMany(type => Post, post => post.publication, { cascade: true, eager: true })
+  @OneToMany(type => Post, post => post.publication, { cascade: true, eager: false })
   posts: Post[] | undefined;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
