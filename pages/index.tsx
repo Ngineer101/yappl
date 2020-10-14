@@ -4,9 +4,13 @@ import axios from 'axios';
 import { Publication } from '../models';
 import { useState } from 'react';
 import Link from 'next/link';
+import { emailRegex } from '../constants/emailRegex';
 
 export default function IndexPage(props: any) {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const publication: Publication | undefined = props.publication;
   return (
     <Container publicationName={publication ? publication.name : ''}>
@@ -19,14 +23,56 @@ export default function IndexPage(props: any) {
               <img src={require('../public/assets/banner.svg')} className='h-64 max-w-full' />
               <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
                 <form method='POST' onSubmit={(evt) => {
-
+                  evt.preventDefault();
+                  if (email && emailRegex.test(email)) {
+                    setLoading(true);
+                    axios.post('/api/member/subscribe', {
+                      email,
+                      publicationId: publication.id
+                    })
+                      .then(response => {
+                        setEmail('');
+                        setLoading(false);
+                        setSuccessMessage('Thanks for subscribing! Please check your inbox for a verification email.');
+                        setErrorMessage('');
+                      })
+                      .catch(error => {
+                        setLoading(false);
+                        setErrorMessage('An error occurred while subscribing.');
+                        setSuccessMessage('');
+                      });
+                  } else {
+                    setErrorMessage('Email is not valid.');
+                    setSuccessMessage('');
+                  }
                 }}>
                   <div className='relative shadow-2xl border border-black'>
                     <input type='email' placeholder='Enter your email to subscribe' onChange={(evt) => setEmail(evt.currentTarget.value)}
                       value={email} className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl form-input block w-full p-3' />
                     <button className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 hover:bg-gray-800'
-                      type='submit'>Subscribe</button>
+                      type='submit' disabled={loading}>
+                      {
+                        loading &&
+                        <svg className="animate-spin h-5 w-5 m-3 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                      }
+                      {
+                        !loading &&
+                        <span>Subscribe</span>
+                      }
+                    </button>
                   </div>
+                  {
+                    successMessage &&
+                    <label className='text-green-500 mt-4 ml-2'>
+                      <strong>{successMessage}</strong>
+                    </label>
+                  }
+                  {
+                    errorMessage &&
+                    <label className='text-red-500 mt-4 ml-2'>
+                      <strong>{errorMessage}</strong>
+                    </label>
+                  }
                 </form>
               </div>
               <div className='my-8'>
