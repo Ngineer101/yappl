@@ -47,7 +47,7 @@ export default function IndexPage(props: any) {
                   }
                 }}>
                   <div className='relative shadow-2xl border border-black'>
-                    <input type='email' placeholder='Enter your email to subscribe' onChange={(evt) => setEmail(evt.currentTarget.value)}
+                    <input type='email' placeholder='Enter your email to subscribe' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
                       value={email} className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl form-input block w-full p-3' />
                     <button className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 hover:bg-gray-800'
                       type='submit' disabled={loading}>
@@ -80,17 +80,16 @@ export default function IndexPage(props: any) {
                   (publication.posts || []).map((p, i) =>
                     <div key={i} className='flex flex-col justify-center items-center -mt-4 bg-white p-4 border border-black shadow-2xl'>
                       <h3 className='text-xl sm:text-xl md:text-2xl lg:text-2xl xl:text-2xl text-center'>{p.title}</h3>
-                      <p className='text-base sm:text-base md:text-xl lg:text-xl xl:text-xl text-center'>{p.subtitle}</p>
-                      <hr />
-                      <Link href={p.slug}>
-                        <a className='mt-2 text-blue-500 text-base sm:text-base md:text-xl lg:text-xl xl:text-xl text-center'>Read the latest issue</a>
+                      <p className='text-base sm:text-base md:text-lg lg:text-lg xl:text-lg text-center text-gray-600'>{p.subtitle}</p>
+                      <Link href={`/p/${p.slug}`}>
+                        <a className='mt-8 text-blue-500 text-base sm:text-base md:text-xl lg:text-xl xl:text-xl text-center'>Read the latest issue</a>
                       </Link>
                     </div>
                   )
                 }
               </div>
               <div className='my-8'>
-                <Link href='/past-issues'>
+                <Link href='/issues'>
                   <a className='btn-default'>Past Issues</a>
                 </Link>
               </div>

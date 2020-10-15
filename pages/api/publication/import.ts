@@ -54,11 +54,12 @@ async function getPublication(source: 'substack' | 'scribeapp', rssFeedUrl: stri
         const description = channel.description;
         const posts = channel.item.map(i => {
           const postUrl = url.parse(i.guid);
+          const slug = postUrl.pathname ? postUrl.pathname.replace('/p/', '') : title.replace(' ', '-')
           return new Post(
             i.title,
             i.description,
             i.guid,
-            postUrl.pathname || i.guid,
+            slug,
             i["content:encoded"],
             i["content:encoded"],
             i["dc:creator"],
