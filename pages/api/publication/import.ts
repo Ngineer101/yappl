@@ -52,22 +52,45 @@ async function getPublication(source: 'substack' | 'scribeapp', rssFeedUrl: stri
       if (channel) {
         const title = channel.title;
         const description = channel.description;
-        const posts = channel.item.map(i => {
-          const postUrl = url.parse(i.guid);
+
+        let posts: Post[] = [];
+        if (channel.item.length && channel.item.length > 0) {
+          posts = channel.item.map(i => {
+            const postUrl = url.parse(i.guid);
+            const slug = postUrl.pathname ? postUrl.pathname.replace('/p/', '') : title.replace(' ', '-')
+            return new Post(
+              i.title,
+              i.description,
+              i.guid,
+              slug,
+              i["content:encoded"],
+              i["content:encoded"],
+              i["dc:creator"],
+              true,
+              source,
+              i.pubDate,
+              i.pubDate)
+          });
+        } else {
+          const item = (channel.item as any) as IItem
+          const postUrl = url.parse(item.guid);
           const slug = postUrl.pathname ? postUrl.pathname.replace('/p/', '') : title.replace(' ', '-')
-          return new Post(
-            i.title,
-            i.description,
-            i.guid,
+          const newPost = new Post(
+            item.title,
+            item.description,
+            item.guid,
             slug,
-            i["content:encoded"],
-            i["content:encoded"],
-            i["dc:creator"],
+            item['content:encoded'],
+            item['content:encoded'],
+            item['dc:creator'],
             true,
             source,
-            i.pubDate,
-            i.pubDate)
-        });
+            item.pubDate,
+            item.pubDate
+          );
+
+          posts = [newPost];
+        }
 
         let publication = new Publication(title, description, userId);
         publication.posts = posts;
@@ -92,16 +115,18 @@ interface IRssFeed {
       },
       generator: string,
       author: string,
-      item: {
-        title: string,
-        description: string,
-        link: string,
-        guid: string,
-        'dc:creator': string,
-        pubDate: Date,
-        enclosure: string,
-        'content:encoded': string
-      }[]
+      item: IItem[]
     }
   }
+}
+
+interface IItem {
+  title: string,
+  description: string,
+  link: string,
+  guid: string,
+  'dc:creator': string,
+  pubDate: Date,
+  enclosure: string,
+  'content:encoded': string
 }
