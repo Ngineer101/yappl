@@ -33,3 +33,39 @@ form {
 .btn-default:hover {
   @apply bg-black text-white;
 }
+
+.adjusted-width {
+  @apply w-full;
+}
+
+@media (min-width: 640px) {
+
+  .adjusted-width {
+    @apply w-full;
+  }
+
+}
+
+@media (min-width: 768px) {
+  
+  .adjusted-width {
+    @apply w-4/5;
+  }
+
+}
+
+@media (min-width: 1024px) {
+  
+  .adjusted-width {
+    @apply w-1/2;
+  }
+
+}
+
+@media (min-width: 1280px) {
+  
+  .adjusted-width {
+    @apply w-2/5;
+  }
+
+}

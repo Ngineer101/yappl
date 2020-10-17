@@ -13,7 +13,7 @@ export default function Issues(props: any) {
         {
           posts.length > 0 ?
             posts.map((p, i) =>
-              <div key={i} className='flex flex-col justify-center items-center bg-white p-4 border border-black shadow-2xl my-4 w-full sm:w-full md:w-full lg:w-2/5 xl:w-2/5'>
+              <div key={i} className='flex flex-col justify-center items-center bg-white p-4 border border-black shadow-2xl my-4 adjusted-width'>
                 <h3 className='text-xl sm:text-xl md:text-2xl lg:text-2xl xl:text-2xl text-center'>{p.title}</h3>
                 <p className='text-base sm:text-base md:text-lg lg:text-lg xl:text-lg text-center text-gray-600'>{p.subtitle}</p>
                 <Link href={`/p/${p.slug}`}>
