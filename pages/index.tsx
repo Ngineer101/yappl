@@ -18,8 +18,8 @@ export default function IndexPage(props: any) {
         {
           publication ?
             <>
-              <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-2'>{publication.name}</h1>
-              <h2 className='text-1xl sm:text-1xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-10'>{publication.description}</h2>
+              <h1 className='text-center mb-2'>{publication.name}</h1>
+              <h2 className='text-center mb-10'>{publication.description}</h2>
               <img src={require('../public/assets/banner.svg')} className='h-64 max-w-full' />
               <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
                 <form method='POST' onSubmit={(evt) => {

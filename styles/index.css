@@ -26,8 +26,61 @@ form {
   @apply flex flex-col
 }
 
+img {
+  @apply max-w-full !important;
+}
+
+h1 {
+  @apply text-3xl font-semibold my-4;
+}
+
+h2 {
+  @apply text-xl font-semibold my-4;
+}
+
+h3 {
+  @apply text-lg font-bold my-4;
+}
+
+h4 {
+  @apply text-base font-bold my-4;
+}
+
+h5 {
+  @apply text-sm font-bold my-4;
+}
+
+h6 {
+  @apply text-sm font-semibold my-4;
+}
+
+hr {
+  @apply my-4;
+}
+
+p {
+  @apply max-w-full my-4;
+}
+
+a {
+  @apply text-blue-500;
+}
+
+code {
+  @apply my-4;
+}
+
+pre {
+  @apply bg-gray-200 p-4;
+}
+
+ol,
+ul {
+  @apply ml-4;
+}
+
 .btn-default {
-  @apply border-2 border-black px-4 py-2 bg-white;
+  @apply border-2 border-black px-4 py-2 bg-white text-black;
 }
 
 .btn-default:hover {
@@ -40,6 +93,30 @@ form {
 
 @media (min-width: 640px) {
 
+  h1 {
+    @apply text-3xl font-semibold;
+  }
+
+  h2 {
+    @apply text-xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg font-bold;
+  }
+
+  h4 {
+    @apply text-base font-bold;
+  }
+  
+  h5 {
+    @apply text-sm font-bold;
+  }
+  
+  h6 {
+    @apply text-sm font-semibold;
+  }
+
   .adjusted-width {
     @apply w-full;
   }
@@ -48,6 +125,30 @@ form {
 
 @media (min-width: 768px) {
   
+  h1 {
+    @apply text-5xl font-semibold;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+  
+  h5 {
+    @apply text-lg font-bold;
+  }
+  
+  h6 {
+    @apply text-base font-semibold;
+  }
+
   .adjusted-width {
     @apply w-4/5;
   }
@@ -56,6 +157,30 @@ form {
 
 @media (min-width: 1024px) {
   
+  h1 {
+    @apply text-5xl font-semibold;
+  }
+
+  h2 {
+    @apply text-3xl  font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+  
+  h5 {
+    @apply text-lg font-bold;
+  }
+  
+  h6 {
+    @apply text-base font-semibold;
+  }
+
   .adjusted-width {
     @apply w-1/2;
   }
@@ -64,6 +189,30 @@ form {
 
 @media (min-width: 1280px) {
   
+  h1 {
+    @apply text-5xl font-semibold;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+  
+  h5 {
+    @apply text-lg font-bold;
+  }
+  
+  h6 {
+    @apply text-base font-semibold;
+  }
+
   .adjusted-width {
     @apply w-2/5;
   }
