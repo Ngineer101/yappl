@@ -13,7 +13,7 @@ export default function SignUp() {
     <Container>
       <div className='flex justify-center items-center'>
         <div className='flex flex-col adjusted-width shadow-2xl p-4'>
-          <img className='my-4' src={require('../public/assets/welcome.svg')} style={{ maxHeight: 180 }} />
+          <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />
           <h2 className='text-center'>Sign up to create your publication</h2>
           <form onSubmit={
             (evt) => {

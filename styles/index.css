@@ -99,6 +99,18 @@ ul {
   @apply w-full;
 }
 
+.btn-square {
+  @apply m-2 bg-gray-300 h-40 w-40 p-1 text-black text-center flex justify-center items-center rounded-lg text-lg;
+}
+
+.btn-square:hover {
+  @apply shadow-lg;
+}
+
+.image-banner {
+  max-height: 180px;
+}
+
 @media (min-width: 640px) {
 
   h1 {
