@@ -79,6 +79,14 @@ ul {
   @apply ml-4;
 }
 
+.input-default {
+  @apply w-full p-2 shadow-2xl border border-black;
+}
+
+.input-default:focus {
+  @apply border-2;
+}
+
 .btn-default {
   @apply border-2 border-black px-4 py-2 bg-white text-black;
 }
