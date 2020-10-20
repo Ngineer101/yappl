@@ -1,23 +1,65 @@
-import React from 'react'
-import { providers, signIn } from 'next-auth/client'
+import React, { useState } from 'react';
+import { csrfToken } from 'next-auth/client';
+import Container from '../../components/container';
+import { useRouter } from 'next/router';
 
 export default function SignIn(props: any) {
-  const providers: any[] = props.providers;
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { error } = router.query;
   return (
-    <div>
-      {
-        Object.values(providers).map(provider => (
-          <div key={provider.name} >
-            <button onClick={() => signIn(provider.id)} > Sign in with {provider.name} </button>
-          </div>
-        ))
-      }
-    </div>
+    <Container>
+      <div className='flex justify-center items-center'>
+        <div className='flex flex-col form-adjusted-width shadow-2xl p-4'>
+          <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} />
+
+          <form method='post' action='/api/auth/callback/credentials' onSubmit={() => setLoading(true)}>
+            <input name='csrfToken' type='hidden' defaultValue={props.csrfToken} />
+
+            <div className='my-4'>
+              <label htmlFor='username'>Username</label>
+              <input className='input-default' name='username' type='text' placeholder='Username' />
+            </div>
+
+            <div className='my-4'>
+              <label htmlFor='password'>Password</label>
+              <input className='input-default' name='password' type='password' placeholder='Password' />
+            </div>
+
+            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
+              {
+                loading &&
+                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+              }
+              {
+                !loading &&
+                <span>Sign in</span>
+              }
+            </button>
+
+            {
+              error &&
+              <>
+                <label className='text-red-500 mt-4 ml-2'>
+                  <strong>
+                    {
+                      error === 'CredentialsSignin' ?
+                        <>Username or password is incorrect</> :
+                        <>An error occurred while signing in</>
+                    }
+                  </strong>
+                </label>
+              </>
+            }
+          </form>
+        </div>
+      </div>
+    </Container>
   )
 }
 
-SignIn.getInitialProps = async () => {
+SignIn.getInitialProps = async (context: any) => {
   return {
-    providers: await providers()
+    csrfToken: await csrfToken(context)
   }
 }

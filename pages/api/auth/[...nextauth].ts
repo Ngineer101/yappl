@@ -72,6 +72,9 @@ const options = {
     }
   }),
   secret: process.env.APP_SECRET,
+  pages: {
+    signIn: '/auth/signin'
+  },
   session: {
     jwt: true, // (Use JSON Web Tokens for session instead of database sessions)
     maxAge: 7 * 24 * 60 * 60, // 30 days (Seconds - How long until an idle session expires and is no longer valid)

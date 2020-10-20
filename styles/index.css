@@ -99,6 +99,10 @@ ul {
   @apply w-full;
 }
 
+.form-adjusted-width {
+  @apply w-full;
+}
+
 .btn-square {
   @apply m-2 bg-gray-300 h-40 w-40 p-1 text-black text-center flex justify-center items-center rounded-lg text-lg;
 }
@@ -141,6 +145,10 @@ ul {
     @apply w-full;
   }
 
+  .form-adjusted-width {
+    @apply w-full;
+  }
+
 }
 
 @media (min-width: 768px) {
@@ -171,6 +179,10 @@ ul {
 
   .adjusted-width {
     @apply w-4/5;
+  }
+
+  .form-adjusted-width {
+    @apply w-3/5;
   }
 
 }
@@ -205,6 +217,10 @@ ul {
     @apply w-1/2;
   }
 
+  .form-adjusted-width {
+    @apply w-2/5;
+  }
+
 }
 
 @media (min-width: 1280px) {
@@ -235,6 +251,10 @@ ul {
 
   .adjusted-width {
     @apply w-2/5;
+  }
+
+  .form-adjusted-width {
+    @apply w-1/3;
   }
 
 }
