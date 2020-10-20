@@ -16,6 +16,7 @@ body, #__next {
   width: 100%;
   min-height: 100vh;
   display: flex;
+  @apply bg-gray-100;
 }
 
 main {
@@ -113,6 +114,14 @@ ul {
 
 .image-banner {
   max-height: 180px;
+}
+
+.card-col {
+  @apply flex flex-col shadow-2xl p-4 bg-white rounded-lg;
+}
+
+.full-page {
+  @apply flex justify-center items-center h-full;
 }
 
 @media (min-width: 640px) {

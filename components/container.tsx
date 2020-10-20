@@ -4,9 +4,9 @@ export default function PageContainer(props: any) {
   const [session, loading] = useSession()
   return (
     <div className='flex flex-col justify-between w-full'>
-      <nav className='flex justify-end w-full p-2'>
-        {
-          !props.hideButton &&
+      {
+        !props.hideNav &&
+        <nav className='flex justify-end w-full p-2'>
           <>
             {
               !session &&
@@ -19,8 +19,9 @@ export default function PageContainer(props: any) {
               </>
             }
           </>
-        }
-      </nav>
+
+        </nav>
+      }
       <main>
         {props.children}
       </main>

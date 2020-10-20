@@ -6,9 +6,9 @@ export default function SetupPublication() {
   const router = useRouter()
   const { userId } = router.query
   return (
-    <Container hideButton>
-      <div className='flex justify-center items-center'>
-        <div className='flex flex-col form-adjusted-width shadow-2xl p-4'>
+    <Container hideNav>
+      <div className='full-page'>
+        <div className='form-adjusted-width card-col'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
           <h2 className='text-center'>Set up your publication</h2>
 
