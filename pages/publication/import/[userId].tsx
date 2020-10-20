@@ -25,7 +25,7 @@ export default function ImportPublication() {
                 axios.post('/api/publication/import', {
                   userId,
                   rssFeedUrl,
-                  source: 'substack'
+                  source: 'rss'
                 })
                   .then(response => {
                     setErrorMessage('');

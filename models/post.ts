@@ -41,7 +41,7 @@ export class Post {
   isPublished: boolean;
 
   @Column({ type: 'varchar', nullable: false })
-  source: 'substack' | 'scribeapp';
+  source: 'rss' | 'scribeapp';
 
   @ManyToOne(type => Publication, publication => publication.posts)
   publication: Publication | undefined;
@@ -60,7 +60,7 @@ export class Post {
     textContent: string,
     authorName: string,
     isPublished: boolean,
-    source: 'substack' | 'scribeapp',
+    source: 'rss' | 'scribeapp',
     createdDate: Date | undefined,
     updatedDate: Date | undefined
   ) {

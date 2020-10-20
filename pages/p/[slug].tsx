@@ -13,8 +13,8 @@ export default function PostPage(props: any) {
               <h1>{post.title}</h1>
               <h2>{post.subtitle}</h2>
               {
-                post.source === 'substack' &&
-                <div className='w-full substack-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
+                post.source === 'rss' &&
+                <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               }
               {
                 post.source === 'scribeapp' &&
