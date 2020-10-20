@@ -29,7 +29,7 @@ export default function ImportPublication() {
                 })
                   .then(response => {
                     setErrorMessage('');
-                    window.location.href = `${window.location.origin}/publication/${response.data}`;
+                    window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;
                   })
                   .catch(error => {
                     setLoading(false);

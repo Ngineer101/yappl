@@ -6,13 +6,20 @@ import { useRouter } from 'next/router';
 export default function SignIn(props: any) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { error } = router.query;
+  const { error, firstSignIn } = router.query;
   return (
     <Container>
       <div className='flex justify-center items-center'>
         <div className='flex flex-col form-adjusted-width shadow-2xl p-4'>
           <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} />
 
+          {
+            firstSignIn &&
+            <>
+              <h3 className='text-center mb-0'>Publication set up successfully!</h3>
+              <h3 className='text-center'>Sign in to get started</h3>
+            </>
+          }
           <form method='post' action='/api/auth/callback/credentials' onSubmit={() => setLoading(true)}>
             <input name='csrfToken' type='hidden' defaultValue={props.csrfToken} />
 

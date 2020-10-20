@@ -37,7 +37,7 @@ export class Member {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(email: string, emailVerified: boolean, publicationId: string, verificationToken: string) {
+  constructor(email: string, emailVerified: boolean, publicationId: string, verificationToken: string | undefined) {
     this.email = email;
     this.emailVerified = emailVerified;
     this.publicationId = publicationId;
