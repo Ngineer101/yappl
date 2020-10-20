@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Post, Publication } from "../../../models";
 import { dbConnection } from "../../../repository";
 
-export default async function DefaultPublicationHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function GetDefaultPublication(req: NextApiRequest, res: NextApiResponse) {
   const {
     method
   } = req;

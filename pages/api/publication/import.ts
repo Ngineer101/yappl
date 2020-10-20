@@ -5,7 +5,7 @@ import xmlParser from 'fast-xml-parser';
 import axios from 'axios';
 import url from 'url';
 
-export default async function PublicationImportHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function ImportPublication(req: NextApiRequest, res: NextApiResponse) {
   const {
     body: {
       userId,

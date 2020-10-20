@@ -3,7 +3,7 @@ import { User } from "../../../models";
 import { dbConnection } from '../../../repository';
 import bcrypt from 'bcrypt';
 
-export default async function SignUpHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function SignUp(req: NextApiRequest, res: NextApiResponse) {
   const {
     body: { username, password },
     method

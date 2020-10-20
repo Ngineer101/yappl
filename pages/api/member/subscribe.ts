@@ -4,7 +4,7 @@ import { dbConnection } from "../../../repository";
 import crypto from 'crypto';
 import { emailRegex } from "../../../constants/emailRegex";
 
-export default async function MemberSubscriptionHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function SubscribeMember(req: NextApiRequest, res: NextApiResponse) {
   const {
     method,
     body: { email, publicationId }

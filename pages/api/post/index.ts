@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Post } from "../../../models";
 import { dbConnection } from "../../../repository";
 
-export default async function DefaultPostHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function GetAllPosts(req: NextApiRequest, res: NextApiResponse) {
   const {
     method
   } = req;

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Publication } from "../../../models";
 import { dbConnection } from "../../../repository";
 
-export default async function NewPublicationHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function CreateNewPublication(req: NextApiRequest, res: NextApiResponse) {
   const {
     body: {
       userId,
