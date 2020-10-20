@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { dbConnection } from "../../../repository";
-import { Publication } from '../../../models/publication';
+import { dbConnection } from "../../../../repository";
+import { Publication } from '../../../../models/publication';
 
 export default async function PublicationHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
