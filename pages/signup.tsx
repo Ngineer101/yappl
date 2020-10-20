@@ -10,7 +10,7 @@ export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
-    <Container>
+    <Container hideButton>
       <div className='flex justify-center items-center'>
         <div className='flex flex-col form-adjusted-width shadow-2xl p-4'>
           <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />

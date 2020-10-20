@@ -6,13 +6,18 @@ export default function PageContainer(props: any) {
     <div className='flex flex-col justify-between w-full'>
       <nav className='flex justify-end w-full p-2'>
         {
-          !session &&
-          <button className='btn-default' onClick={signIn as any}>Sign in</button>
-        }
-        {
-          session &&
+          !props.hideButton &&
           <>
-            <button className='btn-default' onClick={signOut as any}>Sign out</button>
+            {
+              !session &&
+              <button className='btn-default' onClick={signIn as any}>Sign in</button>
+            }
+            {
+              session &&
+              <>
+                <button className='btn-default' onClick={signOut as any}>Sign out</button>
+              </>
+            }
           </>
         }
       </nav>
