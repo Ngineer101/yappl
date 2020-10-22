@@ -19,7 +19,7 @@ export default async function GetDefaultPublication(req: NextApiRequest, res: Ne
       }
 
       const postRepository = connection.getRepository(Post);
-      const post = await postRepository.createQueryBuilder("post").orderBy("post.createdAt", "DESC").getOne();
+      const post = await postRepository.createQueryBuilder("post").where("post.isPublished = true").orderBy("post.createdAt", "DESC").getOne();
       await connection.close();
 
       publication.posts = post ? [post] : [];

@@ -27,6 +27,14 @@ form {
   @apply flex flex-col
 }
 
+input {
+  outline: none !important;
+}
+
+button {
+  outline: none !important;
+}
+
 img {
   @apply max-w-full !important;
 }
