@@ -34,9 +34,6 @@ export class Post {
   @Column({ type: 'varchar', nullable: true })
   textContent: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  jsonContent: string;
-
   @Column({ type: 'varchar', nullable: false })
   authorName: string;
 
@@ -64,7 +61,6 @@ export class Post {
     slug: string,
     htmlContent: string,
     textContent: string,
-    jsonContent: string,
     authorName: string,
     publicationId: string,
     isPublished: boolean,
@@ -78,7 +74,6 @@ export class Post {
     this.slug = slug;
     this.htmlContent = htmlContent;
     this.textContent = textContent;
-    this.jsonContent = jsonContent;
     this.authorName = authorName;
     this.publicationId = publicationId;
     this.isPublished = isPublished;

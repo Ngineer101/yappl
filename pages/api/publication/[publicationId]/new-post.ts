@@ -28,7 +28,6 @@ export default async function CreateNewPost(req: NextApiRequest, res: NextApiRes
         randomId,
         '',
         '',
-        '',
         session.user.name,
         publicationId as string,
         false,
