@@ -23,7 +23,7 @@ export default async function GetDefaultPublication(req: NextApiRequest, res: Ne
       await connection.close();
 
       publication.posts = post ? [post] : [];
-      res.status(200).end(JSON.stringify(publication));
+      res.status(200).json(publication);
       break;
     default:
       res.setHeader('Allow', ['GET']);

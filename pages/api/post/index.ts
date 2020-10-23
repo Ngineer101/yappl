@@ -13,7 +13,7 @@ export default async function GetAllPosts(req: NextApiRequest, res: NextApiRespo
       const postRepository = connection.getRepository(Post);
       const posts = await postRepository.find();
       await connection.close();
-      res.status(200).send(JSON.stringify(posts));
+      res.status(200).json(posts);
       break;
     default:
       res.setHeader('Allow', ['GET']);

@@ -16,7 +16,7 @@ export default async function GetPostBySlug(req: NextApiRequest, res: NextApiRes
       await connection.close();
 
       if (post) {
-        res.status(200).end(JSON.stringify(post));
+        res.status(200).json(post);
         break;
       }
 

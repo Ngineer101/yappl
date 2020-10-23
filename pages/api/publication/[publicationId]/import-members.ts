@@ -39,7 +39,7 @@ export default async function ImportPublicationMembers(req: NextApiRequest, res:
           await connection.close();
         }
 
-        res.status(200).end(JSON.stringify(`Successfully imported ${membersJson.length} members.`));
+        res.status(200).json(`Successfully imported ${membersJson.length} members.`);
       }
       catch (error) {
         res.status(500).end('An error occurred while importing members.');

@@ -17,7 +17,7 @@ export default async function GetPublication(req: NextApiRequest, res: NextApiRe
         await connection.close();
 
         if (publication) {
-          res.status(200).end(JSON.stringify(publication));
+          res.status(200).json(publication);
         } else {
           res.status(404).end('Publication not found');
         }
