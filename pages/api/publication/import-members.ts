@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import csv from 'csvtojson';
 import { IncomingForm } from 'formidable';
+import csv from 'csvtojson';
 import { promises as fs } from 'fs';
-import { Member } from "../../../../models";
-import { dbConnection } from "../../../../repository";
+import { Member } from "../../../models";
+import { dbConnection } from "../../../repository";
 
 export const config = {
   api: {
@@ -11,7 +11,7 @@ export const config = {
   },
 };
 
-export default async function ImportPublicationMembers(req: NextApiRequest, res: NextApiResponse) {
+export default async function ImportPublicationMembersHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
     method,
     query: { publicationId }
