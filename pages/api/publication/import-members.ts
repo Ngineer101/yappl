@@ -4,6 +4,7 @@ import csv from 'csvtojson';
 import { promises as fs } from 'fs';
 import { Member } from "../../../models";
 import { dbConnection } from "../../../repository";
+import { getSession } from "next-auth/client";
 
 export const config = {
   api: {
@@ -16,6 +17,12 @@ export default async function ImportPublicationMembersHandler(req: NextApiReques
     method,
     query: { publicationId }
   } = req;
+
+  const session = await getSession({ req });
+  if (!session) {
+    res.status(401).end('Unauthorized');
+    return;
+  }
 
   switch (method) {
     case 'POST':
