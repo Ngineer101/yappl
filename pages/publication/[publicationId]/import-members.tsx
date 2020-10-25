@@ -3,7 +3,6 @@ import Container from '../../../components/container';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { GetServerSideProps } from 'next';
-import { signIn } from 'next-auth/client';
 
 export default function PublicationPage(props: any) {
   const [loading, setLoading] = useState(false);
@@ -14,7 +13,7 @@ export default function PublicationPage(props: any) {
     // TODO: Validate file format
     var formData = new FormData();
     formData.append('members', acceptedFiles[0]);
-    axios.post(`/api/publication/${props.publicationId}/import-members`, formData, {
+    axios.post(`/api/publication/import-members?publicationId=${props.publicationId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

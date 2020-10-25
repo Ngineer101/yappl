@@ -9,7 +9,7 @@ import axios from 'axios';
 import Container from '../../../../components/container';
 import { Post } from '../../../../models';
 
-const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
+const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
 
 interface IEditPostProps {
@@ -60,7 +60,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       savedSuccess: false,
       savedFail: false
     });
-    axios.post(`/api/publication/${publicationId}/post/${postId}`, {
+    axios.post(`/api/publication/post?publicationId=${publicationId}&postId=${postId}`, {
       title,
       subTitle,
       htmlContent,
@@ -159,7 +159,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
     };
   }
 
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/${publicationId}/post/${postId}`,
+  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/post?publicationId=${publicationId}&postId=${postId}`,
     { withCredentials: true })
     .then(response => {
       const post = response.data ? response.data : null;

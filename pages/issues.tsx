@@ -32,7 +32,7 @@ export default function Issues(props: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/post`)
+  return axios.get(`${process.env.NEXTAUTH_URL}/api/post/all`)
     .then(response => {
       const posts = response.data ? response.data : [];
       return {

@@ -65,6 +65,7 @@ export default function NewPublication() {
                 <span>Create</span>
               }
             </button>
+            {/* TODO: Add error handling */}
           </form>
         </div>
       </div>

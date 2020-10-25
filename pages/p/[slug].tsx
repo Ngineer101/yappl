@@ -31,7 +31,7 @@ export default function PostPage(props: any) {
 
 export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
   const { slug } = context.params;
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/post/${slug}`)
+  return axios.get(`${process.env.NEXTAUTH_URL}/api/post/by-slug?slug=${slug}`)
     .then(response => {
       const post = response.data ? response.data : null;
       return {
