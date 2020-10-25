@@ -94,19 +94,8 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         );
 
         await postRepository.save(newPost);
+        await connection.close();
         res.redirect(`/publication/${publicationId}/post/${newPost.id}`).end('New post created.');
-      }
-
-      break;
-    }
-    case 'single': {
-      if (method === 'GET') {
-        const publication = await publicationRepository.findOne({ id: publicationId.toString() });
-        if (publication) {
-          res.status(200).json(publication);
-        } else {
-          res.status(404).end('Publication not found');
-        }
       }
 
       break;
@@ -133,6 +122,22 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         }
 
         res.status(201).end('Saved post successfully.');
+      }
+
+      break;
+    }
+    case 'all': {
+      if (method === 'GET') {
+        const publications = await publicationRepository.find();
+        const postRepository = connection.getRepository(Post);
+        for (var i = 0; i < publications.length; i++) {
+          const publicationId = publications[i].id;
+          publications[i].posts = await postRepository.createQueryBuilder("post")
+            .where("post.publicationId = :publicationId", { publicationId: publicationId })
+            .orderBy("post.createdAt", "DESC").getMany();
+        }
+
+        res.status(200).json(publications);
       }
 
       break;

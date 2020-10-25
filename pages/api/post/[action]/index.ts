@@ -16,7 +16,10 @@ export default async function GenericPostHandler(req: NextApiRequest, res: NextA
   switch (action) {
     case 'all': {
       if (method === 'GET') {
-        const posts = await postRepository.find();
+        const posts = await postRepository.createQueryBuilder("post")
+          .where("post.isPublished = true")
+          .orderBy("post.createdAt", "DESC")
+          .getMany();
         res.status(200).json(posts);
       }
 
