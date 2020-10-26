@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Publication, Post } from "../../../../models";
+import { Publication, Post, Member } from "../../../../models";
 import { dbConnection } from "../../../../repository";
 import { getSession } from "next-auth/client";
 import axios from 'axios';
 import xmlParser from 'fast-xml-parser';
 import url from 'url';
 import crypto from 'crypto';
+import mailgun from 'mailgun-js';
 
 export default async function GenericPublicationHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -142,6 +143,46 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
 
       break;
     }
+    case 'publish-post': {
+      if (method === 'POST') {
+        const postRepository = connection.getRepository(Post);
+        const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
+        if (post) {
+          const slug = getSlug(post.title, post.slug);
+          post.title = body.title;
+          post.subtitle = body.subTitle;
+          post.htmlContent = body.htmlContent;
+          post.textContent = body.textContent;
+          post.isPublished = true;
+          post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
+          post.slug = slug;
+          post.authorName = session.user.name;
+          await postRepository.save(post);
+
+          const membersRepository = connection.getRepository(Member);
+          const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
+          const emails = members.map(m => m.email);
+          const data = {
+            from: `${session.user.name} <${session.user.email}>`,
+            to: emails.join(', '),
+            subject: post.title,
+            text: post.textContent,
+            html: post.htmlContent
+          }
+
+          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
+          mg.messages().send(data, (error, response) => {
+            if (error) {
+              res.status(500).end('An error occurred while sending the post to members')
+            } else {
+              res.status(201).end(response.message)
+            }
+          });
+        }
+      }
+
+      break;
+    }
     default:
       console.log('Unknown API route specified');
       res.status(400).end('Unknown API route specified');
@@ -211,6 +252,16 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
   }
 
   return null;
+}
+
+function getSlug(title: string, existingSlug: string): string {
+  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-'); // TODO: Remove URL unsafe characters
+  if (existingSlug) {
+    return `${titleWithoutSpaces}-${existingSlug}`;
+  } else {
+    const randomId = crypto.randomBytes(8).toString('hex');
+    return `${titleWithoutSpaces}-${randomId}`;
+  }
 }
 
 interface IRssFeed {
