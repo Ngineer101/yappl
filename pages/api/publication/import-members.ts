@@ -38,7 +38,7 @@ export default async function ImportPublicationMembersHandler(req: NextApiReques
         const contents = await fs.readFile((data as any)?.files?.members.path, { encoding: 'utf8' });
         const membersJson = await csv().fromString(contents);
         if (membersJson.length > 0) {
-          const members = membersJson.map(m => new Member(m.email, false, publicationId as any, undefined));
+          const members = membersJson.map(m => new Member(m.email, true, publicationId as any, undefined));
           const connection = await dbConnection('members');
           const memberRepository = connection.getRepository(Member);
           // TODO: Check for existing members before saving

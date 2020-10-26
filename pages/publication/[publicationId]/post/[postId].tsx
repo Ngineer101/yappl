@@ -114,7 +114,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                 />
               </div>
 
-              <div className='my-4'>
+              <div className='mt-4'>
                 <button className='btn-default' disabled={this.state.savedSuccess} onClick={(evt) => {
                   this.savePost(evt, this.props.publicationId, this.props.postId, this.state.title, this.state.subTitle,
                     draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())), ''); // TODO: Add text content

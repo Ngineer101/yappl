@@ -1,4 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/client";
+import Link from "next/link";
 
 export default function PageContainer(props: any) {
   const [session, loading] = useSession()
@@ -15,7 +16,10 @@ export default function PageContainer(props: any) {
             {
               session &&
               <>
-                <button className='btn-default' onClick={signOut as any}>Sign out</button>
+                <Link href="/dashboard">
+                  <a className='btn-default'>Dashboard</a>
+                </Link>
+                <button className='btn-default ml-2' onClick={signOut as any}>Sign out</button>
               </>
             }
           </>

@@ -171,7 +171,7 @@ ul {
 @media (min-width: 768px) {
   
   h1 {
-    @apply text-5xl font-semibold;
+    @apply text-4xl font-semibold;
   }
 
   h2 {
@@ -207,7 +207,7 @@ ul {
 @media (min-width: 1024px) {
   
   h1 {
-    @apply text-5xl font-semibold;
+    @apply text-4xl font-semibold;
   }
 
   h2 {
@@ -243,7 +243,7 @@ ul {
 @media (min-width: 1280px) {
   
   h1 {
-    @apply text-5xl font-semibold;
+    @apply text-4xl font-semibold;
   }
 
   h2 {
