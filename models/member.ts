@@ -11,7 +11,7 @@ import {
 export class Member {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string | undefined;
 
   @Index()
   @Column({ type: 'varchar', nullable: false, unique: true })

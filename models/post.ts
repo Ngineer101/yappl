@@ -13,7 +13,7 @@ import { Publication } from './publication';
 export class Post {
 
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string | undefined;
 
   @Column({ type: 'varchar', length: 250, nullable: false, unique: false })
   title: string;

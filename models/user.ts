@@ -13,7 +13,7 @@ import { Publication } from './publication';
 export class User {
 
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string | undefined;
 
   @Column({ type: 'varchar', nullable: true })
   name: string | undefined;
@@ -24,7 +24,7 @@ export class User {
 
   @Index()
   @Column({ type: 'varchar', unique: true, nullable: false })
-  username: string;
+  username: string | undefined;
 
   @Column({ type: 'varchar', nullable: true })
   passwordHash: string | undefined;

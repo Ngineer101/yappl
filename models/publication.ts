@@ -14,7 +14,7 @@ import { Post } from './post';
 export class Publication {
 
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string | undefined;
 
   @Column({ type: 'varchar', length: 100, nullable: false, unique: true })
   name: string;
