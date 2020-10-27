@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
 import Link from 'next/link';
-import axios from 'axios';
 import Container from '../components/container';
 import { Post } from "../models";
+import { dbConnection } from "../repository";
 
 export default function Issues(props: any) {
   const posts: Post[] = props.posts || [];
@@ -32,18 +32,16 @@ export default function Issues(props: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/post/all`)
-    .then(response => {
-      const posts = response.data ? response.data : [];
-      return {
-        props: {
-          posts
-        }
-      };
-    })
-    .catch(error => {
-      return {
-        props: {}
-      };
-    })
+  const connection = await dbConnection('post');
+  const postRepository = connection.getRepository(Post);
+  const posts = await postRepository.createQueryBuilder("post")
+    .where("post.isPublished = true")
+    .orderBy("post.createdAt", "DESC")
+    .getMany();
+  await connection.close();
+  return {
+    props: {
+      posts: JSON.parse(JSON.stringify(posts))
+    }
+  };
 }

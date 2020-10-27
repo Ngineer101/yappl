@@ -28,21 +28,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
   const publicationRepository = connection.getRepository(Publication);
 
   switch (action) {
-    case 'default': {
-      if (method === 'GET') {
-        let publication = await publicationRepository.findOne();
-        if (!publication) {
-          res.status(404).end('Default publication not found');
-        } else {
-          const postRepository = connection.getRepository(Post);
-          const post = await postRepository.createQueryBuilder("post").where("post.isPublished = true").orderBy("post.createdAt", "DESC").getOne();
-          publication.posts = post ? [post] : [];
-          res.status(200).json(publication);
-        }
-      }
-
-      break;
-    }
     case 'import': {
       if (method === 'POST') {
         const publication = await getPublication(body.source, body.rssFeedUrl, body.userId);

@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
-import axios from 'axios';
 import { Post } from "../../models";
+import { dbConnection } from "../../repository";
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
@@ -10,8 +10,8 @@ export default function PostPage(props: any) {
         {
           post ?
             <>
-              <h1>{post.title}</h1>
-              <h2>{post.subtitle}</h2>
+              <h1 className='text-center'>{post.title}</h1>
+              <h2 className='text-center'>{post.subtitle}</h2>
               {
                 post.source === 'rss' &&
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
@@ -31,20 +31,19 @@ export default function PostPage(props: any) {
 
 export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
   const { slug } = context.params;
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/post/by-slug?slug=${slug}`)
-    .then(response => {
-      const post = response.data ? response.data : null;
-      return {
-        props: {
-          post
-        }
-      };
-    })
-    .catch(error => {
-      // TODO: Handle error
-      console.error(error);
-      return {
-        props: {}
+  const connection = await dbConnection('post');
+  const postRepository = connection.getRepository(Post);
+  const post = await postRepository.findOne({ slug: slug });
+  await connection.close();
+  if (post) {
+    return {
+      props: {
+        post: JSON.parse(JSON.stringify(post))
       }
-    });
+    };
+  } else {
+    return {
+      props: {}
+    }
+  }
 }

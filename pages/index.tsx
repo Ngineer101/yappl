@@ -1,10 +1,11 @@
 import { GetServerSideProps } from 'next'
 import Container from '../components/container'
 import axios from 'axios';
-import { Publication } from '../models';
+import { Post, Publication } from '../models';
 import { useState } from 'react';
 import Link from 'next/link';
 import { emailRegex } from '../constants/emailRegex';
+import { dbConnection } from '../repository';
 
 export default function IndexPage(props: any) {
   const [email, setEmail] = useState('');
@@ -107,18 +108,25 @@ export default function IndexPage(props: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/default`)
-    .then(response => {
-      const publication = response.data ? response.data : null;
-      return {
-        props: {
-          publication
-        }
-      };
-    })
-    .catch(error => {
-      return {
-        props: {}
-      };
-    })
+  const connection = await dbConnection('publication');
+  const publicationRepository = connection.getRepository(Publication);
+  let publication = await publicationRepository.findOne();
+
+  if (!publication) {
+    await connection.close();
+    return {
+      props: {}
+    };
+  } else {
+    const postRepository = connection.getRepository(Post);
+    const post = await postRepository.createQueryBuilder("post").where("post.isPublished = true").orderBy("post.createdAt", "DESC").getOne();
+    await connection.close();
+    publication.posts = post ? [post] : [];
+
+    return {
+      props: {
+        publication: JSON.parse(JSON.stringify(publication))
+      }
+    }
+  }
 }

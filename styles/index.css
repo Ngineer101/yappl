@@ -36,6 +36,7 @@ button {
 }
 
 img {
+  margin: 0 auto;
   @apply max-w-full !important;
 }
 
