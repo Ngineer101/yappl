@@ -3,7 +3,7 @@ import axios from 'axios';
 import Container from '../components/container';
 
 export default function SignUp() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,11 +18,11 @@ export default function SignUp() {
           <form onSubmit={
             (evt) => {
               evt.preventDefault();
-              if (username && password && password === passwordConfirmation) {
+              if (email && password && password === passwordConfirmation) {
                 setLoading(true);
                 setErrorMessage('');
                 axios.post('/api/user/signup', {
-                  username,
+                  email,
                   password,
                 })
                   .then(response => {
@@ -41,9 +41,9 @@ export default function SignUp() {
             }
           }>
             <div className='my-4'>
-              <label htmlFor='username'>Username</label>
-              <input className='input-default' name='username' type='text' value={username} placeholder='Username'
-                onChange={(evt) => setUsername(evt.currentTarget.value)} />
+              <label htmlFor='email'>Email</label>
+              <input className='input-default' name='email' type='text' value={email} placeholder='Email'
+                onChange={(evt) => setEmail(evt.currentTarget.value)} />
             </div>
 
             <div className='my-4'>
