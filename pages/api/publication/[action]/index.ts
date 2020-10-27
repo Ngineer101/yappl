@@ -167,7 +167,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             to: emails.join(', '),
             subject: post.title,
             text: post.textContent,
-            html: post.htmlContent
+            html: post.htmlContent // TODO: Insert header (with link to post) and footer (with unsubscribe link)
           }
 
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });

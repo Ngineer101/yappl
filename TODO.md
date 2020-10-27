@@ -2,7 +2,6 @@
 
 - Add 'Powered by ' link in footer
 - Find better way to update database for NextAuth (remove all env values)
-- Email a post
 - Check authentication per route
 - Decrease <h1> font size
 - Functionality to update publication details
