@@ -1,0 +1,98 @@
+import { GetServerSideProps } from 'next';
+import { getSession, useSession } from 'next-auth/client';
+import Container from '../components/container';
+import axios from 'axios';
+import { Publication } from '../models';
+
+export default function Dashboard(props: any) {
+  const [session, loading] = useSession();
+  const publications: Publication[] = props.publications ? props.publications : [];
+  return (
+    <Container>
+      {
+        !session &&
+        <>No authenticated</> // TODO: Create unauthorized component
+      }
+      {
+        session &&
+        <div className='flex flex-col justify-center items-center px-1'>
+          <div className='adjusted-width'>
+            {
+              publications.map(publication =>
+                <div key={publication.id}>
+                  <h1 className='text-center'>{publication.name}</h1>
+                  <h3 className='text-center'>{publication.description}</h3>
+                  <hr />
+                  {
+                    publication.posts && publication.posts.length > 0 &&
+                    <>
+                      <div className='flex flex-row justify-between'>
+                        <h3>Posts</h3>
+                        <div className='flex flex-col justify-center items-center'>
+                          <a href={`/api/publication/new-post?publicationId=${publication.id}`}
+                            className='btn-default flex justify-center items-center'>
+                            <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span>New post</span>
+                          </a>
+                        </div>
+                      </div>
+                      {
+                        (publication.posts || []).map(post =>
+                          <div key={post.id} className='card-col my-4'>
+                            <div className='flex flex-row justify-between'>
+                              <div className='flex flex-col justify-center'>
+                                {
+                                  post.title ?
+                                    <h5 className='mt-1'>{post.title}</h5>
+                                    :
+                                    <label>Untitled post</label>
+                                }
+                                {
+                                  post.subtitle &&
+                                  <label>{post.subtitle}</label>
+                                }
+                              </div>
+                              {
+                                post.source === 'scribeapp' &&
+                                <div className='flex flex-col justify-center items-center'>
+                                  <a className="bg-white hover:bg-gray-300 text-black p-2 rounded inline-flex items-center" href={`/publication/${publication.id}/post/${post.id}`}>
+                                    <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                  </a>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        )
+                      }
+                    </>
+                  }
+                </div>
+              )
+            }
+          </div>
+        </div>
+      }
+    </Container>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
+  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/all`, { withCredentials: true })
+    .then(response => {
+      const publications = response.data ? response.data : [];
+      return {
+        props: {
+          publications
+        }
+      };
+    })
+    .catch(error => {
+      return {
+        props: {}
+      }
+    });
+}
