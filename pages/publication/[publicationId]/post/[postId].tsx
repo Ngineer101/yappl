@@ -8,6 +8,7 @@ import draftToHtml from 'draftjs-to-html';
 import axios from 'axios';
 import Container from '../../../../components/container';
 import { Post } from '../../../../models';
+import { dbConnection } from '../../../../repository';
 
 const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
@@ -88,7 +89,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       <Container>
         {
           !this.props.session &&
-          <></>
+          <>Not authenticated</> // TODO: Add unauthenticated component
         }
         {
           this.props.session &&
@@ -159,22 +160,17 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
     };
   }
 
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/post?publicationId=${publicationId}&postId=${postId}`,
-    { withCredentials: true })
-    .then(response => {
-      const post = response.data ? response.data : null;
-      return {
-        props: {
-          post,
-          publicationId: post.publicationId,
-          postId: post.id,
-          session: session
-        }
-      };
-    })
-    .catch(error => {
-      return {
-        props: {}
-      };
-    })
+  const connection = await dbConnection('post');
+  const postRepository = connection.getRepository(Post);
+  const post = await postRepository.findOne({ id: postId, publicationId: publicationId });
+  await connection.close();
+
+  return {
+    props: {
+      session,
+      postId,
+      publicationId,
+      post: JSON.parse(JSON.stringify(post))
+    }
+  };
 }

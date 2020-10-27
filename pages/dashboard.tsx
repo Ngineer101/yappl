@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/client';
 import Container from '../components/container';
-import axios from 'axios';
-import { Publication } from '../models';
+import { Post, Publication } from '../models';
+import { dbConnection } from '../repository';
 
 export default function Dashboard(props: any) {
   const [session, loading] = useSession();
@@ -81,18 +81,28 @@ export default function Dashboard(props: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
-  return axios.get(`${process.env.NEXTAUTH_URL}/api/publication/all`, { withCredentials: true })
-    .then(response => {
-      const publications = response.data ? response.data : [];
-      return {
-        props: {
-          publications
-        }
-      };
-    })
-    .catch(error => {
-      return {
-        props: {}
-      }
-    });
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      props: {}
+    }
+  }
+
+  const connection = await dbConnection('publication');
+  const publicationRepository = connection.getRepository(Publication);
+  const publications = await publicationRepository.find();
+  const postRepository = connection.getRepository(Post);
+  for (var i = 0; i < publications.length; i++) {
+    const publicationId = publications[i].id;
+    publications[i].posts = await postRepository.createQueryBuilder("post")
+      .where("post.publicationId = :publicationId", { publicationId: publicationId })
+      .orderBy("post.createdAt", "DESC").getMany();
+  }
+
+  await connection.close();
+  return {
+    props: {
+      publications: JSON.parse(JSON.stringify(publications))
+    }
+  }
 }

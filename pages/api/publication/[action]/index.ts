@@ -89,15 +89,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     case 'post': {
       const postRepository = connection.getRepository(Post);
       const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
-
-      if (method === 'GET') {
-        if (!post) {
-          res.status(404).end('Post not found.');
-        } else {
-          res.status(200).json(post);
-        }
-      }
-
       if (method === 'POST') {
         if (post) {
           post.title = body.title;
@@ -108,22 +99,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         }
 
         res.status(201).end('Saved post successfully.');
-      }
-
-      break;
-    }
-    case 'all': {
-      if (method === 'GET') {
-        const publications = await publicationRepository.find();
-        const postRepository = connection.getRepository(Post);
-        for (var i = 0; i < publications.length; i++) {
-          const publicationId = publications[i].id;
-          publications[i].posts = await postRepository.createQueryBuilder("post")
-            .where("post.publicationId = :publicationId", { publicationId: publicationId })
-            .orderBy("post.createdAt", "DESC").getMany();
-        }
-
-        res.status(200).json(publications);
       }
 
       break;
