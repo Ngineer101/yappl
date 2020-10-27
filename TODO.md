@@ -5,6 +5,7 @@
 - Check authentication per route
 - Decrease <h1> font size
 - Functionality to update publication details
+- Add name & image URL to sign up form
 
 - Option to skip setup steps
 - Cloudinary integration

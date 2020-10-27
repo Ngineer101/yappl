@@ -23,21 +23,22 @@ export default function Dashboard(props: any) {
                   <h1 className='text-center'>{publication.name}</h1>
                   <h3 className='text-center'>{publication.description}</h3>
                   <hr />
+                  <div className='flex flex-row justify-between'>
+                    <h3>Posts</h3>
+                    <div className='flex flex-col justify-center items-center'>
+                      <a href={`/api/publication/new-post?publicationId=${publication.id}`}
+                        className='btn-default flex justify-center items-center'>
+                        <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        <span>New post</span>
+                      </a>
+                    </div>
+                  </div>
+                  <hr />
                   {
                     publication.posts && publication.posts.length > 0 &&
                     <>
-                      <div className='flex flex-row justify-between'>
-                        <h3>Posts</h3>
-                        <div className='flex flex-col justify-center items-center'>
-                          <a href={`/api/publication/new-post?publicationId=${publication.id}`}
-                            className='btn-default flex justify-center items-center'>
-                            <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            <span>New post</span>
-                          </a>
-                        </div>
-                      </div>
                       {
                         (publication.posts || []).map(post =>
                           <div key={post.id} className='card-col my-4'>
