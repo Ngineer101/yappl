@@ -1,7 +1,6 @@
 # TODO's
 
 - Add 'Powered by ' link in footer
-- Find better way to update database for NextAuth (remove all env values)
 - Check authentication per route
 - Decrease <h1> font size
 - Functionality to update publication details

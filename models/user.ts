@@ -18,7 +18,7 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   name: string | undefined;
 
-  @Index()
+  @Index({ unique: true })
   @Column({ type: 'varchar', unique: true, nullable: true })
   email: string | undefined;
 
