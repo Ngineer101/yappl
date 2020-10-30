@@ -15,7 +15,7 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string | undefined;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: false })
   name: string | undefined;
 
   @Index({ unique: true })

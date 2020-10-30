@@ -1,8 +1,11 @@
 import { useState } from "react"
 import axios from 'axios';
 import Container from '../components/container';
+import { csrfToken } from "next-auth/client";
 
-export default function SignUp() {
+export default function SignUp(props: any) {
+  const [image, setImage] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -24,10 +27,28 @@ export default function SignUp() {
                 axios.post('/api/user/signup', {
                   email,
                   password,
+                  name,
+                  image,
                 })
                   .then(response => {
                     setErrorMessage('');
-                    window.location.href = `${window.location.origin}/publication/setup/${response.data}`;
+                    const userId = response.data;
+                    axios.post('/api/auth/callback/credentials', {
+                      csrfToken: props.csrfToken,
+                      email,
+                      password
+                    })
+                      .then(response => {
+                        window.location.href = `${window.location.origin}/publication/setup/${userId}`;
+                      })
+                      .catch(error => {
+                        setLoading(false);
+                        if (error.response.data) {
+                          setErrorMessage(error.response.data);
+                        } else {
+                          setErrorMessage('An error occurred while signing up');
+                        }
+                      })
                   })
                   .catch(error => {
                     setLoading(false);
@@ -41,9 +62,21 @@ export default function SignUp() {
             }
           }>
             <div className='my-4'>
+              <label>Name</label>
+              <input className='input-default' name='name' type='text' value={name} placeholder='Name'
+                onChange={(evt) => setName(evt.currentTarget.value)} />
+            </div>
+
+            <div className='my-4'>
               <label htmlFor='email'>Email</label>
               <input className='input-default' name='email' type='text' value={email} placeholder='Email'
                 onChange={(evt) => setEmail(evt.currentTarget.value)} />
+            </div>
+
+            <div className='my-4'>
+              <label htmlFor='image'>Gravatar URL</label>
+              <input className='input-default' name='image' type='text' value={image} placeholder='Gravatar URL'
+                onChange={(evt) => setImage(evt.currentTarget.value)} />
             </div>
 
             <div className='my-4'>
@@ -80,4 +113,11 @@ export default function SignUp() {
       </div>
     </Container>
   )
+}
+
+SignUp.getInitialProps = async (context: any) => {
+  // TODO: Only render this page if no users exist
+  return {
+    csrfToken: await csrfToken(context)
+  }
 }

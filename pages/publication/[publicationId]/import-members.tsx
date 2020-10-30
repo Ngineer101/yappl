@@ -22,7 +22,7 @@ export default function PublicationPage(props: any) {
         setLoading(false)
         setErrorMessage('');
         setSuccessMessage(response.data);
-        window.location.href = `${window.location.origin}/auth/signin?callbackUrl=${window.location.origin}/dashboard&firstSignIn=true`;
+        window.location.href = `${window.location.origin}/dashboard`;
       })
       .catch(error => {
         setLoading(false);
@@ -50,7 +50,7 @@ export default function PublicationPage(props: any) {
           <div className='my-4 relative'>
             {
               loading &&
-              <div className='w-full h-full absolute flex justify-center items-center bg-black bg-opacity-75'>
+              <div className='w-full h-full absolute flex justify-center items-center bg-black'>
                 <svg className="animate-spin h-10 w-10 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
               </div>
             }
