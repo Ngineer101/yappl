@@ -26,7 +26,7 @@ export default function NewPublication() {
                   userId,
                   name,
                   description
-                })
+                }, { withCredentials: true })
                   .then(response => {
                     setErrorMessage('');
                     window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;

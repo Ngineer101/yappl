@@ -26,7 +26,7 @@ export default function ImportPublication() {
                   userId,
                   rssFeedUrl,
                   source: 'rss'
-                })
+                }, { withCredentials: true })
                   .then(response => {
                     setErrorMessage('');
                     window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;
