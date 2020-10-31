@@ -21,9 +21,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     return;
   }
 
-  console.log(`Action: ${action}`);
-  console.log(`PublicationId: ${publicationId}`);
-  console.log(`PostId: ${postId}`);
   const connection = await dbConnection('publication');
   const publicationRepository = connection.getRepository(Publication);
 
@@ -55,6 +52,21 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           res.status(200).end(newPublication.id);
         } else {
           res.status(400).end('A publication with this name already exists');
+        }
+      }
+
+      break;
+    }
+    case 'update': {
+      if (method === 'POST') {
+        const publication = await publicationRepository.findOne({ id: publicationId as string });
+        if (publication) {
+          publication.name = body.name;
+          publication.description = body.description;
+          await publicationRepository.save(publication);
+          res.status(204).end('Saved publication');
+        } else {
+          res.status(404).end('Publication not found');
         }
       }
 

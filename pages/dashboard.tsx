@@ -20,8 +20,15 @@ export default function Dashboard(props: any) {
             {
               publications.map(publication =>
                 <div key={publication.id}>
-                  <h1 className='text-center'>{publication.name}</h1>
-                  <h3 className='text-center'>{publication.description}</h3>
+                  <div className='relative'>
+                    <a className="absolute right-0 top-0 -mt-2 bg-gray-100 hover:bg-gray-300 text-black p-2 rounded inline-flex items-center" href={`/publication/${publication.id}/edit`}>
+                      <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </a>
+                    <h1 className='text-center'>{publication.name}</h1>
+                    <h3 className='text-center'>{publication.description}</h3>
+                  </div>
                   <hr />
                   <div className='flex flex-row justify-between'>
                     <h3>Posts</h3>
@@ -73,6 +80,9 @@ export default function Dashboard(props: any) {
                   }
                 </div>
               )
+            }
+            {
+              // TODO: Show message and create publication button if no publication exists
             }
           </div>
         </div>
