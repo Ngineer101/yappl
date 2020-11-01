@@ -1,7 +1,14 @@
+import React from 'react';
 import { signIn, signOut, useSession } from "next-auth/client";
 import Link from "next/link";
+import Unauthorized from './unauthorized';
 
-export default function PageContainer(props: any) {
+export default function PageContainer(props: {
+  publicationName?: string,
+  hideNav?: boolean,
+  protected?: boolean,
+  children: React.ReactNode,
+}) {
   const [session, loading] = useSession()
   return (
     <div className='flex flex-col justify-between w-full'>
@@ -27,7 +34,12 @@ export default function PageContainer(props: any) {
         </nav>
       }
       <main>
-        {props.children}
+        {
+          props.protected && !session ?
+            <Unauthorized />
+            :
+            props.children
+        }
       </main>
       {
         props.publicationName &&
