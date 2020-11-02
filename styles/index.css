@@ -12,6 +12,48 @@
 
 /* Your own custom utilities */
 
+@font-face {
+  font-family: 'Martel';
+  font-weight: 100;
+  src: url('../fonts/Martel-ExtraLight.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: lighter;
+  src: url('../fonts/Martel-Light.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: 400;
+  src: url('../fonts/Martel-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: 500;
+  src: url('../fonts/Martel-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: bold;
+  src: url('../fonts/Martel-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: 800;
+  src: url('../fonts/Martel-ExtraBold.ttf');
+}
+
+@font-face {
+  font-family: 'Martel';
+  font-weight: 900;
+  src: url('../fonts/Martel-Black.ttf');
+}
+
 body, #__next {
   width: 100%;
   min-height: 100vh;
