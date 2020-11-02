@@ -147,6 +147,18 @@ ul {
   @apply bg-black text-white;
 }
 
+.nav-item {
+  @apply p-1 whitespace-no-wrap rounded-lg text-sm text-gray-700;
+}
+
+.nav-item:hover {
+  @apply bg-gray-300 text-black;
+}
+
+.btn-nav {
+  @apply px-2;
+}
+
 .adjusted-width {
   @apply w-full;
 }
@@ -181,6 +193,10 @@ ul {
 
 .header-2xl {
   @apply text-3xl;
+}
+
+.group:hover .group-hover\:block {
+  display: block !important;
 }
 
 @media (min-width: 640px) {
@@ -269,6 +285,9 @@ ul {
     @apply text-5xl;
   }
 
+  .nav-item {
+    @apply text-base;
+  }
 }
 
 @media (min-width: 1024px) {

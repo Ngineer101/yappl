@@ -14,7 +14,7 @@ export default function IndexPage(props: any) {
   const [successMessage, setSuccessMessage] = useState('');
   const publication: Publication | undefined = props.publication;
   return (
-    <Container publicationName={publication ? publication.name : ''}>
+    <Container hideNav publicationName={publication ? publication.name : ''}>
       <div className='flex flex-col justify-center items-center px-1'>
         {
           publication ?
