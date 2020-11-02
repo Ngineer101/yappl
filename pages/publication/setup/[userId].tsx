@@ -6,7 +6,7 @@ export default function SetupPublication() {
   const router = useRouter()
   const { userId } = router.query
   return (
-    <Container hideNav>
+    <Container hideNav protected>
       <div className='full-page'>
         <div className='form-adjusted-width card-col'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />

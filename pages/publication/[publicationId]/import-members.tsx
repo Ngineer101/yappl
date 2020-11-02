@@ -43,7 +43,7 @@ export default function PublicationPage(props: any) {
   } = useDropzone({ onDrop, maxFiles: 1, maxSize: 20000000 });
 
   return (
-    <Container hideNav>
+    <Container hideNav protected>
       <div className='full-page'>
         <div className='form-adjusted-width card-col'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />

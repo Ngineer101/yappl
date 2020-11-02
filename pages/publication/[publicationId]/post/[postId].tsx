@@ -84,13 +84,8 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   }
 
   render() {
-    // const [session, loading] = useSession(); // TODO: Check session before showing post
     return (
-      <Container>
-        {
-          !this.props.session &&
-          <>Not authenticated</> // TODO: Add unauthenticated component
-        }
+      <Container protected>
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>

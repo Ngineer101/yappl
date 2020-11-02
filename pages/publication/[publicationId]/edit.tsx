@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 export default function EditPublicationPage(props: any) {
   const publication: Publication = props.publication ? props.publication : null;
-  const session = useSession();
+  const [session, sessionLoading] = useSession();
   const [name, setName] = useState(publication ? publication.name : '');
   const [description, setDescription] = useState(publication ? publication.description : '');
   const [loading, setLoading] = useState(false);
@@ -18,11 +18,7 @@ export default function EditPublicationPage(props: any) {
   const router = useRouter();
 
   return (
-    <Container>
-      {
-        !session &&
-        <>No authenticated</> // TODO: Create unauthorized component
-      }
+    <Container protected>
       {
         session &&
         <div className='full-page'>

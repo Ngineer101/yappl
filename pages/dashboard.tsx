@@ -8,11 +8,7 @@ export default function Dashboard(props: any) {
   const [session, loading] = useSession();
   const publications: Publication[] = props.publications ? props.publications : [];
   return (
-    <Container>
-      {
-        !session &&
-        <>No authenticated</> // TODO: Create unauthorized component
-      }
+    <Container protected>
       {
         session &&
         <div className='flex flex-col justify-center items-center px-1'>
