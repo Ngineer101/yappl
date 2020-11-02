@@ -97,8 +97,8 @@ export default function IndexPage(props: any) {
             </>
             :
             <>
-              <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-10'>This site is still under construction</h1>
-              <img className='w-11/12 sm:w-11/12 md:w-1/2 lg:w-1/2 xl:w-1/2' src={require('../public/assets/underconstruction.svg')} />
+              <h1 className='header-2xl text-center mb-10'>This site is still under construction</h1>
+              <img className='img-2xl' src={require('../public/assets/underconstruction.svg')} />
             </>
         }
 
