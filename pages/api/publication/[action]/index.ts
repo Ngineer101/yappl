@@ -134,12 +134,26 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           const membersRepository = connection.getRepository(Member);
           const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
           const emails = members.map(m => m.email);
+
+          const htmlContent =
+            `<div style="text-align: right;">
+                <small>
+                  <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
+                </small>
+            </div>` +
+            post.htmlContent +
+            `<div>
+                <small>
+                  <a href="%unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
+                </small>
+            </div>`;
+
           const data = {
             from: `${session.user.name} <${session.user.email}>`,
             to: emails.join(', '),
             subject: post.title,
             text: post.textContent,
-            html: post.htmlContent // TODO: Insert header (with link to post) and footer (with unsubscribe link)
+            html: htmlContent,
           }
 
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
@@ -227,7 +241,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
 }
 
 function getSlug(title: string, existingSlug: string): string {
-  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-'); // TODO: Remove URL unsafe characters
+  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-').replace(/[^a-zA-Z0-9-_]/g, '');
   if (existingSlug) {
     return `${titleWithoutSpaces}-${existingSlug}`;
   } else {
