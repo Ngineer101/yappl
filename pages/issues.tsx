@@ -7,7 +7,7 @@ import { dbConnection } from "../repository";
 export default function Issues(props: any) {
   const posts: Post[] = props.posts || [];
   return (
-    <Container>
+    <Container hideNav>
       <div className='flex flex-col justify-center items-center px-1'>
         <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-2 mt-8'>Past Issues</h1>
         {

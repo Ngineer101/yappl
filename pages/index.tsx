@@ -6,12 +6,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { emailRegex } from '../constants/emailRegex';
 import { dbConnection } from '../repository';
+import { useRouter } from 'next/router';
 
 export default function IndexPage(props: any) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const router = useRouter();
   const publication: Publication | undefined = props.publication;
   return (
     <Container hideNav publicationName={publication ? publication.name : ''}>
@@ -34,17 +35,15 @@ export default function IndexPage(props: any) {
                       .then(response => {
                         setEmail('');
                         setLoading(false);
-                        setSuccessMessage('Thanks for subscribing! Please check your inbox for a verification email.');
                         setErrorMessage('');
+                        router.push('/thanks-for-subscribing');
                       })
                       .catch(error => {
                         setLoading(false);
                         setErrorMessage('An error occurred while subscribing.');
-                        setSuccessMessage('');
                       });
                   } else {
                     setErrorMessage('Email is not valid.');
-                    setSuccessMessage('');
                   }
                 }}>
                   <div className='relative shadow-2xl border border-black'>
@@ -62,12 +61,6 @@ export default function IndexPage(props: any) {
                       }
                     </button>
                   </div>
-                  {
-                    successMessage &&
-                    <label className='text-green-500 mt-4 ml-2'>
-                      <strong>{successMessage}</strong>
-                    </label>
-                  }
                   {
                     errorMessage &&
                     <label className='text-red-500 mt-4 ml-2'>

@@ -75,7 +75,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     case 'new-post': {
       if (method === 'GET') {
         const postRepository = connection.getRepository(Post);
-        const randomId = crypto.randomBytes(8).toString('hex');
+        const randomId = crypto.randomBytes(5).toString('hex');
         const newPost = new Post(
           '',
           '',
