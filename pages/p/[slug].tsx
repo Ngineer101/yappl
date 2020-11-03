@@ -5,20 +5,22 @@ import { dbConnection } from "../../repository";
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
   return (
-    <div className='flex flex-col justify-center items-center p-4'>
+    <div className='flex flex-col justify-center items-center p-4 w-full'>
+      {/* TODO: Add SEO data here */}
       <div className='flex flex-col justify-center items-center adjusted-width'>
         {
           post ?
             <>
               <h1 className='text-center'>{post.title}</h1>
               <h2 className='text-center'>{post.subtitle}</h2>
+              <hr className='w-full' />
               {
                 post.source === 'rss' &&
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               }
               {
                 post.source === 'scribeapp' &&
-                <></>
+                <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               }
             </>
             :

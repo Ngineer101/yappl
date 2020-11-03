@@ -27,6 +27,7 @@ interface IEditPostState {
   title: string;
   subTitle: string;
   editorState: EditorState;
+  // TODO: Add publishing loading state
 }
 
 export default class EditPost extends Component<IEditPostProps, IEditPostState> {
@@ -34,6 +35,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   constructor(props: IEditPostProps) {
     super(props);
     this.savePost = this.savePost.bind(this);
+    this.publishPost = this.publishPost.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -54,8 +56,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     }
   }
 
-  savePost = (evt: any, publicationId: string, postId: string, title: string, subTitle: string,
-    htmlContent: string, textContent: string) => {
+  savePost = (evt: any, publicationId: string, postId: string, title: string, subTitle: string, htmlContent: string) => {
     this.setState({
       isSaving: true,
       savedSuccess: false,
@@ -65,7 +66,6 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       title,
       subTitle,
       htmlContent,
-      textContent,
     })
       .then(() => {
         this.setState({
@@ -83,37 +83,63 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       });
   }
 
+  publishPost = (evt: any, publicationId: string, postId: string, title: string, subTitle: string, htmlContent: string) => {
+    // TODO: Add confirmation before publishing
+    this.setState({
+      isSaving: true,
+      savedSuccess: false,
+      savedFail: false
+    });
+    axios.post(`/api/publication/publish-post?publicationId=${publicationId}&postId=${postId}`, {
+      title,
+      subTitle,
+      htmlContent,
+    }, { withCredentials: true })
+      .then(response => {
+        if (response.data) {
+          window.location.href = response.data.canonicalUrl;
+        }
+      })
+      .catch(() => {
+        this.setState({
+          isSaving: false,
+          savedFail: true,
+          savedSuccess: false
+        });
+      });
+  }
+
   render() {
     return (
       <Container protected>
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
-            <div className='adjusted-width shadow-2xl rounded bg-white p-4 flex-1 h-full flex flex-col justify-between'>
+            <div className='adjusted-width shadow-2xl rounded bg-white px-4 flex-1 h-full flex flex-col justify-between'>
               <div>
                 <h1 className='max-w-full'>
-                  <input type='text' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })} />
+                  <input type='text' className='w-full' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })} />
                 </h1>
                 <h3>
-                  <input type='text' placeholder='Subtitle' value={this.state.subTitle} onChange={(evt) => this.setState({ subTitle: evt.currentTarget.value })} />
+                  <input type='text' className='w-full' placeholder='Subtitle' value={this.state.subTitle} onChange={(evt) => this.setState({ subTitle: evt.currentTarget.value })} />
                 </h3>
-                <hr />
+                <hr className='mb-0' />
               </div>
               <div className='mb-4 flex-1'>
                 <Editor
                   editorState={this.state.editorState}
-                  wrapperClassName='demo-wrapper'
-                  editorClassName='demo-editor'
+                  toolbarClassName='default-toolbar'
                   onEditorStateChange={(contentState: any) => {
                     this.setState({ editorState: contentState, savedSuccess: false });
                   }}
                 />
               </div>
 
-              <div className='mt-4'>
+              <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white'>
+                <hr className='mt-0' />
                 <button className='btn-default' disabled={this.state.savedSuccess} onClick={(evt) => {
                   this.savePost(evt, this.props.publicationId, this.props.postId, this.state.title, this.state.subTitle,
-                    draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())), ''); // TODO: Add text content
+                    draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())));
                 }}>
                   {
                     this.state.isSaving &&
@@ -135,6 +161,16 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                     !this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail &&
                     <span>Save</span>
                   }
+                </button>
+
+                <button className='btn-default' onClick={(evt) =>
+                  this.publishPost(evt,
+                    this.props.publicationId,
+                    this.props.postId,
+                    this.state.title,
+                    this.state.subTitle,
+                    draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))}>
+                  Publish
                 </button>
               </div>
             </div>

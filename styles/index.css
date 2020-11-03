@@ -199,6 +199,17 @@ ul {
   display: block !important;
 }
 
+.default-toolbar {
+  position: sticky;
+  top: 0px;
+  z-index: 20;
+  padding: 12px 0px !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
 @media (min-width: 640px) {
 
   h1 {

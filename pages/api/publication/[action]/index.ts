@@ -82,7 +82,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           randomId,
           randomId,
           '',
-          '',
           session.user.name,
           publicationId as string,
           false,
@@ -133,6 +132,8 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
           const emails = members.map(m => m.email);
 
+          const publicationRepository = connection.getRepository(Publication);
+          const publication = await publicationRepository.findOne({ id: publicationId as string });
           const htmlContent =
             `<div style="text-align: right;">
                 <small>
@@ -142,23 +143,26 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             post.htmlContent +
             `<div>
                 <small>
+                  You are receiving this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
+                </small>
+                <small>
                   <a href="%unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
                 </small>
             </div>`;
 
           const data = {
-            from: `${session.user.name} <${session.user.email}>`,
+            from: `${publication ? publication.name : session.user.name} <${session.user.email}>`,
             to: emails.join(', '),
             subject: post.title,
             html: htmlContent,
           }
 
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
-          mg.messages().send(data, (error, response) => {
+          await mg.messages().send(data, (error, response) => {
             if (error) {
               res.status(500).end('An error occurred while sending the post to members')
             } else {
-              res.status(201).end(response.message)
+              res.status(200).json(post)
             }
           });
         }
