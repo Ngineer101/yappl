@@ -106,7 +106,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.title = body.title;
           post.subtitle = body.subTitle;
           post.htmlContent = body.htmlContent;
-          post.textContent = body.textContent;
           await postRepository.save(post);
         }
 
@@ -124,7 +123,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.title = body.title;
           post.subtitle = body.subTitle;
           post.htmlContent = body.htmlContent;
-          post.textContent = body.textContent;
           post.isPublished = true;
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
@@ -152,7 +150,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             from: `${session.user.name} <${session.user.email}>`,
             to: emails.join(', '),
             subject: post.title,
-            text: post.textContent,
             html: htmlContent,
           }
 
@@ -200,7 +197,6 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
               i.guid,
               slug,
               i["content:encoded"],
-              i["content:encoded"],
               i["dc:creator"],
               '',
               true,
@@ -217,7 +213,6 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
             item.description,
             item.guid,
             slug,
-            item['content:encoded'],
             item['content:encoded'],
             item['dc:creator'],
             '',
