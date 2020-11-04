@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { emailRegex } from '../constants/emailRegex';
 import { dbConnection } from '../repository';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 export default function IndexPage(props: any) {
   const [email, setEmail] = useState('');
@@ -16,6 +17,9 @@ export default function IndexPage(props: any) {
   const publication: Publication | undefined = props.publication;
   return (
     <Container hideNav publicationName={publication ? publication.name : ''}>
+      <Head>
+        <title>{publication?.name}</title>
+      </Head>
       <div className='flex flex-col justify-center items-center px-1'>
         {
           publication ?
@@ -86,11 +90,14 @@ export default function IndexPage(props: any) {
                   )
                 }
               </div>
-              <div className='my-8'>
-                <Link href='/issues'>
-                  <a className='btn-default'>Past Issues</a>
-                </Link>
-              </div>
+              {
+                publication.posts && publication.posts.length > 0 &&
+                <div className='my-8'>
+                  <Link href='/issues'>
+                    <a className='btn-default'>Past Issues</a>
+                  </Link>
+                </div>
+              }
             </>
             :
             <>

@@ -83,6 +83,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           randomId,
           '',
           session.user.name,
+          session.user.image,
           publicationId as string,
           false,
           'scribeapp',
@@ -126,6 +127,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
           post.authorName = session.user.name;
+          post.authorImage = session.user.image;
           await postRepository.save(post);
 
           const membersRepository = connection.getRepository(Member);
@@ -202,6 +204,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
               slug,
               i["content:encoded"],
               i["dc:creator"],
+              "",
               '',
               true,
               source,
@@ -219,6 +222,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
             slug,
             item['content:encoded'],
             item['dc:creator'],
+            "",
             '',
             true,
             source,

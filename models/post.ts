@@ -34,6 +34,9 @@ export class Post {
   @Column({ type: 'varchar', nullable: false })
   authorName: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  authorImage: string;
+
   @Column({ type: 'bool', default: false })
   isPublished: boolean;
 
@@ -58,6 +61,7 @@ export class Post {
     slug: string,
     htmlContent: string,
     authorName: string,
+    authorImage: string,
     publicationId: string,
     isPublished: boolean,
     source: 'rss' | 'scribeapp',
@@ -70,6 +74,7 @@ export class Post {
     this.slug = slug;
     this.htmlContent = htmlContent;
     this.authorName = authorName;
+    this.authorImage = authorImage;
     this.publicationId = publicationId;
     this.isPublished = isPublished;
     this.source = source;

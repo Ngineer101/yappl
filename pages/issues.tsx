@@ -3,11 +3,15 @@ import Link from 'next/link';
 import Container from '../components/container';
 import { Post } from "../models";
 import { dbConnection } from "../repository";
+import Head from 'next/head';
 
 export default function Issues(props: any) {
   const posts: Post[] = props.posts || [];
   return (
     <Container hideNav>
+      <Head>
+        <title>Past Issues</title>
+      </Head>
       <div className='flex flex-col justify-center items-center px-1'>
         <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-2 mt-8'>Past Issues</h1>
         {

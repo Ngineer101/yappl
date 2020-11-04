@@ -1,8 +1,12 @@
 import Container from '../components/container';
+import Head from 'next/head';
 
 export default function ThanksForSubscribing() {
   return (
     <Container hideNav>
+      <Head>
+        <title>Thanks for subscribing!</title>
+      </Head>
       <div className='flex flex-col justify-center items-center p-1'>
         <h1 className='text-center'>
           Thanks for subscribing!

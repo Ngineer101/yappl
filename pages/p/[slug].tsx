@@ -1,12 +1,18 @@
 import { GetServerSideProps } from "next"
 import { Post } from "../../models";
 import { dbConnection } from "../../repository";
+import Head from 'next/head';
+
+export const config = { amp: true }
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
   return (
     <div className='flex flex-col justify-center items-center p-4 w-full'>
       {/* TODO: Add SEO data here */}
+      <Head>
+        <title>{post?.title}</title>
+      </Head>
       <div className='flex flex-col justify-center items-center adjusted-width'>
         {
           post ?
@@ -21,6 +27,7 @@ export default function PostPage(props: any) {
               {
                 post.source === 'scribeapp' &&
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
+                // TODO: Add author image and name
               }
             </>
             :
