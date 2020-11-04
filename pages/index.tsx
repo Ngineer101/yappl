@@ -80,7 +80,7 @@ export default function IndexPage(props: any) {
               <div className='flex flex-col justify-center items-center my-8 adjusted-width'>
                 {
                   (publication.posts || []).map((p, i) =>
-                    <div key={i} className='flex flex-col justify-center items-center -mt-4 bg-white p-4 border border-black shadow-2xl'>
+                    <div key={i} className='issue-card w-full -mt-4'>
                       <h3 className='text-xl sm:text-xl md:text-2xl lg:text-2xl xl:text-2xl text-center'>{p.title}</h3>
                       <p className='text-base sm:text-base md:text-lg lg:text-lg xl:text-lg text-center text-gray-600'>{p.subtitle}</p>
                       <Link href={`/p/${p.slug}`}>

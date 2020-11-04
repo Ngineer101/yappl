@@ -227,6 +227,10 @@ ul {
   border-bottom-color: #e2e8f0 !important;
 }
 
+.issue-card {
+  @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-2xl my-4 rounded-lg;
+}
+
 @media (min-width: 640px) {
 
   h1 {
