@@ -15,7 +15,7 @@ export default function SignUp(props: any) {
   return (
     <Container hideNav>
       <div className='full-page'>
-        <div className='form-adjusted-width card-col'>
+        <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />
           <h2 className='text-center'>Sign up to create your publication</h2>
           <form onSubmit={

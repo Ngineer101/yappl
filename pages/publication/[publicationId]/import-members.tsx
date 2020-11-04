@@ -45,7 +45,7 @@ export default function PublicationPage(props: any) {
   return (
     <Container hideNav protected>
       <div className='full-page'>
-        <div className='form-adjusted-width card-col'>
+        <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
           <h2 className='text-center'>Import members using a CSV file</h2>
           <div className='my-4 relative'>

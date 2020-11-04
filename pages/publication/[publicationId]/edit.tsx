@@ -22,7 +22,7 @@ export default function EditPublicationPage(props: any) {
       {
         session &&
         <div className='full-page'>
-          <div className='form-adjusted-width card-col'>
+          <div className='form-adjusted-width card-col mt-24'>
             <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
             <h2 className='text-center'>Update publication</h2>
             <PublicationForm

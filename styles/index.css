@@ -132,7 +132,7 @@ ul {
 }
 
 .input-default {
-  @apply w-full p-2 shadow-2xl border border-black;
+  @apply w-full p-2 shadow-2xl border border-gray-500 rounded-lg;
 }
 
 .input-default:focus {
@@ -177,6 +177,7 @@ ul {
 
 .image-banner {
   max-height: 180px;
+  @apply -mt-24;
 }
 
 .card-col {
