@@ -23,6 +23,7 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
       if (member) {
         member.emailVerified = true;
         await memberRepository.save(member);
+        await connection.close();
         res.redirect('/email-verified');
       } else {
         res.redirect('/404');
