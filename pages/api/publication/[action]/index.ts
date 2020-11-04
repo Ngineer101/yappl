@@ -119,6 +119,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         const postRepository = connection.getRepository(Post);
         const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
         if (post) {
+          // TODO: Fix bug to save post first before publishing
           const slug = getSlug(post.title, post.slug);
           post.title = body.title;
           post.subtitle = body.subTitle;
@@ -162,11 +163,15 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
           await mg.messages().send(data, (error, response) => {
             if (error) {
-              res.status(500).end('An error occurred while sending the post to members')
+              console.log(`Error publishing post: ${JSON.stringify(error)}`);
             } else {
-              res.status(200).json(post)
+              console.log(`Email response: ${JSON.stringify(response)}`);
             }
           });
+
+          res.status(200).json(post)
+        } else {
+          res.status(400).end('An error occurred while sending the post to members')
         }
       }
 

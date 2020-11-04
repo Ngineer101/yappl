@@ -3,7 +3,7 @@ import { Post } from "../../models";
 import { dbConnection } from "../../repository";
 import Head from 'next/head';
 
-export const config = { amp: true }
+export const config = { amp: 'hybrid' }
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
