@@ -20,7 +20,7 @@ export default function IndexPage(props: any) {
       <Head>
         <title>{publication?.name}</title>
       </Head>
-      <div className='flex flex-col justify-center items-center px-1'>
+      <div className='flex flex-col justify-center items-center px-1 min-h-full'>
         {
           publication ?
             <>
@@ -54,10 +54,10 @@ export default function IndexPage(props: any) {
                     setErrorMessage('Email is not valid.');
                   }
                 }}>
-                  <div className='relative shadow-2xl border border-black'>
+                  <div className='relative shadow-2xl bg-gray-200'>
                     <input type='email' placeholder='Enter your email to subscribe' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
-                      value={email} className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl form-input block w-full p-3' />
-                    <button className='text-sm sm:text-sm md:text-xl lg:text-xl xl:text-xl absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 hover:bg-gray-800'
+                      value={email} className='input-subscribe' />
+                    <button className='button-subscribe'
                       type='submit' disabled={loading}>
                       {
                         loading &&

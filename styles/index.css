@@ -139,6 +139,22 @@ ul {
   @apply border-2;
 }
 
+.input-subscribe {
+  @apply text-sm block w-full p-3 rounded-lg border border-gray-500;
+}
+
+.input-subscribe:focus {
+  @apply border-2;
+}
+
+.button-subscribe {
+  @apply text-sm absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 rounded-r-lg;
+}
+
+.button-subscribe:hover {
+  @apply bg-gray-800;
+}
+
 .btn-default {
   @apply border-2 border-black px-4 py-2 bg-white text-black;
 }
@@ -253,6 +269,13 @@ ul {
     @apply text-3xl;
   }
 
+  .input-subscribe {
+    @apply text-sm;
+  }
+  
+  .button-subscribe {
+    @apply text-sm;
+  }
 }
 
 @media (min-width: 768px) {
@@ -300,6 +323,15 @@ ul {
   .nav-item {
     @apply text-base;
   }
+
+  .input-subscribe {
+    @apply text-xl;
+  }
+  
+  .button-subscribe {
+    @apply text-xl;
+  }
+
 }
 
 @media (min-width: 1024px) {
@@ -343,6 +375,15 @@ ul {
   .header-2xl {
     @apply text-5xl;
   }
+
+  .input-subscribe {
+    @apply text-xl;
+  }
+  
+  .button-subscribe {
+    @apply text-xl;
+  }
+
 }
 
 @media (min-width: 1280px) {
@@ -385,5 +426,13 @@ ul {
 
   .header-2xl {
     @apply text-5xl;
+  }
+
+  .input-subscribe {
+    @apply text-xl;
+  }
+  
+  .button-subscribe {
+    @apply text-xl;
   }
 }
