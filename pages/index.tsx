@@ -40,7 +40,11 @@ export default function IndexPage(props: any) {
                       })
                       .catch(error => {
                         setLoading(false);
-                        setErrorMessage('An error occurred while subscribing.');
+                        if (error.response.data) {
+                          setErrorMessage(error.response.data);
+                        } else {
+                          setErrorMessage('An error occurred while subscribing.');
+                        }
                       });
                   } else {
                     setErrorMessage('Email is not valid.');
