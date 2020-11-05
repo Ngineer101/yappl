@@ -48,20 +48,23 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
           const data = {
             from: `${publication.name} <${process.env.DEFAULT_EMAIL}>`, // TODO: Add publication email
             to: member.email,
-            subject: `Welcome to ${publication.name}`,
+            subject: `Welcome to ${publication.name} 📚`,
             html: `
             <div>
               <h4>Hi!</h4>
-              <h4>Thanks for subscribing to ${publication.name}</h4>
+              <h4>Thanks for subscribing to ${publication.name} 📚.</h4>
 
               <p>Please verify your email by clicking here:
-                <a href="${process.env.SITE_URL}/api/member/subscribe?e=${encodedEmail}&token=${token}" target="_blank">
+                <a href="${process.env.SITE_URL}/api/member/subscribe?e=${encodedEmail}&token=${token}" target="_blank"
+                  style="padding: 0.5rem 1rem; background-color: black; color: white; border-radius: 0.5rem; text-decoration: none;">
                   <strong>verify email</strong>
                 </a>
               </p>
-
-              <p>Cheers</p>
-              <p>${publication.name}</p>
+          
+              <br />
+              <br />
+          
+              <p>Have a great day!</p>
             </div>
             `,
           }

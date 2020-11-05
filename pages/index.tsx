@@ -19,6 +19,23 @@ export default function IndexPage(props: any) {
     <Container hideNav publicationName={publication ? publication.name : ''}>
       <Head>
         <title>{publication?.name}</title>
+        <meta charSet="UTF-8" />
+        <meta name="description" content={publication?.description} />
+
+        <meta name="twitter:card" content="summary" />
+        {/* <meta name="twitter:site" content="" />
+        <meta name="twitter:creator" content="" />
+        TODO: Add values */}
+        <meta name="twitter:title" content={publication?.name} />
+        <meta name="twitter:description" content={publication?.description} />
+        <meta name="twitter:image" content={require('../public/assets/banner.svg')} />
+
+        <meta property="og:title" content={publication?.name} />
+        <meta property="og:site_name" content={publication?.name} />
+        <meta property="og:description" content={publication?.description} />
+        <meta property="og:image" content={require('../public/assets/banner.svg')} />
+        <meta property="og:url" content={process.env.SITE_URL} />
+        <meta property="og:type" content="blog" />
       </Head>
       <div className='flex flex-col justify-center items-center px-1 min-h-full'>
         {
