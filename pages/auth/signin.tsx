@@ -10,7 +10,7 @@ export default function SignIn(props: any) {
   return (
     <Container>
       <div className='flex justify-center items-center'>
-        <div className='flex flex-col form-adjusted-width shadow-2xl p-4'>
+        <div className='card-col form-adjusted-width mt-24'>
           <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} />
 
           {
@@ -24,8 +24,8 @@ export default function SignIn(props: any) {
             <input name='csrfToken' type='hidden' defaultValue={props.csrfToken} />
 
             <div className='my-4'>
-              <label htmlFor='username'>Username</label>
-              <input className='input-default' name='username' type='text' placeholder='Username' />
+              <label htmlFor='email'>Email</label>
+              <input className='input-default' name='email' type='text' placeholder='Email' />
             </div>
 
             <div className='my-4'>
@@ -51,7 +51,7 @@ export default function SignIn(props: any) {
                   <strong>
                     {
                       error === 'CredentialsSignin' ?
-                        <>Username or password is incorrect</> :
+                        <>Email or password is incorrect</> :
                         <>An error occurred while signing in</>
                     }
                   </strong>

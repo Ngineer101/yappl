@@ -21,28 +21,10 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     return;
   }
 
-  console.log(`Action: ${action}`);
-  console.log(`PublicationId: ${publicationId}`);
-  console.log(`PostId: ${postId}`);
   const connection = await dbConnection('publication');
   const publicationRepository = connection.getRepository(Publication);
 
   switch (action) {
-    case 'default': {
-      if (method === 'GET') {
-        let publication = await publicationRepository.findOne();
-        if (!publication) {
-          res.status(404).end('Default publication not found');
-        } else {
-          const postRepository = connection.getRepository(Post);
-          const post = await postRepository.createQueryBuilder("post").where("post.isPublished = true").orderBy("post.createdAt", "DESC").getOne();
-          publication.posts = post ? [post] : [];
-          res.status(200).json(publication);
-        }
-      }
-
-      break;
-    }
     case 'import': {
       if (method === 'POST') {
         const publication = await getPublication(body.source, body.rssFeedUrl, body.userId);
@@ -75,18 +57,33 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
 
       break;
     }
+    case 'update': {
+      if (method === 'POST') {
+        const publication = await publicationRepository.findOne({ id: publicationId as string });
+        if (publication) {
+          publication.name = body.name;
+          publication.description = body.description;
+          await publicationRepository.save(publication);
+          res.status(204).end('Saved publication');
+        } else {
+          res.status(404).end('Publication not found');
+        }
+      }
+
+      break;
+    }
     case 'new-post': {
       if (method === 'GET') {
         const postRepository = connection.getRepository(Post);
-        const randomId = crypto.randomBytes(8).toString('hex');
+        const randomId = crypto.randomBytes(5).toString('hex');
         const newPost = new Post(
           '',
           '',
           randomId,
           randomId,
           '',
-          '',
           session.user.name,
+          session.user.image,
           publicationId as string,
           false,
           'scribeapp',
@@ -104,41 +101,15 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     case 'post': {
       const postRepository = connection.getRepository(Post);
       const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
-
-      if (method === 'GET') {
-        if (!post) {
-          res.status(404).end('Post not found.');
-        } else {
-          res.status(200).json(post);
-        }
-      }
-
       if (method === 'POST') {
         if (post) {
           post.title = body.title;
           post.subtitle = body.subTitle;
           post.htmlContent = body.htmlContent;
-          post.textContent = body.textContent;
           await postRepository.save(post);
         }
 
         res.status(201).end('Saved post successfully.');
-      }
-
-      break;
-    }
-    case 'all': {
-      if (method === 'GET') {
-        const publications = await publicationRepository.find();
-        const postRepository = connection.getRepository(Post);
-        for (var i = 0; i < publications.length; i++) {
-          const publicationId = publications[i].id;
-          publications[i].posts = await postRepository.createQueryBuilder("post")
-            .where("post.publicationId = :publicationId", { publicationId: publicationId })
-            .orderBy("post.createdAt", "DESC").getMany();
-        }
-
-        res.status(200).json(publications);
       }
 
       break;
@@ -148,36 +119,59 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         const postRepository = connection.getRepository(Post);
         const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
         if (post) {
+          // TODO: Fix bug to save post first before publishing
           const slug = getSlug(post.title, post.slug);
           post.title = body.title;
           post.subtitle = body.subTitle;
           post.htmlContent = body.htmlContent;
-          post.textContent = body.textContent;
           post.isPublished = true;
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
           post.authorName = session.user.name;
+          post.authorImage = session.user.image;
           await postRepository.save(post);
 
           const membersRepository = connection.getRepository(Member);
           const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
           const emails = members.map(m => m.email);
+
+          const publicationRepository = connection.getRepository(Publication);
+          const publication = await publicationRepository.findOne({ id: publicationId as string });
+          const htmlContent =
+            `<div style="text-align: right;">
+                <small>
+                  <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
+                </small>
+            </div>` +
+            post.htmlContent +
+            `<div>
+                <small>
+                  You are receiving this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
+                </small>
+                <small>
+                  <a href="%unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
+                </small>
+            </div>`;
+
           const data = {
-            from: `${session.user.name} <${session.user.email}>`,
+            from: `${publication ? publication.name : session.user.name} <${session.user.email}>`,
             to: emails.join(', '),
             subject: post.title,
-            text: post.textContent,
-            html: post.htmlContent // TODO: Insert header (with link to post) and footer (with unsubscribe link)
+            html: htmlContent,
           }
 
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
-          mg.messages().send(data, (error, response) => {
+          await mg.messages().send(data, (error, response) => {
             if (error) {
-              res.status(500).end('An error occurred while sending the post to members')
+              console.log(`Error publishing post: ${JSON.stringify(error)}`);
             } else {
-              res.status(201).end(response.message)
+              console.log(`Email response: ${JSON.stringify(response)}`);
             }
           });
+
+          res.status(200).json(post)
+        } else {
+          res.status(400).end('An error occurred while sending the post to members')
         }
       }
 
@@ -214,8 +208,8 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
               i.guid,
               slug,
               i["content:encoded"],
-              i["content:encoded"],
               i["dc:creator"],
+              "",
               '',
               true,
               source,
@@ -232,8 +226,8 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
             item.guid,
             slug,
             item['content:encoded'],
-            item['content:encoded'],
             item['dc:creator'],
+            "",
             '',
             true,
             source,
@@ -255,7 +249,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
 }
 
 function getSlug(title: string, existingSlug: string): string {
-  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-'); // TODO: Remove URL unsafe characters
+  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-').replace(/[^a-zA-Z0-9-_]/g, '');
   if (existingSlug) {
     return `${titleWithoutSpaces}-${existingSlug}`;
   } else {

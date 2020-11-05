@@ -9,14 +9,14 @@ import bcrypt from 'bcrypt';
 const options = {
   providers: [
     Providers.Credentials({
-      name: 'Username & password',
+      name: 'Email & password',
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "Username" },
+        email: { label: "Email", type: "text", placeholder: "Email" },
         password: { label: "Password", type: "password", placeholder: "Password" }
       },
-      authorize: async (credentials: { username: string, password: string }) => {
+      authorize: async (credentials: { email: string, password: string }) => {
         const connection = await dbConnection('auth');
-        const existingUser = await connection.getRepository(User).findOne({ username: credentials.username });
+        const existingUser = await connection.getRepository(User).findOne({ email: credentials.email });
         await connection.close();
 
         if (!existingUser) {
@@ -29,8 +29,9 @@ const options = {
         }
 
         return Promise.resolve({
-          id: existingUser.id,
-          name: existingUser.username
+          email: existingUser.email,
+          name: existingUser.name,
+          image: existingUser.image
         });
       }
     }),
@@ -38,11 +39,7 @@ const options = {
   database: process.env.POSTGRES_DATABASE,
   adapter: Adapters.TypeORM.Adapter({
     type: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: parseInt(process.env.POSTGRES_PORT || ""),
-    username: process.env.POSTGRES_USERNAME,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DATABASE_NAME
+    url: process.env.POSTGRES_DATABASE || "",
   }, {
     models: {
       User: {
@@ -56,11 +53,6 @@ const options = {
               type: 'varchar',
               primary: true,
               generated: 'uuid'
-            },
-            username: {
-              type: 'varchar',
-              nullable: false,
-              unique: true,
             },
             passwordHash: {
               type: 'varchar',
@@ -86,7 +78,7 @@ const options = {
     secret: process.env.JWT_SECRET,
     encryption: true,
   },
-  debug: true, // TODO: Change to false
+  debug: false, // TODO: Change to true for debugging output
 }
 
 export default (req: NextApiRequest, res: NextApiResponse<any>) => NextAuth(req, res, options)

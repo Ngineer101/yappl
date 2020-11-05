@@ -1,9 +1,12 @@
 import { useState } from "react"
 import axios from 'axios';
 import Container from '../components/container';
+import { csrfToken } from "next-auth/client";
 
-export default function SignUp() {
-  const [username, setUsername] = useState('');
+export default function SignUp(props: any) {
+  const [image, setImage] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
@@ -12,22 +15,40 @@ export default function SignUp() {
   return (
     <Container hideNav>
       <div className='full-page'>
-        <div className='form-adjusted-width card-col'>
+        <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />
           <h2 className='text-center'>Sign up to create your publication</h2>
           <form onSubmit={
             (evt) => {
               evt.preventDefault();
-              if (username && password && password === passwordConfirmation) {
+              if (email && password && password === passwordConfirmation) {
                 setLoading(true);
                 setErrorMessage('');
                 axios.post('/api/user/signup', {
-                  username,
+                  email,
                   password,
+                  name,
+                  image,
                 })
                   .then(response => {
                     setErrorMessage('');
-                    window.location.href = `${window.location.origin}/publication/setup/${response.data}`;
+                    const userId = response.data;
+                    axios.post('/api/auth/callback/credentials', {
+                      csrfToken: props.csrfToken,
+                      email,
+                      password
+                    })
+                      .then(response => {
+                        window.location.href = `${window.location.origin}/publication/setup/${userId}`;
+                      })
+                      .catch(error => {
+                        setLoading(false);
+                        if (error.response.data) {
+                          setErrorMessage(error.response.data);
+                        } else {
+                          setErrorMessage('An error occurred while signing up');
+                        }
+                      })
                   })
                   .catch(error => {
                     setLoading(false);
@@ -41,9 +62,21 @@ export default function SignUp() {
             }
           }>
             <div className='my-4'>
-              <label htmlFor='username'>Username</label>
-              <input className='input-default' name='username' type='text' value={username} placeholder='Username'
-                onChange={(evt) => setUsername(evt.currentTarget.value)} />
+              <label>Name</label>
+              <input className='input-default' name='name' type='text' value={name} placeholder='Name'
+                onChange={(evt) => setName(evt.currentTarget.value)} />
+            </div>
+
+            <div className='my-4'>
+              <label htmlFor='email'>Email</label>
+              <input className='input-default' name='email' type='text' value={email} placeholder='Email'
+                onChange={(evt) => setEmail(evt.currentTarget.value)} />
+            </div>
+
+            <div className='my-4'>
+              <label htmlFor='image'>Gravatar URL</label>
+              <input className='input-default' name='image' type='text' value={image} placeholder='Gravatar URL'
+                onChange={(evt) => setImage(evt.currentTarget.value)} />
             </div>
 
             <div className='my-4'>
@@ -80,4 +113,11 @@ export default function SignUp() {
       </div>
     </Container>
   )
+}
+
+SignUp.getInitialProps = async (context: any) => {
+  // TODO: Only render this page if no users exist
+  return {
+    csrfToken: await csrfToken(context)
+  }
 }

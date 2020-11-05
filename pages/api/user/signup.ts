@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 export default async function SignUp(req: NextApiRequest, res: NextApiResponse) {
   const {
-    body: { username, password },
+    body: { email, password, name, image },
     method
   } = req;
 
@@ -21,7 +21,9 @@ export default async function SignUp(req: NextApiRequest, res: NextApiResponse) 
       }
 
       let user = new User();
-      user.username = username;
+      user.email = email;
+      user.name = name;
+      user.image = image;
       user.passwordHash = bcrypt.hashSync(password, 15);
       await userRepository.save(user);
       await connection.close();

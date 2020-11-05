@@ -5,6 +5,9 @@ import {
   Post,
   Publication,
   Member,
+  Session,
+  Account,
+  VerificationRequest,
 } from '../models';
 
 export const dbConnection = (connectionName: string) => createConnection({
@@ -16,6 +19,9 @@ export const dbConnection = (connectionName: string) => createConnection({
     Publication,
     User,
     Member,
+    Session,
+    Account,
+    VerificationRequest,
   ],
   synchronize: true,
 });

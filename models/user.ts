@@ -15,16 +15,12 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string | undefined;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: false })
   name: string | undefined;
 
-  @Index()
+  @Index({ unique: true })
   @Column({ type: 'varchar', unique: true, nullable: true })
   email: string | undefined;
-
-  @Index()
-  @Column({ type: 'varchar', unique: true, nullable: false })
-  username: string | undefined;
 
   @Column({ type: 'varchar', nullable: true })
   passwordHash: string | undefined;

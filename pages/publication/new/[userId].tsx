@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import { FormEvent, useState } from "react"
 import axios from 'axios';
 import Container from '../../../components/container';
+import PublicationForm from '../../../components/publicationForm';
 
 export default function NewPublication() {
   const [name, setName] = useState('');
@@ -11,13 +12,19 @@ export default function NewPublication() {
   const router = useRouter()
   const { userId } = router.query
   return (
-    <Container hideNav>
+    <Container hideNav protected>
       <div className='full-page'>
-        <div className='form-adjusted-width card-col'>
+        <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
           <h2 className='text-center'>Create new publication</h2>
-          <form onSubmit={
-            (evt) => {
+          <PublicationForm
+            name={name}
+            setName={setName}
+            description={description}
+            setDescription={setDescription}
+            errorMessage={errorMessage}
+            loading={loading}
+            savePublication={(evt) => {
               evt.preventDefault();
               if (name && description) {
                 setLoading(true);
@@ -26,7 +33,7 @@ export default function NewPublication() {
                   userId,
                   name,
                   description
-                })
+                }, { withCredentials: true })
                   .then(response => {
                     setErrorMessage('');
                     window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;
@@ -40,33 +47,7 @@ export default function NewPublication() {
                     }
                   });
               }
-            }
-          }>
-
-            <div className='my-4'>
-              <label htmlFor='name'>Publication name</label>
-              <input className='input-default' type='text' name='name' value={name} placeholder='Publication name'
-                onChange={(evt) => setName(evt.currentTarget.value)} />
-            </div>
-
-            <div className='my-4'>
-              <label htmlFor='description'>About</label>
-              <textarea className='input-default' name='description' value={description} placeholder='What is your publication about?'
-                onChange={(evt) => setDescription(evt.currentTarget.value)}></textarea>
-            </div>
-
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Create</span>
-              }
-            </button>
-            {/* TODO: Add error handling */}
-          </form>
+            }} />
         </div>
       </div>
     </Container>

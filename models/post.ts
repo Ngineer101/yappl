@@ -31,11 +31,11 @@ export class Post {
   @Column({ type: 'varchar', nullable: true })
   htmlContent: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  textContent: string;
-
   @Column({ type: 'varchar', nullable: false })
   authorName: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  authorImage: string;
 
   @Column({ type: 'bool', default: false })
   isPublished: boolean;
@@ -60,8 +60,8 @@ export class Post {
     canonicalUrl: string,
     slug: string,
     htmlContent: string,
-    textContent: string,
     authorName: string,
+    authorImage: string,
     publicationId: string,
     isPublished: boolean,
     source: 'rss' | 'scribeapp',
@@ -73,8 +73,8 @@ export class Post {
     this.canonicalUrl = canonicalUrl;
     this.slug = slug;
     this.htmlContent = htmlContent;
-    this.textContent = textContent;
     this.authorName = authorName;
+    this.authorImage = authorImage;
     this.publicationId = publicationId;
     this.isPublished = isPublished;
     this.source = source;
