@@ -69,7 +69,7 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
             `,
           }
 
-          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
+          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
           await mg.messages().send(data, (error, response) => {
             if (error) {
               console.log(`Error sending email: ${JSON.stringify(error)}`);
