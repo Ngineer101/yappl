@@ -68,6 +68,8 @@ export default function PageContainer(props: {
           <label>&#169; {new Date().getFullYear().toString()} - {props.publicationName}</label>
         </footer>
       }
+
+      <script async defer src="https://beampipe.io/js/tracker.js" data-beampipe-domain="condensedpage.com"></script>
     </div>
   );
 }
