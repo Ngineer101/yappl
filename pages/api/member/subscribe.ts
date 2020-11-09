@@ -8,29 +8,12 @@ import mailgun from 'mailgun-js';
 export default async function SubscribeMember(req: NextApiRequest, res: NextApiResponse) {
   const {
     method,
-    query: { e, token },
     body: { email, publicationId }
   } = req;
 
   const connection = await dbConnection('member');
 
   switch (method) {
-    case 'GET': {
-      const buff = Buffer.from(e as string, 'base64');
-      const decodedEmail = buff.toString('ascii');
-      const memberRepository = connection.getRepository(Member);
-      const member = await memberRepository.findOne({ email: decodedEmail, verificationToken: token as string });
-      if (member) {
-        member.emailVerified = true;
-        await memberRepository.save(member);
-        await connection.close();
-        res.redirect('/email-verified');
-      } else {
-        res.redirect('/404');
-      }
-
-      break;
-    }
     case 'POST': {
       if (email && emailRegex.test(email)) {
         const memberRepository = connection.getRepository(Member);
@@ -54,17 +37,18 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
               <h4>Hi!</h4>
               <h4>Thanks for subscribing to ${publication.name} 📚.</h4>
 
-              <p>Please verify your email by clicking here:
-                <a href="${process.env.SITE_URL}/api/member/subscribe?e=${encodedEmail}&token=${token}" target="_blank"
+              <h4>Please verify your email by clicking here:</h4>
+              <h4>
+                <a href="${process.env.SITE_URL}/member/subscribe?e=${encodedEmail}&token=${token}" target="_blank"
                   style="padding: 0.5rem 1rem; background-color: black; color: white; border-radius: 0.5rem; text-decoration: none;">
                   <strong>verify email</strong>
                 </a>
-              </p>
+              </h4>
           
               <br />
               <br />
           
-              <p>Have a great day!</p>
+              <p><strong>Have a great day!</strong></p>
             </div>
             `,
           }
