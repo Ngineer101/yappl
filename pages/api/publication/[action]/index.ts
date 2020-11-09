@@ -160,7 +160,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             html: htmlContent,
           }
 
-          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '' });
+          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
           await mg.messages().send(data, (error, response) => {
             if (error) {
               console.log(`Error publishing post: ${JSON.stringify(error)}`);
