@@ -1,6 +1,6 @@
 import Container from '../components/container';
 
-export default function ErrorPage() {
+function Error({ statusCode }) {
   return (
     <Container>
       <div className='flex flex-col justify-center items-center p-1'>
@@ -10,3 +10,10 @@ export default function ErrorPage() {
     </Container>
   );
 }
+
+Error.getInitialProps = ({ res, err }) => {
+  const statusCode = res ? res.statusCode : err ? err.statusCode : 404
+  return { statusCode }
+}
+
+export default Error
