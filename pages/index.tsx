@@ -11,6 +11,7 @@ import Head from 'next/head';
 
 export default function IndexPage(props: any) {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function IndexPage(props: any) {
               <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
                 <form method='POST' onSubmit={(evt) => {
                   evt.preventDefault();
-                  if (email && emailRegex.test(email)) {
+                  if (email && emailRegex.test(email) && !name) {
                     setLoading(true);
                     axios.post('/api/member/subscribe', {
                       email,
@@ -71,6 +72,8 @@ export default function IndexPage(props: any) {
                     setErrorMessage('Email is not valid.');
                   }
                 }}>
+                  <input name='sweet-field' className='sweet' placeholder='Sweet and sticky field' id='sweet' autoComplete='off' value={name}
+                    type='sticky-field' onChange={(evt) => setName(evt.currentTarget.value)} />
                   <div className='relative shadow-2xl bg-gray-200'>
                     <input type='email' placeholder='Enter your email to subscribe' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
                       value={email} className='input-subscribe' />
