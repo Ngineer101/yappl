@@ -149,15 +149,26 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
                   You are receiving this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
                 </small>
                 <small>
-                  <a href="%unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
+                  <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
                 </small>
             </div>`;
 
+          var recipientVariables: any = {};
+          members.forEach(m => {
+            const buff = Buffer.from(m.email)
+            const encodedEmail = buff.toString('base64');
+
+            recipientVariables[m.email] = {
+              unsubscribe_url: `${process.env.SITE_URL}/member/unsubscribe?e=${encodedEmail}&token=${m.verificationToken}`
+            }
+          });
+
           const data = {
-            from: `${publication ? publication.name : session.user.name} <${session.user.email}>`,
+            from: `${publication ? publication.name : session.user.name} <${process.env.DEFAULT_EMAIL}>`, // TODO: Add publication email
             to: emails.join(', '),
             subject: post.title,
             html: htmlContent,
+            'recipient-variables': JSON.stringify(recipientVariables),
           }
 
           const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
