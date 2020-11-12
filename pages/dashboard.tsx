@@ -3,12 +3,22 @@ import { getSession, useSession } from 'next-auth/client';
 import Container from '../components/container';
 import { Post, Publication } from '../models';
 import { dbConnection } from '../repository';
+import Head from 'next/head';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export default function Dashboard(props: any) {
   const [session, loading] = useSession();
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState(''); // TODO: Display error message somewhere
+  const [loadingNewPost, setLoading] = useState(false);
   const publications: Publication[] = props.publications ? props.publications : [];
   return (
     <Container protected>
+      <Head>
+        <title>Dashboard</title>
+      </Head>
       {
         session &&
         <div className='flex flex-col justify-center items-center px-1'>
@@ -29,13 +39,37 @@ export default function Dashboard(props: any) {
                   <div className='flex flex-row justify-between'>
                     <h3>Posts</h3>
                     <div className='flex flex-col justify-center items-center'>
-                      <a href={`/api/publication/new-post?publicationId=${publication.id}`}
-                        className='btn-default flex justify-center items-center'>
-                        <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        <span>New post</span>
-                      </a>
+                      <button className='btn-default flex justify-center items-center'
+                        onClick={(evt) => {
+                          setLoading(true);
+                          axios.get(`/api/publication/new-post?publicationId=${publication.id}`,
+                            { withCredentials: true })
+                            .then(response => {
+                              router.push(`/publication/${publication.id}/post/${response.data}`);
+                            })
+                            .catch(error => {
+                              setLoading(false);
+                              if (error.response.data) {
+                                setErrorMessage(error.response.data);
+                              } else {
+                                setErrorMessage('An error occurred while creating a new post.');
+                              }
+                            })
+                        }}>
+                        {
+                          loadingNewPost &&
+                          <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                        }
+                        {
+                          !loadingNewPost &&
+                          <>
+                            <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span>New post</span>
+                          </>
+                        }
+                      </button>
                     </div>
                   </div>
                   <hr />

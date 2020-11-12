@@ -92,8 +92,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         );
 
         await postRepository.save(newPost);
-        await connection.close();
-        res.redirect(`/publication/${publicationId}/post/${newPost.id}`).end('New post created.');
+        res.status(200).end(newPost.id);
       }
 
       break;
