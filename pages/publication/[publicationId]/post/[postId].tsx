@@ -26,6 +26,7 @@ interface IEditPostState {
   savedFail: boolean;
   isPublishing: boolean;
   publishFail: boolean;
+  showPublishConfirmation: boolean;
   title: string;
   subTitle: string;
   editorState: EditorState;
@@ -46,6 +47,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       savedFail: false,
       isPublishing: false,
       publishFail: false,
+      showPublishConfirmation: false,
       title: props.post ? props.post.title : '',
       subTitle: props.post ? props.post.subtitle : '',
       editorState: EditorState.createEmpty()
@@ -173,16 +175,34 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
 
                   {
                     this.props.post && !this.props.post.isPublished &&
-                    <button className='btn-default' onClick={this.publishPost}>
+                    <>
                       {
-                        this.state.isPublishing &&
-                        <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                        !this.state.showPublishConfirmation &&
+                        <button className='btn-default' onClick={(evt) => this.setState({ showPublishConfirmation: true })}>
+                          Publish
+                        </button>
                       }
                       {
-                        !this.state.isPublishing &&
-                        <span>Publish</span>
+                        this.state.showPublishConfirmation &&
+                        <>
+                          <div className='flex'>
+                            <button className='bg-green-700 text-white px-4 py-2 rounded-l-lg hover:bg-green-500'
+                              onClick={this.publishPost}>
+                              {
+                                this.state.isPublishing &&
+                                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                              }
+                              {
+                                !this.state.isPublishing &&
+                                <span>Send email</span>
+                              }
+                            </button>
+                            <button className='bg-red-700 text-white px-4 py-2 rounded-r-lg hover:bg-red-500' disabled={this.state.isPublishing}
+                              onClick={() => this.setState({ showPublishConfirmation: false })}>Cancel</button>
+                          </div>
+                        </>
                       }
-                    </button>
+                    </>
                   }
                   {
                     this.props.post && this.props.post.isPublished &&
