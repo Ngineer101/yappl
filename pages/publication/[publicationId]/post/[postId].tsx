@@ -24,22 +24,30 @@ interface IEditPostState {
   isSaving: boolean;
   savedSuccess: boolean;
   savedFail: boolean;
+  isPublishing: boolean;
+  publishFail: boolean;
+  showPublishConfirmation: boolean;
   title: string;
   subTitle: string;
   editorState: EditorState;
-  // TODO: Add publishing loading state
 }
 
 export default class EditPost extends Component<IEditPostProps, IEditPostState> {
+
+  timeout: any = null;
 
   constructor(props: IEditPostProps) {
     super(props);
     this.savePost = this.savePost.bind(this);
     this.publishPost = this.publishPost.bind(this);
+    this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
       savedFail: false,
+      isPublishing: false,
+      publishFail: false,
+      showPublishConfirmation: false,
       title: props.post ? props.post.title : '',
       subTitle: props.post ? props.post.subtitle : '',
       editorState: EditorState.createEmpty()
@@ -56,16 +64,16 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     }
   }
 
-  savePost = (evt: any, publicationId: string, postId: string, title: string, subTitle: string, htmlContent: string) => {
+  savePost = () => {
     this.setState({
       isSaving: true,
       savedSuccess: false,
       savedFail: false
     });
-    axios.post(`/api/publication/post?publicationId=${publicationId}&postId=${postId}`, {
-      title,
-      subTitle,
-      htmlContent,
+    axios.post(`/api/publication/post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
+      title: this.state.title,
+      subTitle: this.state.subTitle,
+      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
     })
       .then(() => {
         this.setState({
@@ -83,17 +91,16 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       });
   }
 
-  publishPost = (evt: any, publicationId: string, postId: string, title: string, subTitle: string, htmlContent: string) => {
+  publishPost = () => {
     // TODO: Add confirmation before publishing
     this.setState({
-      isSaving: true,
-      savedSuccess: false,
-      savedFail: false
+      isPublishing: true,
+      publishFail: false
     });
-    axios.post(`/api/publication/publish-post?publicationId=${publicationId}&postId=${postId}`, {
-      title,
-      subTitle,
-      htmlContent,
+    axios.post(`/api/publication/publish-post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
+      title: this.state.title,
+      subTitle: this.state.subTitle,
+      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
     }, { withCredentials: true })
       .then(response => {
         if (response.data) {
@@ -102,11 +109,15 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       })
       .catch(() => {
         this.setState({
-          isSaving: false,
-          savedFail: true,
-          savedSuccess: false
+          isPublishing: false,
+          publishFail: false
         });
       });
+  }
+
+  savePostWithTimeout = () => {
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => this.savePost(), 1500);
   }
 
   render() {
@@ -115,63 +126,89 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
-            <div className='adjusted-width shadow-2xl rounded bg-white px-4 flex-1 h-full flex flex-col justify-between'>
+            <div className='adjusted-width shadow-2xl rounded bg-white px-4 flex-1 h-full flex flex-col justify-between -mt-12'>
               <div>
                 <h1 className='max-w-full'>
-                  <input type='text' className='w-full' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })} />
+                  <input type='text' className='w-full' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })}
+                    onKeyUp={this.savePostWithTimeout} />
                 </h1>
                 <h3>
-                  <input type='text' className='w-full' placeholder='Subtitle' value={this.state.subTitle} onChange={(evt) => this.setState({ subTitle: evt.currentTarget.value })} />
+                  <input type='text' className='w-full' placeholder='Subtitle' value={this.state.subTitle} onChange={(evt) => this.setState({ subTitle: evt.currentTarget.value })}
+                    onKeyUp={this.savePostWithTimeout} />
                 </h3>
                 <hr className='mb-0' />
               </div>
               <div className='mb-4 flex-1'>
                 <Editor
+                  toolbar={{
+                    options: ['inline', 'blockType', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
+                  }}
                   editorState={this.state.editorState}
                   toolbarClassName='default-toolbar'
                   onEditorStateChange={(contentState: any) => {
-                    this.setState({ editorState: contentState, savedSuccess: false });
+                    this.setState({ editorState: contentState, savedSuccess: false }, () => this.savePostWithTimeout());
                   }}
                 />
               </div>
 
-              <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white'>
+              <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white flex flex-col'>
                 <hr className='mt-0' />
-                <button className='btn-default' disabled={this.state.savedSuccess} onClick={(evt) => {
-                  this.savePost(evt, this.props.publicationId, this.props.postId, this.state.title, this.state.subTitle,
-                    draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())));
-                }}>
+                <div className='flex justify-between'>
+                  <button className='btn-default' disabled={this.state.savedSuccess} onClick={this.savePost}>
+                    {
+                      this.state.isSaving &&
+                      <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                    }
+                    {
+                      this.state.savedSuccess &&
+                      <span>Saved at {new Date().getHours().toString()}:{new Date().getMinutes().toString()}</span>
+                    }
+                    {
+                      this.state.savedFail &&
+                      <span>Saving failed</span>
+                    }
+                    {
+                      !this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail &&
+                      <span>Save</span>
+                    }
+                  </button>
+
                   {
-                    this.state.isSaving &&
-                    <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-                  }
-                  {
-                    this.state.savedSuccess &&
+                    this.props.post && !this.props.post.isPublished &&
                     <>
-                      <span>Saved</span>
-                      <br />
-                      <small className='text-gray-700'>{new Date().getHours().toString()}:{new Date().getMinutes().toString()}:{new Date().getSeconds().toString()}</small>
+                      {
+                        !this.state.showPublishConfirmation &&
+                        <button className='btn-default' onClick={(evt) => this.setState({ showPublishConfirmation: true })}>
+                          Publish
+                        </button>
+                      }
+                      {
+                        this.state.showPublishConfirmation &&
+                        <>
+                          <div className='flex'>
+                            <button className='bg-green-700 text-white px-4 py-2 rounded-l-lg hover:bg-green-500'
+                              onClick={this.publishPost}>
+                              {
+                                this.state.isPublishing &&
+                                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                              }
+                              {
+                                !this.state.isPublishing &&
+                                <span>Send email</span>
+                              }
+                            </button>
+                            <button className='bg-red-700 text-white px-4 py-2 rounded-r-lg hover:bg-red-500' disabled={this.state.isPublishing}
+                              onClick={() => this.setState({ showPublishConfirmation: false })}>Cancel</button>
+                          </div>
+                        </>
+                      }
                     </>
                   }
                   {
-                    this.state.savedFail &&
-                    <span>Saving fail</span>
+                    this.props.post && this.props.post.isPublished &&
+                    <span className='flex justify-center items-center'>Post successfully published</span>
                   }
-                  {
-                    !this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail &&
-                    <span>Save</span>
-                  }
-                </button>
-
-                <button className='btn-default' onClick={(evt) =>
-                  this.publishPost(evt,
-                    this.props.publicationId,
-                    this.props.postId,
-                    this.state.title,
-                    this.state.subTitle,
-                    draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))}>
-                  Publish
-                </button>
+                </div>
               </div>
             </div>
           </div>

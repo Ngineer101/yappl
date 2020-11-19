@@ -92,8 +92,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         );
 
         await postRepository.save(newPost);
-        await connection.close();
-        res.redirect(`/publication/${publicationId}/post/${newPost.id}`).end('New post created.');
+        res.status(200).end(newPost.id);
       }
 
       break;
@@ -118,7 +117,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
       if (method === 'POST') {
         const postRepository = connection.getRepository(Post);
         const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
-        if (post) {
+        if (post && !post.isPublished) {
           // TODO: Fix bug to save post first before publishing
           const slug = getSlug(post.title, post.slug);
           post.title = body.title;
