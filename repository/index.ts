@@ -23,5 +23,4 @@ export const dbConnection = (connectionName: string) => createConnection({
     Account,
     VerificationRequest,
   ],
-  synchronize: true,
 });
