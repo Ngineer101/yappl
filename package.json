@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "generate-migration": "ts-node .\\node_modules\\typeorm\\cli.js migration:generate -f ./ormconfig.ts",
-    "run-migration": "ts-node .\\node_modules\\typeorm\\cli.js migration:run -f ./ormconfig.ts",
-    "revert-migration": "ts-node .\\node_modules\\typeorm\\cli.js migration:revert -f ./ormconfig.ts",
+    "run-migration": "ts-node ./node_modules/typeorm/cli.js migration:run -f ./ormconfig.ts",
+    "revert-migration": "ts-node ./node_modules/typeorm/cli.js migration:revert -f ./ormconfig.ts",
     "dev": "npm run run-migration && next",
     "build": "npm run run-migration && next build",
     "start": "next start"
