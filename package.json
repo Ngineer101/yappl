@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "autoprefixer": "^10.0.2",
     "axios": "^0.20.0",
     "bcrypt": "^5.0.0",
     "csvtojson": "^2.0.10",
@@ -23,6 +24,7 @@
     "next-auth": "^3.1.0",
     "next-images": "^1.6.0",
     "pg": "^8.5.1",
+    "postcss": "^8.1.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
@@ -44,7 +46,7 @@
     "@types/react-draft-wysiwyg": "^1.13.0",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-preset-env": "^6.7.0",
-    "tailwindcss": "^1.8.10",
+    "tailwindcss": "^2.0.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   },
