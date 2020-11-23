@@ -5,6 +5,7 @@ import { promises as fs } from 'fs';
 import { Member } from "../../../models";
 import { dbConnection } from "../../../repository";
 import { getSession } from "next-auth/client";
+import crypto from 'crypto';
 
 export const config = {
   api: {
@@ -38,7 +39,7 @@ export default async function ImportPublicationMembersHandler(req: NextApiReques
         const contents = await fs.readFile((data as any)?.files?.members.path, { encoding: 'utf8' });
         const membersJson = await csv().fromString(contents);
         if (membersJson.length > 0) {
-          const members = membersJson.map(m => new Member(m.email, true, publicationId as any, undefined));
+          const members = membersJson.map(m => new Member(m.email, true, publicationId as any, crypto.randomBytes(36).toString('hex')));
           const connection = await dbConnection('members');
           const memberRepository = connection.getRepository(Member);
           // TODO: Check for existing members before saving

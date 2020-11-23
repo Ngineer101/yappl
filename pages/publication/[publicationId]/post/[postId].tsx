@@ -92,7 +92,6 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   }
 
   publishPost = () => {
-    // TODO: Add confirmation before publishing
     this.setState({
       isPublishing: true,
       publishFail: false

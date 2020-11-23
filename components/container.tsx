@@ -56,10 +56,21 @@ export default function PageContainer(props: {
       }
       <main>
         {
-          props.protected && !session ?
-            <Unauthorized />
-            :
-            props.children
+          loading &&
+          <div className='full-page'>
+            <span className="animate-ping absolute inline-flex h-12 w-12 rounded-full bg-black"></span>
+          </div>
+        }
+        {
+          !loading &&
+          <>
+            {
+              props.protected && !session ?
+                <Unauthorized />
+                :
+                props.children
+            }
+          </>
         }
       </main>
       {

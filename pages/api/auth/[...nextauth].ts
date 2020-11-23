@@ -78,7 +78,7 @@ const options = {
     secret: process.env.JWT_SECRET,
     encryption: true,
   },
-  debug: false, // TODO: Change to true for debugging output
+  debug: false,
 }
 
 export default (req: NextApiRequest, res: NextApiResponse<any>) => NextAuth(req, res, options)
