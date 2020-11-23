@@ -27,8 +27,14 @@ export default function PostPage(props: any) {
               {
                 post.source === 'scribeapp' &&
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
-                // TODO: Add author image and name
               }
+              <hr className='w-full' />
+              <div className='w-full flex items-center'>
+                <div className='mr-3'>
+                  <img className='h-12 w-12 rounded-full' src={post.authorImage} />
+                </div>
+                <span>- {post.authorName}</span>
+              </div>
             </>
             :
             <div></div>
