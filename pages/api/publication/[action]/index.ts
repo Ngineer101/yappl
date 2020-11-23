@@ -137,19 +137,38 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           const publicationRepository = connection.getRepository(Publication);
           const publication = await publicationRepository.findOne({ id: publicationId as string });
           const htmlContent =
-            `<div style="text-align: right;">
-                <small>
-                  <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
-                </small>
-            </div>` +
+            `
+            <div style="display: flex; justify-content: center;">
+              <div style="max-width: 600px;">
+                <div>
+                  <h1>${post.title}</h1>
+                  <label>${post.subtitle}</label>
+                </div>
+                <div style="text-align: right;">
+                  <small>
+                    <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
+                  </small>
+                </div>
+                <br />
+            ` +
             post.htmlContent +
-            `<div>
-                <small>
-                  You are receiving this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
-                </small>
-                <small>
-                  <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
-                </small>
+            `
+                <hr />
+                <div style="display: flex; align-items: center;">
+                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" />
+                  <span style="margin: auto 0px;">- ${post.authorName}</span>
+                </div>
+                <br />
+                <br />
+                <div>
+                  <small>
+                    You received this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
+                  </small>
+                  <small>
+                    <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
+                  </small>
+                </div>
+              </div>
             </div>`;
 
           var recipientVariables: any = {};
