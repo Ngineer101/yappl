@@ -41,6 +41,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     this.savePost = this.savePost.bind(this);
     this.publishPost = this.publishPost.bind(this);
     this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
+    this.savePostWithKeyBinding = this.savePostWithKeyBinding.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -61,6 +62,28 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       const { contentBlocks, entityMap } = blocksFromHtml;
       const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
       this.setState({ editorState: EditorState.createWithContent(contentState) });
+    }
+
+    document.addEventListener('keydown', this.savePostWithKeyBinding);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.savePostWithKeyBinding);
+  }
+
+  savePostWithKeyBinding = (evt: KeyboardEvent) => {
+    if (
+      (evt.ctrlKey && evt.key === "s") ||
+      (evt.ctrlKey && evt.key === "S") ||
+      (evt.metaKey && evt.key === "s") ||
+      (evt.metaKey && evt.key === "S")
+    ) {
+      evt.preventDefault();
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+
+      this.savePost();
     }
   }
 
