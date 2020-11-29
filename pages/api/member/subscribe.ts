@@ -29,13 +29,13 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
           const encodedEmail = buff.toString('base64');
           // TODO: make this template configurable
           const data = {
-            from: `${publication.name} <${process.env.DEFAULT_EMAIL}>`, // TODO: Add publication email
+            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `noreply@${process.env.MAILGUN_DOMAIN}`}>`, // TODO: Add publication email
             to: member.email,
-            subject: `Welcome to ${publication.name} 📚`,
+            subject: `Welcome to ${publication.name}`,
             html: `
             <div>
               <h4>Hi!</h4>
-              <h4>Thanks for subscribing to ${publication.name} 📚.</h4>
+              <h4>Thanks for subscribing to ${publication.name}.</h4>
 
               <h4>Please verify your email by clicking here:</h4>
               <h4>

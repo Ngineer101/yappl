@@ -182,7 +182,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           });
 
           const data = {
-            from: `${publication ? publication.name : session.user.name} <${process.env.DEFAULT_EMAIL}>`, // TODO: Add publication email
+            from: `${publication ? publication.name : session.user.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `noreply@${process.env.MAILGUN_DOMAIN}`}>`, // TODO: Add publication email
             to: emails.join(', '),
             subject: post.title,
             html: htmlContent,
@@ -278,7 +278,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
 }
 
 function getSlug(title: string, existingSlug: string): string {
-  const titleWithoutSpaces = title.replace(' ', '-').replace('\'', '').replace(',', '-').replace(/[^a-zA-Z0-9-_]/g, '');
+  const titleWithoutSpaces = title.replace(/\s+/g, '-').replace('\'', '').replace(',', '-').replace(/[^a-zA-Z0-9-_]/g, '');
   if (existingSlug) {
     return `${titleWithoutSpaces}-${existingSlug}`;
   } else {
