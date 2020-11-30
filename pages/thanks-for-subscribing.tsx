@@ -16,7 +16,7 @@ export default function ThanksForSubscribing() {
             Please check your inbox for a verification email.
         </h2>
           {/* TODO: Add twitter share button */}
-          <img className='img-2xl' src={require('../public/assets/success.svg')} />
+          <img className='img-2xl' src={require('../public/assets/mailsent.svg')} />
         </div>
       </div>
     </Container>
