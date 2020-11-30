@@ -83,8 +83,6 @@ export default function PageContainer(props: {
           </small>
         </footer>
       }
-
-      <script async defer src="https://beampipe.io/js/tracker.js" data-beampipe-domain="condensedpage.com"></script>
     </div>
   );
 }
