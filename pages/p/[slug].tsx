@@ -40,6 +40,7 @@ export default function PostPage(props: any) {
             <div></div>
         }
       </div>
+      <script async defer src="https://beampipe.io/js/tracker.js" data-beampipe-domain="condensedpage.com"></script>
     </div>
   )
 }
