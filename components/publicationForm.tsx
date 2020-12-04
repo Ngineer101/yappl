@@ -9,6 +9,8 @@ export default function PublicationForm(props: {
   setName: Dispatch<SetStateAction<string>>,
   description: string,
   setDescription: Dispatch<SetStateAction<string>>,
+  imageUrl: string | undefined,
+  setImageUrl: Dispatch<SetStateAction<string | undefined>>,
   errorMessage: string,
   loading: boolean,
   savePublication: (evt: FormEvent<HTMLFormElement>) => void,
@@ -25,6 +27,12 @@ export default function PublicationForm(props: {
         <label htmlFor='description'>About</label>
         <textarea className='input-default' name='description' value={props.description} placeholder='What is your publication about?'
           onChange={(evt) => props.setDescription(evt.currentTarget.value)}></textarea>
+      </div>
+
+      <div className='my-4'>
+        <label htmlFor='imageUrl'>Cover image URL</label>
+        <input className='input-default' type='text' name='imageUrl' value={props.imageUrl} placeholder='This image will be displayed on the home page'
+          onChange={(evt) => props.setImageUrl(evt.currentTarget.value)} />
       </div>
 
       <button className='flex justify-center btn-default mt-4' type='submit' disabled={props.loading}>

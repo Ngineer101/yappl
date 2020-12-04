@@ -27,7 +27,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
   switch (action) {
     case 'import': {
       if (method === 'POST') {
-        const publication = await getPublication(body.source, body.rssFeedUrl, body.userId);
+        const publication = await getPublication(body.source, body.rssFeedUrl, body.userId, session.user.name);
         if (publication) {
           const existingPublication = await publicationRepository.findOne({ name: publication.name });
           if (!existingPublication) {
@@ -47,7 +47,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
       if (method === 'POST') {
         const existingPublication = await publicationRepository.findOne({ name: body.name });
         if (!existingPublication) {
-          const newPublication = new Publication(body.name, body.description, body.userId);
+          const newPublication = new Publication(body.name, body.description, body.userId, body.imageUrl);
           await publicationRepository.save(newPublication);
           res.status(200).end(newPublication.id);
         } else {
@@ -63,6 +63,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         if (publication) {
           publication.name = body.name;
           publication.description = body.description;
+          publication.imageUrl = body.imageUrl
           await publicationRepository.save(publication);
           res.status(204).end('Saved publication');
         } else {
@@ -215,7 +216,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
   await connection.close();
 }
 
-async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, userId: string): Promise<Publication | null> {
+async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, userId: string, defaultAuthorName: string): Promise<Publication | null> {
   // TODO: Check source
   const response = await axios.get(rssFeedUrl);
   if (response.data) {
@@ -237,7 +238,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
               i.guid,
               slug,
               i["content:encoded"],
-              i["dc:creator"],
+              i["dc:creator"] ? i["dc:creator"] : defaultAuthorName,
               "",
               '',
               true,
@@ -255,7 +256,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
             item.guid,
             slug,
             item['content:encoded'],
-            item['dc:creator'],
+            item["dc:creator"] ? item["dc:creator"] : defaultAuthorName,
             "",
             '',
             true,
@@ -267,7 +268,7 @@ async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, u
           posts = [newPost];
         }
 
-        let publication = new Publication(title, description, userId);
+        let publication = new Publication(title, description, userId, channel.image ? channel.image.url : undefined);
         publication.posts = posts;
         return publication;
       }

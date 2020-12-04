@@ -13,6 +13,7 @@ export default function EditPublicationPage(props: any) {
   const [session, sessionLoading] = useSession();
   const [name, setName] = useState(publication ? publication.name : '');
   const [description, setDescription] = useState(publication ? publication.description : '');
+  const [imageUrl, setImageUrl] = useState(publication ? publication.imageUrl : '');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function EditPublicationPage(props: any) {
               setName={setName}
               description={description}
               setDescription={setDescription}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
               errorMessage={errorMessage}
               loading={loading}
               savePublication={
@@ -40,7 +43,8 @@ export default function EditPublicationPage(props: any) {
                     setErrorMessage('');
                     axios.post(`/api/publication/update?publicationId=${publication.id}`, {
                       name,
-                      description
+                      description,
+                      imageUrl,
                     }, { withCredentials: true })
                       .then(response => {
                         setErrorMessage('');

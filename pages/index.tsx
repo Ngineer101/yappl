@@ -29,12 +29,12 @@ export default function IndexPage(props: any) {
         TODO: Add values */}
         <meta name="twitter:title" content={publication?.name} />
         <meta name="twitter:description" content={publication?.description} />
-        <meta name="twitter:image" content={require('../public/assets/banner.svg')} />
+        <meta name="twitter:image" content={publication?.imageUrl ? publication?.imageUrl : require('../public/assets/banner.svg')} />
 
         <meta property="og:title" content={publication?.name} />
         <meta property="og:site_name" content={publication?.name} />
         <meta property="og:description" content={publication?.description} />
-        <meta property="og:image" content={require('../public/assets/banner.svg')} />
+        <meta property="og:image" content={publication?.imageUrl ? publication?.imageUrl : require('../public/assets/banner.svg')} />
         <meta property="og:url" content={process.env.SITE_URL} />
         <meta property="og:type" content="blog" />
       </Head>
@@ -44,7 +44,7 @@ export default function IndexPage(props: any) {
             <>
               <h1 className='text-center mb-2'>{publication.name}</h1>
               <h2 className='text-center mb-10 max-w-5xl'>{publication.description}</h2>
-              <img src={require('../public/assets/banner.svg')} className='h-64 max-w-full' />
+              <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='h-64 max-w-full' />
               <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
                 <form method='POST' onSubmit={(evt) => {
                   evt.preventDefault();

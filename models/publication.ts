@@ -22,6 +22,9 @@ export class Publication {
   @Column({ type: 'varchar', nullable: true })
   description: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  imageUrl: string | undefined;
+
   @Column({ type: 'varchar' })
   userId: string;
 
@@ -37,9 +40,10 @@ export class Publication {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(name: string, description: string, userId: string) {
+  constructor(name: string, description: string, userId: string, imageUrl: string | undefined) {
     this.name = name;
     this.description = description;
     this.userId = userId;
+    this.imageUrl = imageUrl;
   }
 }

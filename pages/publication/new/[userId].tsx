@@ -7,6 +7,7 @@ import PublicationForm from '../../../components/publicationForm';
 export default function NewPublication() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter()
@@ -22,6 +23,8 @@ export default function NewPublication() {
             setName={setName}
             description={description}
             setDescription={setDescription}
+            imageUrl={imageUrl}
+            setImageUrl={setImageUrl as any} // :(
             errorMessage={errorMessage}
             loading={loading}
             savePublication={(evt) => {
@@ -32,7 +35,8 @@ export default function NewPublication() {
                 axios.post('/api/publication/new', {
                   userId,
                   name,
-                  description
+                  description,
+                  imageUrl,
                 }, { withCredentials: true })
                   .then(response => {
                     setErrorMessage('');
