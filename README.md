@@ -1,4 +1,4 @@
-![Yappl logo](https://res.cloudinary.com/djhmkzcnv/image/upload/v1607100015/yappl-landing-page/logo_zokuy3.png)
+![Yappl logo](https://res.cloudinary.com/djhmkzcnv/image/upload/v1606508421/yappl-landing-page/twitter_header_photo_2_ms8kaq.png)
 
 # Yet Another Publishing Platform
 
@@ -12,13 +12,13 @@ __A Mailgun account is required if you want to send emails__
 
 ## Step 1
 
-### Click this button
+Click this button
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2FNgineer101%2Fyappl&env=SITE_URL,NEXTAUTH_URL,POSTGRES_DATABASE,APP_SECRET,JWT_SECRET)
 
 ## Step 2
 
-### Add these environment variables to your Vercel app
+Add these environment variables to your Vercel app
 
 | Name | Description | Example |
 | ---- | ----------- | ------- |
@@ -30,11 +30,11 @@ __A Mailgun account is required if you want to send emails__
 
 ## Step 3
 
-### Connect your domain on Vercel ([read more](https://vercel.com/docs/custom-domains))
+Connect your domain on Vercel ([read more](https://vercel.com/docs/custom-domains))
 
 ## Step 4
 
-### Go to yourdomain.com/signup and set up your publication
+Go to yourdomain.com/signup and set up your publication
 
 ## Start writing
 
