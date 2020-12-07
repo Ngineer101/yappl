@@ -3,12 +3,14 @@ import dynamic from 'next/dynamic';
 import { getSession, Session } from 'next-auth/client';
 import { Component } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState, convertToRaw, convertFromHTML, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { EditorState } from 'draft-js';
 import axios from 'axios';
 import Container from '../../../../components/container';
 import { Post } from '../../../../models';
 import { dbConnection } from '../../../../repository';
+import Line from '../../../../components/editorComponents/line';
+import { convertToHTML, convertFromHTML } from 'draft-convert';
+import { HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
 
 const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
@@ -36,12 +38,42 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
 
   timeout: any = null;
 
+  convertContentToHtml = convertToHTML({
+    blockToHTML: (block) => {
+      if ((block as any).type === 'atomic') {
+        return <hr />
+      }
+    },
+    entityToHTML: (entity) => {
+      if (entity.type === HORIZONTAL_LINE) {
+        return <hr />
+      }
+    }
+  });
+
+  convertContentFromHtml = convertFromHTML({
+    htmlToBlock: (nodeName, node): any => {
+      if (nodeName === 'hr') {
+        return {
+          type: 'atomic',
+          data: {}
+        }
+      }
+    },
+    htmlToEntity: (nodeName, node, createEntity) => {
+      if (nodeName === 'hr') {
+        return createEntity(HORIZONTAL_LINE, 'IMMUTABLE', {});
+      }
+    }
+  });
+
   constructor(props: IEditPostProps) {
     super(props);
     this.savePost = this.savePost.bind(this);
     this.publishPost = this.publishPost.bind(this);
     this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
     this.savePostWithKeyBinding = this.savePostWithKeyBinding.bind(this);
+    this.blockRenderer = this.blockRenderer.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -58,9 +90,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   componentDidMount() {
     const post = this.props.post ? this.props.post : { htmlContent: '' };
     if (post.htmlContent) {
-      const blocksFromHtml = convertFromHTML(post.htmlContent as any);
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const contentState = this.convertContentFromHtml(post.htmlContent)
       this.setState({ editorState: EditorState.createWithContent(contentState) });
     }
 
@@ -96,7 +126,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     axios.post(`/api/publication/post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
       title: this.state.title,
       subTitle: this.state.subTitle,
-      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+      htmlContent: this.convertContentToHtml(this.state.editorState.getCurrentContent()),
     })
       .then(() => {
         this.setState({
@@ -122,7 +152,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     axios.post(`/api/publication/publish-post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
       title: this.state.title,
       subTitle: this.state.subTitle,
-      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+      htmlContent: this.convertContentToHtml(this.state.editorState.getCurrentContent()),
     }, { withCredentials: true })
       .then(response => {
         if (response.data) {
@@ -140,6 +170,23 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   savePostWithTimeout = () => {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => this.savePost(), 1500);
+  }
+
+  blockRenderer = (block: any) => {
+    const { editorState } = this.state;
+    if (block.getType() === 'atomic') {
+      const contentState = editorState.getCurrentContent();
+      const entityKey = block.getEntityAt(0);
+      const entity = contentState.getEntity(entityKey);
+      if (entity && entity.getType() === HORIZONTAL_LINE) {
+        return {
+          component: () => <hr />,
+          editable: false,
+        };
+      }
+    }
+
+    return undefined;
   }
 
   render() {
@@ -163,8 +210,24 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
               <div className='mb-4 flex-1'>
                 <Editor
                   toolbar={{
-                    options: ['inline', 'blockType', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
+                    options: ['inline', 'blockType', 'list', 'link', 'emoji', 'image'],
+                    inline: {
+                      options: ['bold', 'italic', 'underline'],
+                    },
+                    blockType: {
+                      options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                    },
+                    list: {
+                      options: ['unordered', 'ordered', 'indent', 'outdent'],
+                    },
+                    link: {
+                      showOpenOptionOnHover: false,
+                      defaultTargetOption: '_blank',
+                      options: ['link', 'unlink'],
+                    },
                   }}
+                  toolbarCustomButtons={[<Line />]}
+                  blockRendererFn={this.blockRenderer}
                   editorState={this.state.editorState}
                   toolbarClassName='default-toolbar'
                   onEditorStateChange={(contentState: any) => {

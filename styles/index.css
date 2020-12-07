@@ -58,7 +58,6 @@ body, #__next {
   width: 100%;
   min-height: 100vh;
   display: flex;
-  @apply bg-gray-100;
 }
 
 main {
