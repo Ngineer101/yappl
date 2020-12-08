@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/client';
-import Container from '../components/container';
+import AdminContainer from '../components/adminContainer';
 import { Post, Publication } from '../models';
 import { dbConnection } from '../repository';
 import Head from 'next/head';
@@ -15,7 +15,7 @@ export default function Dashboard(props: any) {
   const [loadingNewPost, setLoading] = useState(false);
   const publications: Publication[] = props.publications ? props.publications : [];
   return (
-    <Container protected>
+    <AdminContainer>
       <Head>
         <title>Dashboard</title>
       </Head>
@@ -117,7 +117,7 @@ export default function Dashboard(props: any) {
           </div>
         </div>
       }
-    </Container>
+    </AdminContainer>
   )
 }
 

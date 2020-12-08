@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { GetServerSideProps } from 'next';
@@ -43,7 +43,7 @@ export default function PublicationPage(props: any) {
   } = useDropzone({ onDrop, maxFiles: 1, maxSize: 20000000 });
 
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
@@ -86,8 +86,7 @@ export default function PublicationPage(props: any) {
           }
         </div>
       </div>
-
-    </Container>
+    </AdminContainer>
   );
 }
 

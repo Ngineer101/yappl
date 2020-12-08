@@ -5,7 +5,7 @@ import { Component } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState } from 'draft-js';
 import axios from 'axios';
-import Container from '../../../../components/container';
+import AdminContainer from '../../../../components/adminContainer';
 import { Post } from '../../../../models';
 import { dbConnection } from '../../../../repository';
 import Line from '../../../../components/editorComponents/line';
@@ -191,7 +191,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
 
   render() {
     return (
-      <Container protected>
+      <AdminContainer>
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
@@ -298,7 +298,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
             </div>
           </div>
         }
-      </Container>
+      </AdminContainer>
     )
   }
 

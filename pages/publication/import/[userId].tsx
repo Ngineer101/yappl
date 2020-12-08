@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import axios from 'axios';
 import { useState } from "react";
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import { urlRegex } from '../../../constants/urlRegex'
 
 export default function ImportPublication() {
@@ -11,7 +11,7 @@ export default function ImportPublication() {
   const [errorMessage, setErrorMessage] = useState('');
   const { userId } = router.query
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
@@ -71,6 +71,6 @@ export default function ImportPublication() {
           </form>
         </div>
       </div>
-    </Container>
+    </AdminContainer>
   );
 }

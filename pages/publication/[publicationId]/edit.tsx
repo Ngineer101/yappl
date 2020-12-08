@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { Publication } from "../../../models";
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import { getSession, useSession } from "next-auth/client";
 import { useState } from "react";
 import PublicationForm from "../../../components/publicationForm";
@@ -19,7 +19,7 @@ export default function EditPublicationPage(props: any) {
   const router = useRouter();
 
   return (
-    <Container protected>
+    <AdminContainer>
       {
         session &&
         <div className='full-page'>
@@ -63,7 +63,7 @@ export default function EditPublicationPage(props: any) {
           </div>
         </div>
       }
-    </Container>
+    </AdminContainer>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { FormEvent, useState } from "react"
 import axios from 'axios';
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import PublicationForm from '../../../components/publicationForm';
 
 export default function NewPublication() {
@@ -13,7 +13,7 @@ export default function NewPublication() {
   const router = useRouter()
   const { userId } = router.query
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
@@ -54,6 +54,6 @@ export default function NewPublication() {
             }} />
         </div>
       </div>
-    </Container>
+    </AdminContainer>
   )
 }
