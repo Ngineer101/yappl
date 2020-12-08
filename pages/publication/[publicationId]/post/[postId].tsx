@@ -74,6 +74,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
     this.savePostWithKeyBinding = this.savePostWithKeyBinding.bind(this);
     this.blockRenderer = this.blockRenderer.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -189,6 +190,22 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     return undefined;
   }
 
+  uploadImage = (data: File): Promise<{ data: { link: string } } | void> => {
+    var formData = new FormData();
+    formData.append('image', data);
+    return axios.post(`/api/upload?subPath=${this.props.postId}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(response => {
+        return { data: response.data } as any;
+      })
+      .catch(error => {
+        console.log(JSON.stringify(error)); // TODO: Add proper error handling
+      });
+  }
+
   render() {
     return (
       <Container protected>
@@ -224,6 +241,22 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                       showOpenOptionOnHover: false,
                       defaultTargetOption: '_blank',
                       options: ['link', 'unlink'],
+                    },
+                    image: {
+                      className: undefined,
+                      component: undefined,
+                      popupClassName: undefined,
+                      urlEnabled: true,
+                      uploadEnabled: true,
+                      alignmentEnabled: true,
+                      uploadCallback: this.uploadImage,
+                      previewImage: true,
+                      inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+                      alt: { present: false, mandatory: false },
+                      defaultSize: {
+                        height: 'auto',
+                        width: 'auto',
+                      },
                     },
                   }}
                   toolbarCustomButtons={[<Line />]}
