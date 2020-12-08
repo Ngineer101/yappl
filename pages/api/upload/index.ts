@@ -33,21 +33,13 @@ export default async function GenericUploadHandler(req: NextApiRequest, res: Nex
           })
         });
 
-        const path = process.env.NODE_ENV !== "production" ? `./public/assets/uploads/${subPath}` : `/assets/uploads/${subPath}`;
-        console.log(`Directory name: ${__dirname}`)
-        console.log(`File name: ${__filename}`)
         const contents = await fsPromises.readFile((data as any)?.files?.image.path);
-        const uploadDirExists = fs.existsSync(path);
-        if (!uploadDirExists) {
-          await fsPromises.mkdir(path, { recursive: true });
-        }
-
-        await fsPromises.writeFile(`${path}/${(data as any)?.files?.image.name}`, contents);
-        res.status(200).json({ link: `/assets/uploads/${subPath}/${(data as any)?.files?.image.name}` });
+        // TODO: Upload image somewhere
+        res.status(200).json({ link: '' });
       }
       catch (error) {
         console.log(`An error occurred while uploading the file: ${JSON.stringify(error)}`);
-        res.status(500).json(error); // TODO: Revert this change
+        res.status(500).end('An error occurred while uploading the file.');
       }
       break;
     default:
