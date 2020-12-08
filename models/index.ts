@@ -5,3 +5,4 @@ export { Member } from './member';
 export { Account } from './account';
 export { Session } from './session';
 export { VerificationRequest } from './verificationRequest';
+export { MailSettings } from './mailSettings';
