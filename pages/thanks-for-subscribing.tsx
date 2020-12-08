@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 export default function ThanksForSubscribing() {
   return (
-    <Container hideNav>
+    <Container>
       <Head>
         <title>Thanks for subscribing!</title>
       </Head>

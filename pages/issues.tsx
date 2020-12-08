@@ -8,7 +8,7 @@ import Head from 'next/head';
 export default function Issues(props: any) {
   const posts: Post[] = props.posts || [];
   return (
-    <Container hideNav>
+    <Container>
       <Head>
         <title>Past Issues</title>
       </Head>

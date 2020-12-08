@@ -6,7 +6,7 @@ import Head from 'next/head';
 
 export default function UnsubscribeMember(props: any) {
   return (
-    <Container hideNav>
+    <Container>
       {
         props.unsubscribed &&
         <>

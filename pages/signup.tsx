@@ -13,7 +13,7 @@ export default function SignUp(props: any) {
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
-    <Container hideNav>
+    <Container>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />

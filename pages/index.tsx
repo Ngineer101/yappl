@@ -17,7 +17,7 @@ export default function IndexPage(props: any) {
   const router = useRouter();
   const publication: Publication | undefined = props.publication;
   return (
-    <Container hideNav publicationName={publication ? publication.name : ''}>
+    <Container publicationName={publication ? publication.name : ''}>
       <Head>
         <title>{publication?.name}</title>
         <meta charSet="UTF-8" />
