@@ -33,7 +33,7 @@ export default async function GenericUploadHandler(req: NextApiRequest, res: Nex
           })
         });
 
-        const path = process.env.NODE_ENV !== "production" ? `${__dirname}/public/assets/uploads/${subPath}` : `${__dirname}/assets/uploads/${subPath}`;
+        const path = process.env.NODE_ENV !== "production" ? `./public/assets/uploads/${subPath}` : `assets/uploads/${subPath}`;
         console.log(`Directory name: ${__dirname}`)
         console.log(`File name: ${__filename}`)
         const contents = await fsPromises.readFile((data as any)?.files?.image.path);
