@@ -45,7 +45,7 @@ export default async function GenericUploadHandler(req: NextApiRequest, res: Nex
       }
       catch (error) {
         console.error('An error occurred while uploading the file', error);
-        res.status(500).end('An error occurred while uploading the file.');
+        res.status(500).json(error);
       }
       break;
     default:
