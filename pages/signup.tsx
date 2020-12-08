@@ -73,6 +73,7 @@ export default function SignUp(props: any) {
                 onChange={(evt) => setEmail(evt.currentTarget.value)} />
             </div>
 
+            {/* TODO: add functionality to upload image */}
             <div className='my-4'>
               <label htmlFor='image'>Gravatar URL</label>
               <input className='input-default' name='image' type='text' value={image} placeholder='Gravatar URL'

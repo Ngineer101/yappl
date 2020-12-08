@@ -29,6 +29,7 @@ export default function PublicationForm(props: {
           onChange={(evt) => props.setDescription(evt.currentTarget.value)}></textarea>
       </div>
 
+      {/* TODO: add functionality to upload image */}
       <div className='my-4'>
         <label htmlFor='imageUrl'>Cover image URL</label>
         <input className='input-default' type='text' name='imageUrl' value={props.imageUrl} placeholder='This image will be displayed on the home page'
