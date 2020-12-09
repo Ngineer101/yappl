@@ -1,5 +1,5 @@
 {
-  "name": "scribeapp",
+  "name": "yappl",
   "version": "1.0.0",
   "scripts": {
     "generate-migration": "ts-node .\\node_modules\\typeorm\\cli.js migration:generate -f ./ormconfig.ts",

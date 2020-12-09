@@ -87,7 +87,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           session.user.image,
           publicationId as string,
           false,
-          'scribeapp',
+          'yappl',
           new Date(),
           new Date()
         );
@@ -216,7 +216,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
   await connection.close();
 }
 
-async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, userId: string, defaultAuthorName: string): Promise<Publication | null> {
+async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userId: string, defaultAuthorName: string): Promise<Publication | null> {
   // TODO: Check source
   const response = await axios.get(rssFeedUrl);
   if (response.data) {

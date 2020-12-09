@@ -25,7 +25,7 @@ export default function PostPage(props: any) {
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               }
               {
-                post.source === 'scribeapp' &&
+                post.source === 'yappl' &&
                 <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               }
               <hr className='w-full' />

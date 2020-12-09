@@ -93,7 +93,7 @@ export default function Dashboard(props: any) {
                                 }
                               </div>
                               {
-                                post.source === 'scribeapp' &&
+                                post.source === 'yappl' &&
                                 <div className='flex flex-col justify-center items-center'>
                                   <a className="bg-white hover:bg-gray-300 text-black p-2 rounded inline-flex items-center" href={`/publication/${publication.id}/post/${post.id}`}>
                                     <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

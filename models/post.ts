@@ -41,7 +41,7 @@ export class Post {
   isPublished: boolean;
 
   @Column({ type: 'varchar', nullable: false })
-  source: 'rss' | 'scribeapp';
+  source: 'rss' | 'yappl';
 
   @Column({ type: 'uuid', nullable: false })
   publicationId: string;
@@ -64,7 +64,7 @@ export class Post {
     authorImage: string,
     publicationId: string,
     isPublished: boolean,
-    source: 'rss' | 'scribeapp',
+    source: 'rss' | 'yappl',
     createdDate: Date | undefined,
     updatedDate: Date | undefined
   ) {
