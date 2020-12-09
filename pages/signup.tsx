@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from 'axios';
 import Container from '../components/container';
 import { csrfToken } from "next-auth/client";
+import SpinnerButton from "../components/spinnerButton";
 
 export default function SignUp(props: any) {
   const [image, setImage] = useState('');
@@ -92,16 +93,12 @@ export default function SignUp(props: any) {
                 value={passwordConfirmation} onChange={(evt) => setPasswordConfirmation(evt.currentTarget.value)} />
             </div>
 
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Sign up</span>
-              }
-            </button>
+            <SpinnerButton
+              text='Sign up'
+              type='submit'
+              loading={loading}
+              disabled={loading}
+              className='mt-4' />
 
             {
               errorMessage &&

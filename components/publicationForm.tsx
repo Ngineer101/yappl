@@ -3,6 +3,7 @@ import {
   FormEvent,
   SetStateAction
 } from "react";
+import SpinnerButton from "./spinnerButton";
 
 export default function PublicationForm(props: {
   name: string,
@@ -36,16 +37,12 @@ export default function PublicationForm(props: {
           onChange={(evt) => props.setImageUrl(evt.currentTarget.value)} />
       </div>
 
-      <button className='flex justify-center btn-default mt-4' type='submit' disabled={props.loading}>
-        {
-          props.loading &&
-          <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-        }
-        {
-          !props.loading &&
-          <span>Save</span>
-        }
-      </button>
+      <SpinnerButton
+        text='Save'
+        type='submit'
+        loading={props.loading}
+        disabled={props.loading}
+        className='mt-4' />
 
       {
         props.errorMessage &&

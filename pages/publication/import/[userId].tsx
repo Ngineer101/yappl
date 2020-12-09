@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from "react";
 import AdminContainer from '../../../components/adminContainer';
 import { urlRegex } from '../../../constants/urlRegex'
+import SpinnerButton from "../../../components/spinnerButton";
 
 export default function ImportPublication() {
   const router = useRouter()
@@ -51,16 +52,12 @@ export default function ImportPublication() {
                 value={rssFeedUrl} onChange={(evt) => setRssFeedUrl(evt.currentTarget.value)} />
             </div>
 
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Import</span>
-              }
-            </button>
+            <SpinnerButton
+              text='Import'
+              type='submit'
+              loading={loading}
+              disabled={loading}
+              className='mt-4' />
 
             {
               errorMessage &&
