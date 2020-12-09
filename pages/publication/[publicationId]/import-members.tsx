@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 
-export default function PublicationPage(props: any) {
+export default function ImportMembers(props: any) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');

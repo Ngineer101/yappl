@@ -1,6 +1,6 @@
 import Container from '../components/container';
 
-export default function NotFoundPage() {
+export default function NotFound() {
   return (
     <Container>
       <div className='flex flex-col justify-center items-center p-1'>

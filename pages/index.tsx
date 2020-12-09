@@ -9,7 +9,7 @@ import { dbConnection } from '../repository';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-export default function IndexPage(props: any) {
+export default function Index(props: any) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
