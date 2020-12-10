@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Publication, Post, Member } from "../../../../models";
+import { Publication, Post, Member, MailSettings } from "../../../../models";
 import { dbConnection } from "../../../../repository";
 import { getSession } from "next-auth/client";
 import axios from 'axios';
@@ -72,6 +72,38 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
       }
 
       break;
+    }
+    case 'update-mail-settings': {
+      if (method === 'POST') {
+        const {
+          mailProvider,
+          mailgunApiKey,
+          mailgunDomain,
+          mailgunHost,
+        } = body;
+
+        const publicationRepository = connection.getRepository(Publication);
+        const mailSettingsRepository = connection.getRepository(MailSettings);
+        const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
+        if (publication.mailSettingsId) {
+          const mailSettings = await mailSettingsRepository.findOneOrFail({ id: publication.mailSettingsId });
+          mailSettings.provider = mailProvider;
+          mailSettings.mailgunApiKey = mailgunApiKey;
+          mailSettings.mailgunDomain = mailgunDomain;
+          mailSettings.mailgunHost = mailgunHost;
+          await mailSettingsRepository.save(mailSettings);
+        } else {
+          let mailSettings = new MailSettings(mailProvider);
+          mailSettings.mailgunApiKey = mailgunApiKey;
+          mailSettings.mailgunDomain = mailgunDomain;
+          mailSettings.mailgunHost = mailgunHost;
+          await mailSettingsRepository.save(mailSettings);
+          publication.mailSettingsId = mailSettings.id;
+          await publicationRepository.save(publication);
+        }
+
+        res.status(204).end('Mail settings saved');
+      }
     }
     case 'new-post': {
       if (method === 'GET') {

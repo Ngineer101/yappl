@@ -131,6 +131,7 @@ ul {
 }
 
 .input-default {
+  outline: none;
   @apply w-full p-2 shadow-2xl border border-gray-500 rounded-lg;
 }
 
