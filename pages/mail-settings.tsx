@@ -7,6 +7,7 @@ import { dbConnection } from "../repository";
 import SpinnerButton from '../components/spinnerButton';
 import axios from 'axios';
 import { useRouter } from "next/router";
+import { CryptoUtils } from '../utils/crypto';
 
 export default function MailSettings(props: any) {
   const publication: Publication = props.publications ? props.publications[0] : null; // There should only be one publication anyway
@@ -62,6 +63,7 @@ export default function MailSettings(props: any) {
               <>
                 <div className='my-4'>
                   <label htmlFor='mailgunApiKey'>Mailgun API key</label>
+                  {/* TODO: change input to password type */}
                   <input className='input-default' type='text' name='mailgunApiKey' value={mailgunApiKey} placeholder='Mailgun API key (e.g. key-1ds434a8b56...)'
                     onChange={(evt) => setMailgunApiKey(evt.currentTarget.value)} />
                 </div>
@@ -114,6 +116,13 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
   const publicationRepository = connection.getRepository(Publication);
   const publications = await publicationRepository.find({ relations: ["mailSettings"] });
   await connection.close();
+
+  for (let i = 0; i < publications.length; i++) {
+    let publication = publications[i];
+    if (publication.mailSettingsId && publication.mailSettings && publication.mailSettings.mailgunApiKey) {
+      publication.mailSettings.mailgunApiKey = CryptoUtils.decryptKey(publication.mailSettings.mailgunApiKey);
+    }
+  };
 
   return {
     props: {

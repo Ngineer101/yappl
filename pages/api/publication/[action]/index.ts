@@ -7,6 +7,7 @@ import xmlParser from 'fast-xml-parser';
 import url from 'url';
 import crypto from 'crypto';
 import mailgun from 'mailgun-js';
+import { CryptoUtils } from '../../../../utils/crypto';
 
 export default async function GenericPublicationHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -85,16 +86,22 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
         const publicationRepository = connection.getRepository(Publication);
         const mailSettingsRepository = connection.getRepository(MailSettings);
         const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
+
+        let encryptedApiKey = '';
+        if (mailgunApiKey) {
+          encryptedApiKey = CryptoUtils.encryptKey(mailgunApiKey);
+        }
+
         if (publication.mailSettingsId) {
           const mailSettings = await mailSettingsRepository.findOneOrFail({ id: publication.mailSettingsId });
           mailSettings.provider = mailProvider;
-          mailSettings.mailgunApiKey = mailgunApiKey;
+          mailSettings.mailgunApiKey = encryptedApiKey;
           mailSettings.mailgunDomain = mailgunDomain;
           mailSettings.mailgunHost = mailgunHost;
           await mailSettingsRepository.save(mailSettings);
         } else {
           let mailSettings = new MailSettings(mailProvider);
-          mailSettings.mailgunApiKey = mailgunApiKey;
+          mailSettings.mailgunApiKey = encryptedApiKey;
           mailSettings.mailgunDomain = mailgunDomain;
           mailSettings.mailgunHost = mailgunHost;
           await mailSettingsRepository.save(mailSettings);
