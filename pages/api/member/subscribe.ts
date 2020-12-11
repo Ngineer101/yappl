@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Member, Publication } from "../../../models";
+import { Member, Publication, MailProviders, MailSettings } from "../../../models";
 import { dbConnection } from "../../../repository";
 import crypto from 'crypto';
 import { emailRegex } from "../../../constants/emailRegex";
 import mailgun from 'mailgun-js';
+import { CryptoUtils } from "../../../utils/crypto";
 
 export default async function SubscribeMember(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -15,6 +16,13 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
 
   switch (method) {
     case 'POST': {
+      const mailSettingsRepository = connection.getRepository(MailSettings);
+      const mailSettings = await mailSettingsRepository.findOne();
+      if (!mailSettings || mailSettings?.provider === MailProviders.NONE) {
+        res.status(201).end('Member subscribed successfully');
+        break;
+      }
+
       if (email && emailRegex.test(email)) {
         const memberRepository = connection.getRepository(Member);
         const existingMember = await memberRepository.findOne({ email: email, publicationId: publicationId });
@@ -29,7 +37,7 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
           const encodedEmail = buff.toString('base64');
           // TODO: make this template configurable
           const data = {
-            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `noreply@${process.env.MAILGUN_DOMAIN}`}>`, // TODO: Add publication email
+            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `hey@${mailSettings.mailgunDomain}`}>`, // TODO: Add publication email
             to: member.email,
             subject: `Welcome to ${publication.name}`,
             html: `
@@ -53,7 +61,7 @@ export default async function SubscribeMember(req: NextApiRequest, res: NextApiR
             `,
           }
 
-          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
+          const mg = mailgun({ apiKey: CryptoUtils.decryptKey(mailSettings.mailgunApiKey || ''), domain: mailSettings.mailgunDomain || '', host: mailSettings.mailgunHost });
           await mg.messages().send(data, (error, response) => {
             if (error) {
               console.log(`Error sending email: ${JSON.stringify(error)}`);

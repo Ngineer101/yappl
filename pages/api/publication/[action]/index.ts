@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Publication, Post, Member, MailSettings } from "../../../../models";
+import { Publication, Post, Member, MailSettings, MailProviders } from "../../../../models";
 import { dbConnection } from "../../../../repository";
 import { getSession } from "next-auth/client";
 import axios from 'axios';
@@ -170,12 +170,19 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.authorImage = session.user.image;
           await postRepository.save(post);
 
+          const mailSettingsRepository = connection.getRepository(MailSettings);
+          const mailSettings = await mailSettingsRepository.findOne();
+          if (!mailSettings || mailSettings?.provider === MailProviders.NONE) {
+            res.status(200).json(post);
+            break;
+          }
+
           const membersRepository = connection.getRepository(Member);
           const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
           const emails = members.map(m => m.email);
 
           const publicationRepository = connection.getRepository(Publication);
-          const publication = await publicationRepository.findOne({ id: publicationId as string });
+          const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
           const htmlContent =
             `
             <div style="display: flex; justify-content: center;">
@@ -202,7 +209,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
                 <br />
                 <div>
                   <small>
-                    You received this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
+                    You received this email because you are subscribed to ${publication.name}.
                   </small>
                   <small>
                     <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
@@ -222,14 +229,14 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           });
 
           const data = {
-            from: `${publication ? publication.name : session.user.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `noreply@${process.env.MAILGUN_DOMAIN}`}>`, // TODO: Add publication email
+            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `hey@${mailSettings.mailgunDomain}`}>`, // TODO: Add publication email
             to: emails.join(', '),
             subject: post.title,
             html: htmlContent,
             'recipient-variables': JSON.stringify(recipientVariables),
           }
 
-          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
+          const mg = mailgun({ apiKey: CryptoUtils.decryptKey(mailSettings.mailgunApiKey || ''), domain: mailSettings.mailgunDomain || '', host: mailSettings.mailgunHost });
           await mg.messages().send(data, (error, response) => {
             if (error) {
               console.log(`Error publishing post: ${JSON.stringify(error)}`);
