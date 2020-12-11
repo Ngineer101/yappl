@@ -171,8 +171,12 @@ ul {
   @apply bg-gray-300 text-black;
 }
 
+.nav-item-border {
+  @apply border border-gray-300;
+}
+
 .btn-nav {
-  @apply px-2;
+  @apply px-2 pt-1 flex justify-center items-center text-gray-700 hover:text-black hover:bg-gray-300;
 }
 
 .adjusted-width {
