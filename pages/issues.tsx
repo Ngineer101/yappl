@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import Link from 'next/link';
 import Container from '../components/container';
 import { Post } from "../models";
@@ -35,7 +35,7 @@ export default function Issues(props: any) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
+export const getStaticProps: GetStaticProps = async (): Promise<any> => {
   const connection = await dbConnection('post');
   const postRepository = connection.getRepository(Post);
   const posts = await postRepository.createQueryBuilder("post")
@@ -46,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (): Promise<any> => 
   return {
     props: {
       posts: JSON.parse(JSON.stringify(posts))
-    }
+    },
+    revalidate: 60,
   };
 }

@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next"
+import { GetStaticPaths, GetStaticProps } from "next"
 import { Post } from "../../models";
 import { dbConnection } from "../../repository";
 import Head from 'next/head';
@@ -44,7 +44,18 @@ export default function PostPage(props: any) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
+export const getStaticPaths: GetStaticPaths = async (): Promise<any> => {
+  const connection = await dbConnection('posts');
+  const postRepository = connection.getRepository(Post);
+  const posts = await postRepository.find();
+  const paths = posts.map(p => { return { params: { slug: p.slug } } });
+  return {
+    paths,
+    fallback: true,
+  };
+}
+
+export const getStaticProps: GetStaticProps = async (context: any): Promise<any> => {
   const { slug } = context.params;
   const connection = await dbConnection('post');
   const postRepository = connection.getRepository(Post);
@@ -54,11 +65,13 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
     return {
       props: {
         post: JSON.parse(JSON.stringify(post))
-      }
+      },
+      revalidate: 60,
     };
   } else {
     return {
-      props: {}
+      notFound: true,
+      revalidate: 60,
     }
   }
 }
