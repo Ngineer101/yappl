@@ -4,7 +4,7 @@ import { dbConnection } from "../../repository";
 import Head from 'next/head';
 import Container from '../../components/container';
 
-export const config = { amp: 'hybrid' }
+// export const config = { amp: 'hybrid' } TODO: Investigate why AMP build fails
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
