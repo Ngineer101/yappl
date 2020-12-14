@@ -2,45 +2,41 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { Post } from "../../models";
 import { dbConnection } from "../../repository";
 import Head from 'next/head';
+import Container from '../../components/container';
 
 export const config = { amp: 'hybrid' }
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
   return (
-    <div className='flex flex-col justify-center items-center p-4 w-full'>
-      {/* TODO: Add SEO data here */}
-      <Head>
-        <title>{post?.title}</title>
-      </Head>
-      <div className='flex flex-col justify-center items-center adjusted-width'>
-        {
-          post ?
-            <>
-              <h1 className='text-center'>{post.title}</h1>
-              <h2 className='text-center'>{post.subtitle}</h2>
-              <hr className='w-full' />
-              {
-                post.source === 'rss' &&
-                <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
-              }
-              {
-                post.source === 'yappl' &&
-                <div className='w-full rss-post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
-              }
-              <hr className='w-full' />
-              <div className='w-full flex items-center'>
-                <div className='mr-3'>
-                  <img className='h-12 w-12 rounded-full' src={post.authorImage} />
+    <Container>
+      <div className='flex flex-col justify-center items-center p-4 w-full'>
+        {/* TODO: Add SEO data here */}
+        <Head>
+          <title>{post?.title}</title>
+        </Head>
+        <div className='flex flex-col justify-center items-center adjusted-width'>
+          {
+            post ?
+              <>
+                <h1 className='post-title'>{post.title}</h1>
+                <h2 className='post-subtitle'>{post.subtitle}</h2>
+                <hr className='w-full' />
+                <div className='w-full post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
+                <hr className='w-full' />
+                <div className='w-full flex items-center'>
+                  <div className='mr-3'>
+                    <img className='h-12 w-12 rounded-full' src={post.authorImage} />
+                  </div>
+                  <span>- {post.authorName}</span>
                 </div>
-                <span>- {post.authorName}</span>
-              </div>
-            </>
-            :
-            <div></div>
-        }
+              </>
+              :
+              <div></div>
+          }
+        </div>
       </div>
-    </div>
+    </Container>
   )
 }
 

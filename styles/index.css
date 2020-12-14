@@ -235,6 +235,18 @@ ul {
   @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-2xl my-4 rounded-lg;
 }
 
+.post-title {
+  @apply mb-1 w-full;
+}
+
+.post-subtitle {
+  @apply text-base lg:text-lg xl:text-lg 2xl:text-lg mt-1 text-gray-500 w-full;
+}
+
+.post-container {
+  @apply font-medium leading-7;
+}
+
 .sweet {
   opacity: 0;
   position: absolute;
@@ -379,7 +391,7 @@ ul {
   }
 
   .adjusted-width {
-    @apply w-1/2;
+    @apply w-3/5;
   }
 
   .form-adjusted-width {
@@ -431,7 +443,7 @@ ul {
   }
 
   .adjusted-width {
-    @apply w-2/5;
+    @apply w-1/2;
   }
 
   .form-adjusted-width {
@@ -453,4 +465,12 @@ ul {
   .button-subscribe {
     @apply text-xl;
   }
+}
+
+@media (min-width: 1600px) {
+
+  .adjusted-width {
+    @apply w-2/5;
+  }
+
 }
