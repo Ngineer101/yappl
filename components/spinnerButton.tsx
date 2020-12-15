@@ -1,4 +1,5 @@
 export default function SpinnerButton(props: {
+  onClick?: (evt: any) => void,
   text: string,
   loading: boolean,
   type: "button" | "submit" | "reset" | undefined,
@@ -6,7 +7,7 @@ export default function SpinnerButton(props: {
   className?: string
 }) {
   return (
-    <button className={`${props.className} flex justify-center btn-default relative`} disabled={props.disabled} type={props.type}>
+    <button className={`${props.className ? props.className : ''} flex justify-center btn-default relative`} disabled={props.disabled} type={props.type} onClick={props.onClick}>
       <span className={props.loading ? 'opacity-30' : ''} style={{ paddingTop: '0.125rem' }}>
         {props.text}
       </span>

@@ -7,6 +7,8 @@ import Head from 'next/head';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import SpinnerButton from '../components/spinnerButton';
+import moment from 'moment';
 
 export default function Dashboard(props: any) {
   const router = useRouter();
@@ -36,7 +38,12 @@ export default function Dashboard(props: any) {
                 <div className='flex flex-row justify-between'>
                   <h3>Posts</h3>
                   <div className='flex flex-col justify-center items-center'>
-                    <button className='btn-default flex justify-center items-center'
+
+                    <SpinnerButton
+                      loading={loadingNewPost}
+                      disabled={loadingNewPost}
+                      type='button'
+                      text={'New post'}
                       onClick={(evt) => {
                         setLoading(true);
                         axios.get(`/api/publication/new-post?publicationId=${publication.id}`,
@@ -52,21 +59,8 @@ export default function Dashboard(props: any) {
                               setErrorMessage('An error occurred while creating a new post.');
                             }
                           })
-                      }}>
-                      {
-                        loadingNewPost &&
-                        <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-                      }
-                      {
-                        !loadingNewPost &&
-                        <>
-                          <svg className='w-6 h-6 mr-2' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                          <span>New post</span>
-                        </>
-                      }
-                    </button>
+                      }} />
+
                   </div>
                 </div>
                 <hr />
@@ -87,6 +81,11 @@ export default function Dashboard(props: any) {
                               {
                                 post.subtitle &&
                                 <label>{post.subtitle}</label>
+                              }
+                              {
+                                post.isPublished ?
+                                  <small className='mt-2'>Published {moment(post.publishedAt).format('ll')}</small> :
+                                  <small className='mt-2'>Edited {moment(post.updatedAt).format('ll')}</small>
                               }
                             </div>
                             {

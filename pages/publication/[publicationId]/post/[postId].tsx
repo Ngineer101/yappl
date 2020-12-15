@@ -11,6 +11,8 @@ import { dbConnection } from '../../../../repository';
 import Line from '../../../../components/editorComponents/line';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
+import SpinnerButton from '../../../../components/spinnerButton';
+import moment from 'moment';
 
 const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
@@ -74,6 +76,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
     this.savePostWithKeyBinding = this.savePostWithKeyBinding.bind(this);
     this.blockRenderer = this.blockRenderer.bind(this);
+    this.getSaveButtonText = this.getSaveButtonText.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -172,6 +175,22 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     this.timeout = setTimeout(() => this.savePost(), 1500);
   }
 
+  getSaveButtonText = (): string => {
+    if (this.state.savedSuccess) {
+      return `Last save ${moment(new Date()).format('LT').toLowerCase()}`;
+    }
+
+    if (this.state.savedFail) {
+      return 'Saving failed';
+    }
+
+    if (!this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail) {
+      return 'Save';
+    }
+
+    return 'Saving...';
+  }
+
   blockRenderer = (block: any) => {
     const { editorState } = this.state;
     if (block.getType() === 'atomic') {
@@ -239,24 +258,13 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
               <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white flex flex-col'>
                 <hr className='mt-0' />
                 <div className='flex justify-between'>
-                  <button className='btn-default' disabled={this.state.savedSuccess} onClick={this.savePost}>
-                    {
-                      this.state.isSaving &&
-                      <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-                    }
-                    {
-                      this.state.savedSuccess &&
-                      <span>Saved at {new Date().getHours().toString()}:{new Date().getMinutes().toString()}</span>
-                    }
-                    {
-                      this.state.savedFail &&
-                      <span>Saving failed</span>
-                    }
-                    {
-                      !this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail &&
-                      <span>Save</span>
-                    }
-                  </button>
+
+                  <SpinnerButton
+                    onClick={this.savePost}
+                    loading={this.state.isSaving}
+                    disabled={this.state.savedSuccess}
+                    type='button'
+                    text={this.getSaveButtonText()} />
 
                   {
                     this.props.post && !this.props.post.isPublished &&

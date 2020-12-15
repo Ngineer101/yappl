@@ -3,6 +3,7 @@ import { Post } from "../../models";
 import { dbConnection } from "../../repository";
 import Head from 'next/head';
 import Container from '../../components/container';
+import moment from 'moment';
 
 // export const config = { amp: 'hybrid' } TODO: Investigate why AMP build fails
 
@@ -21,15 +22,23 @@ export default function PostPage(props: any) {
               <>
                 <h1 className='post-title'>{post.title}</h1>
                 <h2 className='post-subtitle'>{post.subtitle}</h2>
-                <hr className='w-full' />
-                <div className='w-full post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
-                <hr className='w-full' />
                 <div className='w-full flex items-center'>
                   <div className='mr-3'>
-                    <img className='h-12 w-12 rounded-full' src={post.authorImage} />
+                    <img className='h-10 w-10 rounded-full' src={post.authorImage} />
                   </div>
-                  <span>- {post.authorName}</span>
+                  <div className='flex flex-col'>
+                    <label>{post.authorName}</label>
+                    <small>
+                      {
+                        post.publishedAt ?
+                          moment(post.publishedAt).format('ll') :
+                          moment(post.createdAt).format('ll')
+                      }
+                    </small>
+                  </div>
                 </div>
+                <hr className='w-full' />
+                <div className='w-full post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
               </>
               :
               <div></div>
