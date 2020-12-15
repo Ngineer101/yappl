@@ -2,6 +2,7 @@ import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import Unauthorized from './unauthorized';
+import SpinnerButton from './spinnerButton';
 
 export default function AdminPageContainer(props: {
   children: React.ReactNode,
@@ -12,7 +13,12 @@ export default function AdminPageContainer(props: {
       <nav className='flex justify-between w-full p-2 items-center border-b-2 border-gray-300 shadow-md'>
         {
           !session && !loading &&
-          <button className='btn-default' onClick={signIn as any}>Sign in</button>
+          <SpinnerButton
+            loading={false}
+            disabled={false}
+            type='button'
+            text='Sign in'
+            onClick={signIn as any} />
         }
         {
           session && !loading &&
