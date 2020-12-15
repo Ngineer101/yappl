@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 
 export default function PageContainer(props: {
   publicationName?: string,
@@ -6,6 +7,10 @@ export default function PageContainer(props: {
 }) {
   return (
     <div className='flex flex-col justify-between w-full'>
+      <Head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Martel:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+      </Head>
       <main>
         {
           props.children

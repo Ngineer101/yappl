@@ -3,6 +3,7 @@ import { signIn, signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import Unauthorized from './unauthorized';
 import SpinnerButton from './spinnerButton';
+import Head from 'next/head';
 
 export default function AdminPageContainer(props: {
   children: React.ReactNode,
@@ -10,6 +11,10 @@ export default function AdminPageContainer(props: {
   const [session, loading] = useSession();
   return (
     <div className='flex flex-col justify-between w-full'>
+      <Head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Martel:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+      </Head>
       <nav className='flex justify-between w-full p-2 items-center border-b-2 border-gray-300 shadow-md'>
         {
           !session && !loading &&
