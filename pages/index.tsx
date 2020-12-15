@@ -8,6 +8,7 @@ import { emailRegex } from '../constants/emailRegex';
 import { dbConnection } from '../repository';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import IssueCard from '../components/issueCard';
 
 export default function Index(props: {
   publication: Publication,
@@ -47,7 +48,7 @@ export default function Index(props: {
             <>
               <h1 className='text-center mb-2'>{publication.name}</h1>
               <h2 className='text-center mb-10 max-w-5xl'>{publication.description}</h2>
-              <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='h-64 max-w-full' />
+              <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='cover-image' />
               {
                 props.mailActive &&
                 <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
@@ -103,17 +104,9 @@ export default function Index(props: {
                   </form>
                 </div>
               }
-              <div className='flex flex-col justify-center items-center my-8 adjusted-width'>
+              <div className='flex flex-col justify-center items-center my-8 w-full'>
                 {
-                  (publication.posts || []).map((p, i) =>
-                    <div key={i} className='issue-card w-full -mt-4'>
-                      <h3 className='text-xl sm:text-xl md:text-2xl lg:text-2xl xl:text-2xl text-center'>{p.title}</h3>
-                      <p className='text-base sm:text-base md:text-lg lg:text-lg xl:text-lg text-center text-gray-600'>{p.subtitle}</p>
-                      <Link href={`/p/${p.slug}`}>
-                        <a className='mt-8 text-blue-500 text-base sm:text-base md:text-xl lg:text-xl xl:text-xl text-center'>Read the latest issue</a>
-                      </Link>
-                    </div>
-                  )
+                  (publication.posts || []).map((p, i) => <IssueCard post={p} key={i} />)
                 }
               </div>
               {

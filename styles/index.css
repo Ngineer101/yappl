@@ -231,8 +231,12 @@ ul {
   border-bottom-color: #e2e8f0 !important;
 }
 
+.cover-image {
+  @apply w-full h-auto sm:w-full sm:h-auto md:w-auto md:h-64 lg:w-auto lg:h-64 xl:w-auto xl:h-64 2xl:w-auto 2xl:h-64;
+}
+
 .issue-card {
-  @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-2xl my-4 rounded-lg;
+  @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-xl my-4 rounded-lg;
 }
 
 .post-title {
