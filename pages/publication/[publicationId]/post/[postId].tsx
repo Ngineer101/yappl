@@ -214,7 +214,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
-            <div className='adjusted-width shadow-2xl rounded bg-white px-4 flex-1 h-full flex flex-col justify-between -mt-12'>
+            <div className='adjusted-width bg-white px-4 flex-1 h-full flex flex-col justify-between mt-4'>
               <div>
                 <h1 className='max-w-full'>
                   <input type='text' className='w-full' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })}
@@ -255,8 +255,8 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                 />
               </div>
 
-              <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white flex flex-col'>
-                <hr className='mt-0' />
+              <div className='mt-4 pb-2 bottom-0 sticky z-20 bg-white flex flex-col'>
+                <hr className='mt-0 mb-2' />
                 <div className='flex justify-between'>
 
                   <SpinnerButton
@@ -271,9 +271,15 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                     <>
                       {
                         !this.state.showPublishConfirmation &&
-                        <button className='btn-default' onClick={(evt) => this.setState({ showPublishConfirmation: true })}>
-                          Publish
-                        </button>
+                        <SpinnerButton
+                          loading={false}
+                          disabled={false}
+                          type='button'
+                          text='Publish'
+                          onClick={(evt) => {
+                            clearTimeout(this.timeout);
+                            this.setState({ showPublishConfirmation: true });
+                          }} />
                       }
                       {
                         this.state.showPublishConfirmation &&
