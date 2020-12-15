@@ -49,6 +49,9 @@ export class Post {
   @ManyToOne(type => Publication, publication => publication.posts)
   publication: Publication | undefined;
 
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  publishedAt: Date | undefined;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date | undefined;
 

@@ -166,6 +166,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.isPublished = true;
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
+          post.publishedAt = new Date();
           post.authorName = session.user.name;
           post.authorImage = session.user.image;
           await postRepository.save(post);
