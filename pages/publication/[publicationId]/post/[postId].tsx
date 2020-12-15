@@ -262,7 +262,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                   <SpinnerButton
                     onClick={this.savePost}
                     loading={this.state.isSaving}
-                    disabled={this.state.savedSuccess}
+                    disabled={this.state.savedSuccess || this.state.isSaving}
                     type='button'
                     text={this.getSaveButtonText()} />
 
