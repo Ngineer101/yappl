@@ -48,7 +48,7 @@ export default function Index(props: {
             <>
               <h1 className='text-center mb-2'>{publication.name}</h1>
               <h2 className='text-center mb-8 max-w-5xl'>{publication.description}</h2>
-              <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='cover-image' />
+              <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='cover-image' alt={`${publication.name} cover image`} />
               {
                 props.mailActive &&
                 <div className='adjusted-width mb-8'>
@@ -123,7 +123,7 @@ export default function Index(props: {
             :
             <>
               <h1 className='header-2xl text-center mb-10'>This site is still under construction</h1>
-              <img className='img-2xl' src={require('../public/assets/underconstruction.svg')} />
+              <img className='img-2xl' src={require('../public/assets/underconstruction.svg')} alt='under construction' />
             </>
         }
 

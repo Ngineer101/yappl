@@ -12,7 +12,7 @@ export default function SignIn(props: any) {
     <Container>
       <div className='flex justify-center items-center'>
         <div className='card-col form-adjusted-width mt-24'>
-          <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} />
+          <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} alt='welcome banner' />
 
           {
             firstSignIn &&

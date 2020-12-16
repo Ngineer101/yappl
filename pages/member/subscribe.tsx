@@ -16,7 +16,7 @@ export default function SubscribeMember(props: any) {
           <div className='full-page'>
             <div className='flex flex-col justify-center items-center p-1'>
               <h1 className='header-2xl text-center mb-10'>Thanks for verifying your email.</h1>
-              <img className='img-2xl' src={require('../../public/assets/success.svg')} />
+              <img className='img-2xl' src={require('../../public/assets/success.svg')} alt='thanks for verifying your email' />
             </div>
           </div>
         </>
@@ -30,7 +30,7 @@ export default function SubscribeMember(props: any) {
           <div className='full-page'>
             <div className='flex flex-col justify-center items-center p-1'>
               <h1 className='header-2xl text-center mb-10'>Email verification failed. Please reload the page.</h1>
-              <img className='img-2xl' src={require('../../public/assets/servererror.svg')} />
+              <img className='img-2xl' src={require('../../public/assets/servererror.svg')} alt='server error' />
             </div>
           </div>
         </>

@@ -45,7 +45,7 @@ export default function AdminPageContainer(props: {
                 <li className="relative group rounded-lg">
                   {
                     session.user.image ?
-                      <img className='h-12 w-12 rounded-full' src={session.user.image} />
+                      <img className='h-12 w-12 rounded-full' src={session.user.image} alt='profile pic' />
                       :
                       <svg className='w-12 h-12' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}

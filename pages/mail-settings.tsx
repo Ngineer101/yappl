@@ -23,7 +23,7 @@ export default function MailSettings(props: any) {
     <AdminPageContainer>
       <div className='flex justify-center items-center full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../public/assets/mail.svg')} />
+          <img className='my-4 image-banner' src={require('../public/assets/mail.svg')} alt='mail' />
           <h2 className='text-center'>{publication.name} mail settings</h2>
           <form onSubmit={(evt) => {
             evt.preventDefault();

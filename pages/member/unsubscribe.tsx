@@ -16,7 +16,7 @@ export default function UnsubscribeMember(props: any) {
           <div className='full-page'>
             <div className='flex flex-col justify-center items-center p-1'>
               <h1 className='header-2xl text-center mb-10'>You have successfully unsubscribed.</h1>
-              <img className='img-2xl' src={require('../../public/assets/banner.svg')} />
+              <img className='img-2xl' src={require('../../public/assets/banner.svg')} alt='you have successfully unsubscribed' />
             </div>
           </div>
         </>
@@ -30,7 +30,7 @@ export default function UnsubscribeMember(props: any) {
           <div className='full-page'>
             <div className='flex flex-col justify-center items-center p-1'>
               <h1 className='header-2xl text-center mb-10'>Unsubscribe failed. Please reload the page.</h1>
-              <img className='img-2xl' src={require('../../public/assets/servererror.svg')} />
+              <img className='img-2xl' src={require('../../public/assets/servererror.svg')} alt='server error' />
             </div>
           </div>
         </>

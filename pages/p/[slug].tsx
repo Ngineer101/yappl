@@ -24,7 +24,7 @@ export default function PostPage(props: any) {
                 <h2 className='post-subtitle'>{post.subtitle}</h2>
                 <div className='w-full flex items-center'>
                   <div className='mr-3'>
-                    <img className='h-10 w-10 rounded-full' src={post.authorImage} />
+                    <img className='h-10 w-10 rounded-full' src={post.authorImage} alt='author image' />
                   </div>
                   <div className='flex flex-col'>
                     <label>{post.authorName}</label>

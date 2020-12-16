@@ -203,7 +203,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             `
                 <hr />
                 <div style="display: flex; align-items: center;">
-                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" />
+                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" alt="author image" />
                   <span style="margin: auto 0px;">- ${post.authorName}</span>
                 </div>
                 <br />
