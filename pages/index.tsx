@@ -47,11 +47,11 @@ export default function Index(props: {
           publication ?
             <>
               <h1 className='text-center mb-2'>{publication.name}</h1>
-              <h2 className='text-center mb-10 max-w-5xl'>{publication.description}</h2>
+              <h2 className='text-center mb-8 max-w-5xl'>{publication.description}</h2>
               <img src={publication.imageUrl ? publication.imageUrl : require('../public/assets/banner.svg')} className='cover-image' />
               {
                 props.mailActive &&
-                <div className='max-w-2xl w-11/12 bg-cover bg-center mb-8 p-4'>
+                <div className='adjusted-width mb-8'>
                   <form method='POST' onSubmit={(evt) => {
                     evt.preventDefault();
                     if (email && emailRegex.test(email) && !name) {
@@ -80,18 +80,18 @@ export default function Index(props: {
                   }}>
                     <input name='sweet-field' className='sweet' placeholder='Sweet and sticky field' id='sweet' autoComplete='off' value={name}
                       type='sticky-field' onChange={(evt) => setName(evt.currentTarget.value)} />
-                    <div className='relative shadow-2xl bg-gray-200'>
-                      <input type='email' placeholder='Enter your email to subscribe' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
+                    <div className='flex shadow-2xl'>
+                      <input type='email' placeholder='Enter your email' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
                         value={email} className='input-subscribe' />
                       <button className='button-subscribe'
                         type='submit' disabled={loading}>
+                        <span className={loading ? 'opacity-30' : ''} style={{ paddingTop: '0.125rem' }}>Subscribe</span>
                         {
                           loading &&
-                          <svg className="animate-spin h-5 w-5 m-3 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-                        }
-                        {
-                          !loading &&
-                          <span>Subscribe</span>
+                          <div className='absolute'>
+                            <svg className="animate-spin h-6 w-6 m-1 rounded-full border-2"
+                              style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
+                          </div>
                         }
                       </button>
                     </div>
@@ -104,14 +104,16 @@ export default function Index(props: {
                   </form>
                 </div>
               }
-              <div className='flex flex-col justify-center items-center my-8 w-full'>
+              <hr className='my-8 border-t-2 border-black w-2/12' />
+              <div className='flex flex-col justify-center items-center my-4 w-full'>
                 {
                   (publication.posts || []).map((p, i) => <IssueCard post={p} key={i} />)
                 }
               </div>
+              <hr className='my-8 border-t-2 border-black w-2/12' />
               {
                 publication.posts && publication.posts.length > 0 &&
-                <div className='my-8'>
+                <div className='flex flex-col justify-center items-center mb-16 mt-8 w-full'>
                   <Link href='/issues'>
                     <a className='btn-default'>Past Issues</a>
                   </Link>

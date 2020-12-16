@@ -98,7 +98,7 @@ ul {
 }
 
 .input-subscribe {
-  @apply text-sm block w-full p-3 rounded-lg border border-gray-500;
+  @apply text-lg block w-full p-3 rounded-l-lg border border-gray-500;
 }
 
 .input-subscribe:focus {
@@ -106,7 +106,7 @@ ul {
 }
 
 .button-subscribe {
-  @apply text-sm absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 rounded-r-lg;
+  @apply text-lg relative justify-center flex items-center bg-black text-white px-4 rounded-r-lg;
 }
 
 .button-subscribe:hover {
@@ -190,7 +190,7 @@ ul {
 }
 
 .cover-image {
-  @apply w-full h-auto sm:w-full sm:h-auto md:w-auto md:h-64 lg:w-auto lg:h-64 xl:w-auto xl:h-64 2xl:w-auto 2xl:h-64;
+  @apply w-full h-auto sm:w-full sm:h-auto md:w-auto md:h-64 lg:w-auto lg:h-64 xl:w-auto xl:h-64 2xl:w-auto 2xl:h-64 mb-8;
 }
 
 .issue-card {
@@ -262,11 +262,11 @@ ul {
   }
 
   .input-subscribe {
-    @apply text-sm;
+    @apply text-lg;
   }
   
   .button-subscribe {
-    @apply text-sm;
+    @apply text-lg;
   }
 }
 
