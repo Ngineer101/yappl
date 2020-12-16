@@ -143,7 +143,7 @@ export const getStaticProps: GetStaticProps = async (): Promise<any> => {
     await connection.close();
     return {
       props: {},
-      revalidate: 60,
+      revalidate: 300,
     };
   } else {
     const postRepository = connection.getRepository(Post);
@@ -156,7 +156,7 @@ export const getStaticProps: GetStaticProps = async (): Promise<any> => {
         mailActive: mailSettings && mailSettings.provider !== MailProviders.NONE,
         publication: JSON.parse(JSON.stringify(publication))
       },
-      revalidate: 60,
+      revalidate: 300,
     }
   }
 }

@@ -71,12 +71,12 @@ export const getStaticProps: GetStaticProps = async (context: any): Promise<any>
       props: {
         post: JSON.parse(JSON.stringify(post))
       },
-      revalidate: 60,
+      revalidate: 300,
     };
   } else {
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: 300,
     }
   }
 }
