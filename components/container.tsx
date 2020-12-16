@@ -8,6 +8,7 @@ export default function PageContainer(props: {
   return (
     <div className='flex flex-col justify-between w-full'>
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=0" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Martel:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
       </Head>
