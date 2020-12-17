@@ -78,10 +78,12 @@ export default function Index(props: {
                       setErrorMessage('Email is not valid.');
                     }
                   }}>
+                    <label htmlFor='sweet' className='sweet'>Please fill in this field</label>
                     <input name='sweet-field' className='sweet' placeholder='Sweet and sticky field' id='sweet' autoComplete='off' value={name}
                       type='sticky-field' onChange={(evt) => setName(evt.currentTarget.value)} />
                     <div className='flex shadow-2xl'>
-                      <input type='email' placeholder='Enter your email' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
+                      <label htmlFor='member-email' className='sweet'>Enter your email</label>
+                      <input id='member-email' name='email' type='email' placeholder='Enter your email' autoFocus onChange={(evt) => setEmail(evt.currentTarget.value)}
                         value={email} className='input-subscribe' />
                       <button className='button-subscribe'
                         type='submit' disabled={loading}>
