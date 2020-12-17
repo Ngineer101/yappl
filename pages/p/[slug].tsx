@@ -1,20 +1,31 @@
 import { GetStaticPaths, GetStaticProps } from "next"
-import { Post } from "../../models";
+import { Post, Publication } from "../../models";
 import { dbConnection } from "../../repository";
 import Head from 'next/head';
 import Container from '../../components/container';
 import moment from 'moment';
-
-// export const config = { amp: 'hybrid' } TODO: Investigate why AMP build fails
 
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
   return (
     <Container>
       <div className='flex flex-col justify-center items-center p-4 w-full'>
-        {/* TODO: Add SEO data here */}
         <Head>
           <title>{post?.title}</title>
+          <meta charSet='UTF-8' />
+          <meta name='description' content={post?.subtitle} />
+
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:title" content={post?.title} />
+          <meta name="twitter:description" content={post?.subtitle} />
+          {/* <meta name="twitter:image" content={} /> TODO: Add twitter image when post has cover image */}
+
+          <meta property="og:title" content={post?.title} />
+          <meta property="og:site_name" content={props.publicationName} />
+          <meta property="og:description" content={post?.subtitle} />
+          {/* <meta property="og:image" content={} /> TODO: Add facebook image when post has cover image */}
+          <meta property="og:url" content={process.env.SITE_URL} />
+          <meta property="og:type" content="blog" />
         </Head>
         <div className='flex flex-col justify-center items-center adjusted-width'>
           {
@@ -65,10 +76,14 @@ export const getStaticProps: GetStaticProps = async (context: any): Promise<any>
   const connection = await dbConnection('post');
   const postRepository = connection.getRepository(Post);
   const post = await postRepository.findOne({ slug: slug });
+
+  const publicationRepository = connection.getRepository(Publication);
+  const publication = await publicationRepository.findOne();
   await connection.close();
   if (post) {
     return {
       props: {
+        publicationName: publication ? publication.name : '',
         post: JSON.parse(JSON.stringify(post))
       },
       revalidate: 300,
