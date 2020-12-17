@@ -12,53 +12,10 @@
 
 /* Your own custom utilities */
 
-@font-face {
-  font-family: 'Martel';
-  font-weight: 100;
-  src: url('../fonts/Martel-ExtraLight.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: lighter;
-  src: url('../fonts/Martel-Light.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: 400;
-  src: url('../fonts/Martel-Regular.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: 500;
-  src: url('../fonts/Martel-SemiBold.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: bold;
-  src: url('../fonts/Martel-Bold.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: 800;
-  src: url('../fonts/Martel-ExtraBold.ttf');
-}
-
-@font-face {
-  font-family: 'Martel';
-  font-weight: 900;
-  src: url('../fonts/Martel-Black.ttf');
-}
-
 body, #__next {
   width: 100%;
   min-height: 100vh;
   display: flex;
-  @apply bg-gray-100;
 }
 
 main {
@@ -132,6 +89,7 @@ ul {
 }
 
 .input-default {
+  outline: none;
   @apply w-full p-2 shadow-2xl border border-gray-500 rounded-lg;
 }
 
@@ -140,7 +98,7 @@ ul {
 }
 
 .input-subscribe {
-  @apply text-sm block w-full p-3 rounded-lg border border-gray-500;
+  @apply text-lg block w-full p-3 rounded-l-lg border border-gray-500;
 }
 
 .input-subscribe:focus {
@@ -148,7 +106,7 @@ ul {
 }
 
 .button-subscribe {
-  @apply text-sm absolute inset-y-0 right-0 flex items-center bg-black text-white px-4 rounded-r-lg;
+  @apply text-lg relative justify-center flex items-center bg-black text-white px-4 rounded-r-lg;
 }
 
 .button-subscribe:hover {
@@ -171,8 +129,12 @@ ul {
   @apply bg-gray-300 text-black;
 }
 
+.nav-item-border {
+  @apply border border-gray-300;
+}
+
 .btn-nav {
-  @apply px-2;
+  @apply px-2 pt-1 flex justify-center items-center text-gray-700 hover:text-black hover:bg-gray-300;
 }
 
 .adjusted-width {
@@ -227,8 +189,24 @@ ul {
   border-bottom-color: #e2e8f0 !important;
 }
 
+.cover-image {
+  @apply w-full h-auto sm:w-full sm:h-auto md:w-auto md:h-64 lg:w-auto lg:h-64 xl:w-auto xl:h-64 2xl:w-auto 2xl:h-64 mb-8;
+}
+
 .issue-card {
-  @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-2xl my-4 rounded-lg;
+  @apply flex flex-col justify-center items-center bg-white p-4 border border-gray-500 shadow-xl my-4 rounded-lg;
+}
+
+.post-title {
+  @apply mb-1 w-full;
+}
+
+.post-subtitle {
+  @apply text-base lg:text-lg xl:text-lg 2xl:text-lg mt-1 text-gray-500 w-full;
+}
+
+.post-container {
+  @apply font-medium leading-7;
 }
 
 .sweet {
@@ -284,11 +262,11 @@ ul {
   }
 
   .input-subscribe {
-    @apply text-sm;
+    @apply text-lg;
   }
   
   .button-subscribe {
-    @apply text-sm;
+    @apply text-lg;
   }
 }
 
@@ -375,7 +353,7 @@ ul {
   }
 
   .adjusted-width {
-    @apply w-1/2;
+    @apply w-3/5;
   }
 
   .form-adjusted-width {
@@ -427,7 +405,7 @@ ul {
   }
 
   .adjusted-width {
-    @apply w-2/5;
+    @apply w-1/2;
   }
 
   .form-adjusted-width {
@@ -449,4 +427,12 @@ ul {
   .button-subscribe {
     @apply text-xl;
   }
+}
+
+@media (min-width: 1600px) {
+
+  .adjusted-width {
+    @apply w-2/5;
+  }
+
 }

@@ -5,10 +5,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  CreateDateColumn
+  CreateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user';
 import { Post } from './post';
+import { MailSettings } from './mailSettings';
 
 @Entity('publications')
 export class Publication {
@@ -30,6 +33,13 @@ export class Publication {
 
   @ManyToOne(type => User, user => user.publications)
   user: User | undefined;
+
+  @Column({ type: "uuid", nullable: true })
+  mailSettingsId: string | undefined;
+
+  @OneToOne(type => MailSettings, { cascade: true, eager: false, nullable: true })
+  @JoinColumn({ name: 'mailSettingsId' })
+  mailSettings: MailSettings | undefined;
 
   @OneToMany(type => Post, post => post.publication, { cascade: true, eager: false })
   posts: Post[] | undefined;

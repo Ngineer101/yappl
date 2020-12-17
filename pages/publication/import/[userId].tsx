@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import axios from 'axios';
 import { useState } from "react";
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import { urlRegex } from '../../../constants/urlRegex'
+import SpinnerButton from "../../../components/spinnerButton";
 
 export default function ImportPublication() {
   const router = useRouter()
@@ -11,10 +12,10 @@ export default function ImportPublication() {
   const [errorMessage, setErrorMessage] = useState('');
   const { userId } = router.query
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
+          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} alt='post' />
           <h2 className='text-center'>Import existing publication</h2>
           <form onSubmit={
             (evt) => {
@@ -51,16 +52,12 @@ export default function ImportPublication() {
                 value={rssFeedUrl} onChange={(evt) => setRssFeedUrl(evt.currentTarget.value)} />
             </div>
 
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Import</span>
-              }
-            </button>
+            <SpinnerButton
+              text='Import'
+              type='submit'
+              loading={loading}
+              disabled={loading}
+              className='mt-4' />
 
             {
               errorMessage &&
@@ -71,6 +68,6 @@ export default function ImportPublication() {
           </form>
         </div>
       </div>
-    </Container>
+    </AdminContainer>
   );
 }

@@ -8,6 +8,7 @@ import {
   Session,
   Account,
   VerificationRequest,
+  MailSettings,
 } from '../models';
 
 export const dbConnection = (connectionName: string) => createConnection({
@@ -22,5 +23,6 @@ export const dbConnection = (connectionName: string) => createConnection({
     Session,
     Account,
     VerificationRequest,
+    MailSettings,
   ],
 });

@@ -3,12 +3,16 @@ import dynamic from 'next/dynamic';
 import { getSession, Session } from 'next-auth/client';
 import { Component } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState, convertToRaw, convertFromHTML, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { EditorState } from 'draft-js';
 import axios from 'axios';
-import Container from '../../../../components/container';
+import AdminContainer from '../../../../components/adminContainer';
 import { Post } from '../../../../models';
 import { dbConnection } from '../../../../repository';
+import Line from '../../../../components/editorComponents/line';
+import { convertToHTML, convertFromHTML } from 'draft-convert';
+import { HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
+import SpinnerButton from '../../../../components/spinnerButton';
+import moment from 'moment';
 
 const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
@@ -36,12 +40,43 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
 
   timeout: any = null;
 
+  convertContentToHtml = convertToHTML({
+    blockToHTML: (block) => {
+      if ((block as any).type === 'atomic') {
+        return <hr />
+      }
+    },
+    entityToHTML: (entity) => {
+      if (entity.type === HORIZONTAL_LINE) {
+        return <hr />
+      }
+    }
+  });
+
+  convertContentFromHtml = convertFromHTML({
+    htmlToBlock: (nodeName, node): any => {
+      if (nodeName === 'hr') {
+        return {
+          type: 'atomic',
+          data: {}
+        }
+      }
+    },
+    htmlToEntity: (nodeName, node, createEntity) => {
+      if (nodeName === 'hr') {
+        return createEntity(HORIZONTAL_LINE, 'IMMUTABLE', {});
+      }
+    }
+  });
+
   constructor(props: IEditPostProps) {
     super(props);
     this.savePost = this.savePost.bind(this);
     this.publishPost = this.publishPost.bind(this);
     this.savePostWithTimeout = this.savePostWithTimeout.bind(this);
     this.savePostWithKeyBinding = this.savePostWithKeyBinding.bind(this);
+    this.blockRenderer = this.blockRenderer.bind(this);
+    this.getSaveButtonText = this.getSaveButtonText.bind(this);
     this.state = {
       isSaving: false,
       savedSuccess: false,
@@ -58,9 +93,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   componentDidMount() {
     const post = this.props.post ? this.props.post : { htmlContent: '' };
     if (post.htmlContent) {
-      const blocksFromHtml = convertFromHTML(post.htmlContent as any);
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const contentState = this.convertContentFromHtml(post.htmlContent)
       this.setState({ editorState: EditorState.createWithContent(contentState) });
     }
 
@@ -96,7 +129,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     axios.post(`/api/publication/post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
       title: this.state.title,
       subTitle: this.state.subTitle,
-      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+      htmlContent: this.convertContentToHtml(this.state.editorState.getCurrentContent()),
     })
       .then(() => {
         this.setState({
@@ -122,7 +155,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     axios.post(`/api/publication/publish-post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
       title: this.state.title,
       subTitle: this.state.subTitle,
-      htmlContent: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+      htmlContent: this.convertContentToHtml(this.state.editorState.getCurrentContent()),
     }, { withCredentials: true })
       .then(response => {
         if (response.data) {
@@ -142,13 +175,46 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     this.timeout = setTimeout(() => this.savePost(), 1500);
   }
 
+  getSaveButtonText = (): string => {
+    if (this.state.savedSuccess) {
+      return `Last save ${moment(new Date()).format('LT').toLowerCase()}`;
+    }
+
+    if (this.state.savedFail) {
+      return 'Saving failed';
+    }
+
+    if (!this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail) {
+      return 'Save';
+    }
+
+    return 'Saving...';
+  }
+
+  blockRenderer = (block: any) => {
+    const { editorState } = this.state;
+    if (block.getType() === 'atomic') {
+      const contentState = editorState.getCurrentContent();
+      const entityKey = block.getEntityAt(0);
+      const entity = contentState.getEntity(entityKey);
+      if (entity && entity.getType() === HORIZONTAL_LINE) {
+        return {
+          component: () => <hr />,
+          editable: false,
+        };
+      }
+    }
+
+    return undefined;
+  }
+
   render() {
     return (
-      <Container protected>
+      <AdminContainer>
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
-            <div className='adjusted-width shadow-2xl rounded bg-white px-4 flex-1 h-full flex flex-col justify-between -mt-12'>
+            <div className='adjusted-width bg-white px-4 flex-1 h-full flex flex-col justify-between mt-4'>
               <div>
                 <h1 className='max-w-full'>
                   <input type='text' className='w-full' placeholder='Title' value={this.state.title} onChange={(evt) => this.setState({ title: evt.currentTarget.value })}
@@ -163,8 +229,24 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
               <div className='mb-4 flex-1'>
                 <Editor
                   toolbar={{
-                    options: ['inline', 'blockType', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
+                    options: ['inline', 'blockType', 'list', 'link', 'emoji', 'image'],
+                    inline: {
+                      options: ['bold', 'italic', 'underline'],
+                    },
+                    blockType: {
+                      options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                    },
+                    list: {
+                      options: ['unordered', 'ordered', 'indent', 'outdent'],
+                    },
+                    link: {
+                      showOpenOptionOnHover: false,
+                      defaultTargetOption: '_blank',
+                      options: ['link', 'unlink'],
+                    },
                   }}
+                  toolbarCustomButtons={[<Line />]}
+                  blockRendererFn={this.blockRenderer}
                   editorState={this.state.editorState}
                   toolbarClassName='default-toolbar'
                   onEditorStateChange={(contentState: any) => {
@@ -173,36 +255,31 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                 />
               </div>
 
-              <div className='mt-4 pb-4 bottom-0 sticky z-20 bg-white flex flex-col'>
-                <hr className='mt-0' />
+              <div className='mt-4 pb-2 bottom-0 sticky z-20 bg-white flex flex-col'>
+                <hr className='mt-0 mb-2' />
                 <div className='flex justify-between'>
-                  <button className='btn-default' disabled={this.state.savedSuccess} onClick={this.savePost}>
-                    {
-                      this.state.isSaving &&
-                      <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-                    }
-                    {
-                      this.state.savedSuccess &&
-                      <span>Saved at {new Date().getHours().toString()}:{new Date().getMinutes().toString()}</span>
-                    }
-                    {
-                      this.state.savedFail &&
-                      <span>Saving failed</span>
-                    }
-                    {
-                      !this.state.isSaving && !this.state.savedSuccess && !this.state.savedFail &&
-                      <span>Save</span>
-                    }
-                  </button>
+
+                  <SpinnerButton
+                    onClick={this.savePost}
+                    loading={this.state.isSaving}
+                    disabled={this.state.savedSuccess || this.state.isSaving}
+                    type='button'
+                    text={this.getSaveButtonText()} />
 
                   {
                     this.props.post && !this.props.post.isPublished &&
                     <>
                       {
                         !this.state.showPublishConfirmation &&
-                        <button className='btn-default' onClick={(evt) => this.setState({ showPublishConfirmation: true })}>
-                          Publish
-                        </button>
+                        <SpinnerButton
+                          loading={false}
+                          disabled={false}
+                          type='button'
+                          text='Publish'
+                          onClick={(evt) => {
+                            clearTimeout(this.timeout);
+                            this.setState({ showPublishConfirmation: true });
+                          }} />
                       }
                       {
                         this.state.showPublishConfirmation &&
@@ -235,7 +312,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
             </div>
           </div>
         }
-      </Container>
+      </AdminContainer>
     )
   }
 

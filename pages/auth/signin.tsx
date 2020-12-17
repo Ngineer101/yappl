@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { csrfToken } from 'next-auth/client';
 import Container from '../../components/container';
 import { useRouter } from 'next/router';
+import SpinnerButton from '../../components/spinnerButton';
 
 export default function SignIn(props: any) {
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,7 @@ export default function SignIn(props: any) {
     <Container>
       <div className='flex justify-center items-center'>
         <div className='card-col form-adjusted-width mt-24'>
-          <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} />
+          <img className='my-4 image-banner' src={require('../../public/assets/welcome.svg')} alt='welcome banner' />
 
           {
             firstSignIn &&
@@ -33,16 +34,12 @@ export default function SignIn(props: any) {
               <input className='input-default' name='password' type='password' placeholder='Password' />
             </div>
 
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Sign in</span>
-              }
-            </button>
+            <SpinnerButton
+              loading={loading}
+              disabled={loading}
+              type='submit'
+              text='Sign in'
+              className='mt-4' />
 
             {
               error &&

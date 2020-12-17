@@ -36,3 +36,4 @@ yarn-error.log*
 /.vscode
 
 defaultDb
+/public/assets/uploads/*

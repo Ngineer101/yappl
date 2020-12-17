@@ -41,13 +41,16 @@ export class Post {
   isPublished: boolean;
 
   @Column({ type: 'varchar', nullable: false })
-  source: 'rss' | 'scribeapp';
+  source: 'rss' | 'yappl';
 
   @Column({ type: 'uuid', nullable: false })
   publicationId: string;
 
   @ManyToOne(type => Publication, publication => publication.posts)
   publication: Publication | undefined;
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  publishedAt: Date | undefined;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt: Date | undefined;
@@ -64,7 +67,7 @@ export class Post {
     authorImage: string,
     publicationId: string,
     isPublished: boolean,
-    source: 'rss' | 'scribeapp',
+    source: 'rss' | 'yappl',
     createdDate: Date | undefined,
     updatedDate: Date | undefined
   ) {

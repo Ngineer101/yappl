@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Publication, Post, Member } from "../../../../models";
+import { Publication, Post, Member, MailSettings, MailProviders } from "../../../../models";
 import { dbConnection } from "../../../../repository";
 import { getSession } from "next-auth/client";
 import axios from 'axios';
@@ -7,6 +7,7 @@ import xmlParser from 'fast-xml-parser';
 import url from 'url';
 import crypto from 'crypto';
 import mailgun from 'mailgun-js';
+import { CryptoUtils } from '../../../../utils/crypto';
 
 export default async function GenericPublicationHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -73,6 +74,44 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
 
       break;
     }
+    case 'update-mail-settings': {
+      if (method === 'POST') {
+        const {
+          mailProvider,
+          mailgunApiKey,
+          mailgunDomain,
+          mailgunHost,
+        } = body;
+
+        const publicationRepository = connection.getRepository(Publication);
+        const mailSettingsRepository = connection.getRepository(MailSettings);
+        const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
+
+        let encryptedApiKey = '';
+        if (mailgunApiKey) {
+          encryptedApiKey = CryptoUtils.encryptKey(mailgunApiKey);
+        }
+
+        if (publication.mailSettingsId) {
+          const mailSettings = await mailSettingsRepository.findOneOrFail({ id: publication.mailSettingsId });
+          mailSettings.provider = mailProvider;
+          mailSettings.mailgunApiKey = encryptedApiKey;
+          mailSettings.mailgunDomain = mailgunDomain;
+          mailSettings.mailgunHost = mailgunHost;
+          await mailSettingsRepository.save(mailSettings);
+        } else {
+          let mailSettings = new MailSettings(mailProvider);
+          mailSettings.mailgunApiKey = encryptedApiKey;
+          mailSettings.mailgunDomain = mailgunDomain;
+          mailSettings.mailgunHost = mailgunHost;
+          await mailSettingsRepository.save(mailSettings);
+          publication.mailSettingsId = mailSettings.id;
+          await publicationRepository.save(publication);
+        }
+
+        res.status(204).end('Mail settings saved');
+      }
+    }
     case 'new-post': {
       if (method === 'GET') {
         const postRepository = connection.getRepository(Post);
@@ -87,7 +126,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           session.user.image,
           publicationId as string,
           false,
-          'scribeapp',
+          'yappl',
           new Date(),
           new Date()
         );
@@ -127,16 +166,24 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.isPublished = true;
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
+          post.publishedAt = new Date();
           post.authorName = session.user.name;
           post.authorImage = session.user.image;
           await postRepository.save(post);
+
+          const mailSettingsRepository = connection.getRepository(MailSettings);
+          const mailSettings = await mailSettingsRepository.findOne();
+          if (!mailSettings || mailSettings?.provider === MailProviders.NONE) {
+            res.status(200).json(post);
+            break;
+          }
 
           const membersRepository = connection.getRepository(Member);
           const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
           const emails = members.map(m => m.email);
 
           const publicationRepository = connection.getRepository(Publication);
-          const publication = await publicationRepository.findOne({ id: publicationId as string });
+          const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
           const htmlContent =
             `
             <div style="display: flex; justify-content: center;">
@@ -156,14 +203,14 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             `
                 <hr />
                 <div style="display: flex; align-items: center;">
-                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" />
+                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" alt="author image" />
                   <span style="margin: auto 0px;">- ${post.authorName}</span>
                 </div>
                 <br />
                 <br />
                 <div>
                   <small>
-                    You received this email because you are subscribed to ${publication ? publication.name : 'this publication'}.
+                    You received this email because you are subscribed to ${publication.name}.
                   </small>
                   <small>
                     <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
@@ -183,14 +230,14 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           });
 
           const data = {
-            from: `${publication ? publication.name : session.user.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `noreply@${process.env.MAILGUN_DOMAIN}`}>`, // TODO: Add publication email
+            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `hey@${mailSettings.mailgunDomain}`}>`, // TODO: Add publication email
             to: emails.join(', '),
             subject: post.title,
             html: htmlContent,
             'recipient-variables': JSON.stringify(recipientVariables),
           }
 
-          const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY || '', domain: process.env.MAILGUN_DOMAIN || '', host: process.env.MAILGUN_HOST });
+          const mg = mailgun({ apiKey: CryptoUtils.decryptKey(mailSettings.mailgunApiKey || ''), domain: mailSettings.mailgunDomain || '', host: mailSettings.mailgunHost });
           await mg.messages().send(data, (error, response) => {
             if (error) {
               console.log(`Error publishing post: ${JSON.stringify(error)}`);
@@ -216,7 +263,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
   await connection.close();
 }
 
-async function getPublication(source: 'rss' | 'scribeapp', rssFeedUrl: string, userId: string, defaultAuthorName: string): Promise<Publication | null> {
+async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userId: string, defaultAuthorName: string): Promise<Publication | null> {
   // TODO: Check source
   const response = await axios.get(rssFeedUrl);
   if (response.data) {

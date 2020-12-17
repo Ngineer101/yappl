@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 
 export default function SetupPublication() {
   const router = useRouter()
   const { userId } = router.query
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
+          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} alt='post' />
           <h2 className='text-center'>Set up your publication</h2>
 
           <div className='flex flex-row justify-center items-center'>
@@ -23,6 +23,6 @@ export default function SetupPublication() {
           </div>
         </div>
       </div>
-    </Container>
+    </AdminContainer>
   )
 }

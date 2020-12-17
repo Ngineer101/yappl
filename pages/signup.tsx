@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from 'axios';
 import Container from '../components/container';
 import { csrfToken } from "next-auth/client";
+import SpinnerButton from "../components/spinnerButton";
 
 export default function SignUp(props: any) {
   const [image, setImage] = useState('');
@@ -13,10 +14,10 @@ export default function SignUp(props: any) {
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
-    <Container hideNav>
+    <Container>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} />
+          <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} alt='welcome banner' />
           <h2 className='text-center'>Sign up to create your publication</h2>
           <form onSubmit={
             (evt) => {
@@ -73,6 +74,7 @@ export default function SignUp(props: any) {
                 onChange={(evt) => setEmail(evt.currentTarget.value)} />
             </div>
 
+            {/* TODO: add functionality to upload image */}
             <div className='my-4'>
               <label htmlFor='image'>Gravatar URL</label>
               <input className='input-default' name='image' type='text' value={image} placeholder='Gravatar URL'
@@ -91,16 +93,12 @@ export default function SignUp(props: any) {
                 value={passwordConfirmation} onChange={(evt) => setPasswordConfirmation(evt.currentTarget.value)} />
             </div>
 
-            <button className='flex justify-center btn-default mt-4' type='submit' disabled={loading}>
-              {
-                loading &&
-                <svg className="animate-spin h-5 w-5 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
-              }
-              {
-                !loading &&
-                <span>Sign up</span>
-              }
-            </button>
+            <SpinnerButton
+              text='Sign up'
+              type='submit'
+              loading={loading}
+              disabled={loading}
+              className='mt-4' />
 
             {
               errorMessage &&

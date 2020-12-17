@@ -1,11 +1,11 @@
 import axios from 'axios';
-import Container from '../../../components/container';
+import AdminContainer from '../../../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 
-export default function PublicationPage(props: any) {
+export default function ImportMembers(props: any) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -43,10 +43,10 @@ export default function PublicationPage(props: any) {
   } = useDropzone({ onDrop, maxFiles: 1, maxSize: 20000000 });
 
   return (
-    <Container hideNav protected>
+    <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} />
+          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} alt='post' />
           <h2 className='text-center'>Import members using a CSV file</h2>
           <div className='my-4 relative'>
             {
@@ -86,8 +86,7 @@ export default function PublicationPage(props: any) {
           }
         </div>
       </div>
-
-    </Container>
+    </AdminContainer>
   );
 }
 
