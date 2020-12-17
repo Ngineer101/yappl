@@ -155,7 +155,7 @@ export const getStaticProps: GetStaticProps = async (): Promise<any> => {
 
     return {
       props: {
-        mailActive: mailSettings && mailSettings.provider !== MailProviders.NONE,
+        mailActive: mailSettings && mailSettings.provider !== MailProviders.NONE ? true : false,
         publication: JSON.parse(JSON.stringify(publication))
       },
       revalidate: 300,
