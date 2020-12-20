@@ -1,10 +1,11 @@
 import { AtomicBlockUtils } from "draft-js";
 import { HORIZONTAL_LINE } from "../../constants/editorEntityType";
+import { INewEditorComponentProps } from "./INewEditorComponentProps";
 
 export default function Line({
   editorState,
   onChange
-}: any) {
+}: INewEditorComponentProps) {
   return (
     <div className='flex flex-col justify-center items-center'
       onClick={() => {
