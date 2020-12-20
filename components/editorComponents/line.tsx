@@ -5,7 +5,7 @@ import { INewEditorComponentProps } from "./INewEditorComponentProps";
 export default function Line({
   editorState,
   onChange
-}: INewEditorComponentProps) {
+}: any) {
   return (
     <div className='flex flex-col justify-center items-center'
       onClick={() => {

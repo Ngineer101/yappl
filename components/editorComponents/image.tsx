@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { CUSTOM_FIGURE } from "../../constants/editorEntityType";
 import { INewEditorComponentProps } from "./INewEditorComponentProps";
 
-export default function WysiwygImage(props: INewEditorComponentProps) {
+export default function WysiwygImage(props: any) {
   const [expanded, setExpanded] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [imageCaption, setImageCaption] = useState('');
