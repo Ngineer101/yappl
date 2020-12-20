@@ -232,18 +232,28 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                     options: ['inline', 'blockType', 'list', 'link', 'emoji', 'image'],
                     inline: {
                       options: ['bold', 'italic', 'underline'],
+                      bold: { icon: require('../../../../public/assets/icons/format_bold.svg') },
+                      italic: { icon: require('../../../../public/assets/icons/format_italic.svg') },
+                      underline: { icon: require('../../../../public/assets/icons/format_underlined.svg') },
                     },
                     blockType: {
                       options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
                     },
                     list: {
                       options: ['unordered', 'ordered', 'indent', 'outdent'],
+                      unordered: { icon: require('../../../../public/assets/icons/format_list_bulleted.svg') },
+                      ordered: { icon: require('../../../../public/assets/icons/format_list_numbered.svg') },
+                      indent: { icon: require('../../../../public/assets/icons/format_indent_increase.svg') },
+                      outdent: { icon: require('../../../../public/assets/icons/format_indent_decrease.svg') },
                     },
                     link: {
                       showOpenOptionOnHover: false,
                       defaultTargetOption: '_blank',
                       options: ['link', 'unlink'],
+                      link: { icon: require('../../../../public/assets/icons/insert_link.svg') },
+                      unlink: { icon: require('../../../../public/assets/icons/link_off.svg') },
                     },
+                    emoji: { icon: require('../../../../public/assets/icons/tag_faces.svg') },
                   }}
                   toolbarCustomButtons={[<Line />]}
                   blockRendererFn={this.blockRenderer}
