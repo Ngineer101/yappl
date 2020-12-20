@@ -9,8 +9,9 @@ import AdminContainer from '../../../../components/adminContainer';
 import { Post } from '../../../../models';
 import { dbConnection } from '../../../../repository';
 import Line from '../../../../components/editorComponents/line';
+import WysiwygImage from '../../../../components/editorComponents/image';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
-import { HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
+import { CUSTOM_FIGURE, HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
 import SpinnerButton from '../../../../components/spinnerButton';
 import moment from 'moment';
 
@@ -41,14 +42,12 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   timeout: any = null;
 
   convertContentToHtml = convertToHTML({
-    blockToHTML: (block) => {
-      if ((block as any).type === 'atomic') {
-        return <hr />
-      }
-    },
     entityToHTML: (entity) => {
       if (entity.type === HORIZONTAL_LINE) {
         return <hr />
+      }
+      if (entity.type === CUSTOM_FIGURE) {
+        return <img src={entity.data.imageUrl} alt={entity.data.imageCaption} style={{ width: '100%' }} />
       }
     }
   });
@@ -61,10 +60,24 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
           data: {}
         }
       }
+      if (nodeName === 'figure') {
+        return {
+          type: 'atomic',
+          data: {}
+        }
+      }
     },
     htmlToEntity: (nodeName, node, createEntity) => {
       if (nodeName === 'hr') {
         return createEntity(HORIZONTAL_LINE, 'IMMUTABLE', {});
+      }
+      if (nodeName === 'figure') {
+        const imageUrl = node.children.item(0)?.src;
+        const imageCaption = node.children.item(0)?.alt;
+        return createEntity(CUSTOM_FIGURE, 'IMMUTABLE', {
+          imageUrl,
+          imageCaption,
+        });
       }
     }
   });
@@ -203,6 +216,12 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
           editable: false,
         };
       }
+      if (entity && entity.getType() === CUSTOM_FIGURE) {
+        return {
+          component: () => <img src={entity.getData().imageUrl} alt={entity.getData().imageCaption} style={{ width: '100%' }} />,
+          editable: false,
+        };
+      }
     }
 
     return undefined;
@@ -229,7 +248,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
               <div className='mb-4 flex-1'>
                 <Editor
                   toolbar={{
-                    options: ['inline', 'blockType', 'list', 'link', 'emoji', 'image'],
+                    options: ['inline', 'blockType', 'list', 'link', 'emoji'],
                     inline: {
                       options: ['bold', 'italic', 'underline'],
                       bold: { icon: require('../../../../public/assets/icons/format_bold.svg') },
@@ -255,7 +274,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                     },
                     emoji: { icon: require('../../../../public/assets/icons/tag_faces.svg') },
                   }}
-                  toolbarCustomButtons={[<Line />]}
+                  toolbarCustomButtons={[<WysiwygImage />, <Line />]}
                   blockRendererFn={this.blockRenderer}
                   editorState={this.state.editorState}
                   toolbarClassName='default-toolbar'
