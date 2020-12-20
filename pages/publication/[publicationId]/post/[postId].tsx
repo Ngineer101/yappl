@@ -72,8 +72,8 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
         return createEntity(HORIZONTAL_LINE, 'IMMUTABLE', {});
       }
       if (nodeName === 'figure') {
-        const imageUrl = node.children.item(0)?.src;
-        const imageCaption = node.children.item(0)?.alt;
+        const imageUrl = (node.children.item(0) as HTMLImageElement)?.src;
+        const imageCaption = (node.children.item(0) as HTMLImageElement)?.alt;
         return createEntity(CUSTOM_FIGURE, 'IMMUTABLE', {
           imageUrl,
           imageCaption,
