@@ -14,6 +14,7 @@ import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { CUSTOM_FIGURE, HORIZONTAL_LINE } from '../../../../constants/editorEntityType';
 import SpinnerButton from '../../../../components/spinnerButton';
 import moment from 'moment';
+import Head from 'next/head';
 
 const Editor: any = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor as any),
   { ssr: false });
@@ -235,6 +236,9 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   render() {
     return (
       <AdminContainer>
+        <Head>
+          <title>Edit post</title>
+        </Head>
         {
           this.props.session &&
           <div className='flex flex-col justify-center items-center h-full'>
