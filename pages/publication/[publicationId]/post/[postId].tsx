@@ -47,6 +47,9 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       if ((block as any).type === 'code') {
         return <pre />
       }
+      if ((block as any).type === 'code-block') {
+        return <pre />
+      }
     },
     entityToHTML: (entity) => {
       if (entity.type === HORIZONTAL_LINE) {

@@ -83,6 +83,14 @@ pre {
   @apply bg-gray-200 p-4 my-4;
 }
 
+blockquote {
+  @apply my-4 p-4 bg-gray-100 border-solid border-l-4 border-gray-300;
+}
+
+blockquote p {
+  display: inline;
+}
+
 ol,
 ul {
   @apply ml-4;
