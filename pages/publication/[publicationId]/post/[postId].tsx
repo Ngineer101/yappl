@@ -42,6 +42,11 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   timeout: any = null;
 
   convertContentToHtml = convertToHTML({
+    blockToHTML: (block) => {
+      if ((block as any).type === 'code') {
+        return <pre />
+      }
+    },
     entityToHTML: (entity) => {
       if (entity.type === HORIZONTAL_LINE) {
         return <hr />

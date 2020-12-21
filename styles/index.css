@@ -76,11 +76,11 @@ a {
 }
 
 code {
-  @apply my-4;
+  @apply bg-gray-200 my-4;
 }
 
 pre {
-  @apply bg-gray-200 p-4;
+  @apply bg-gray-200 p-4 my-4;
 }
 
 ol,

@@ -4,7 +4,6 @@ module.exports = {
     fontFamily: {
       sans: ['Martel', 'sans-serif'],
       serif: ['Martel', 'sans-serif'],
-      mono: ['Martel', 'sans-serif'],
       display: ['Martel', 'sans-serif'],
       body: ['Martel', 'sans-serif'],
     },
