@@ -53,11 +53,19 @@ export const getStaticProps: GetStaticProps = async (): Promise<any> => {
     .orderBy("post.createdAt", "DESC")
     .getMany();
   await connection.close();
-  return {
-    props: {
-      publication: JSON.parse(JSON.stringify(publication)),
-      posts: JSON.parse(JSON.stringify(posts))
-    },
-    revalidate: 300,
-  };
+  if (publication) {
+    return {
+      props: {
+        publication: JSON.parse(JSON.stringify(publication)),
+        posts: JSON.parse(JSON.stringify(posts))
+      },
+      revalidate: 300,
+    };
+  }
+  else {
+    return {
+      props: {},
+      revalidate: 300,
+    }
+  }
 }

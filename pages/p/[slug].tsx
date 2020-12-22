@@ -66,7 +66,7 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<any> => {
   const posts = await postRepository.find();
   const paths = posts.map(p => { return { params: { slug: p.slug } } });
   return {
-    paths,
+    paths: paths || [],
     fallback: true,
   };
 }
