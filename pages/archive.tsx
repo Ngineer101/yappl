@@ -5,13 +5,13 @@ import { dbConnection } from "../repository";
 import Head from 'next/head';
 import IssueCard from "../components/issueCard";
 
-export default function Issues(props: any) {
+export default function Archive(props: any) {
   const posts: Post[] = props.posts || [];
   const publication: Publication | undefined = props.publication;
   return (
     <Container>
       <Head>
-        <title>Past Issues</title>
+        <title>Archive</title>
         <meta charSet="UTF-8" />
         <meta name="description" content={publication?.description} />
 
@@ -28,7 +28,7 @@ export default function Issues(props: any) {
         <meta property="og:type" content="blog" />
       </Head>
       <div className='flex flex-col justify-center items-center px-1'>
-        <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-2 mt-8'>Past Issues</h1>
+        <h1 className='text-3xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-5xl text-center mb-2 mt-8'>Archive</h1>
         {
           posts.length > 0 ?
             posts.map((p, i) => <IssueCard post={p} key={i} />)
