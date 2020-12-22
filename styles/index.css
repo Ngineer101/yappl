@@ -129,6 +129,10 @@ ul {
   @apply bg-gray-800;
 }
 
+.btn-default-text {
+  padding-top: 0.125rem;
+}
+
 .nav-item {
   @apply p-1 whitespace-nowrap rounded-lg text-sm text-gray-700;
 }

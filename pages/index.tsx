@@ -117,7 +117,9 @@ export default function Index(props: {
                 publication.posts && publication.posts.length > 0 &&
                 <div className='flex flex-col justify-center items-center mb-16 mt-8 w-full'>
                   <Link href='/archive'>
-                    <a className='btn-default'>Archive</a>
+                    <a className='btn-default flex justify-center'>
+                      <span className='btn-default-text'>Archive</span>
+                    </a>
                   </Link>
                 </div>
               }
