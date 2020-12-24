@@ -122,6 +122,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           randomId,
           randomId,
           '',
+          '',
           session.user.name,
           session.user.image,
           publicationId as string,
@@ -145,6 +146,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           post.title = body.title;
           post.subtitle = body.subTitle;
           post.htmlContent = body.htmlContent;
+          post.rawContent = body.rawContent;
           await postRepository.save(post);
         }
 
@@ -285,6 +287,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
               i.guid,
               slug,
               i["content:encoded"],
+              '',
               i["dc:creator"] ? i["dc:creator"] : defaultAuthorName,
               "",
               '',
@@ -303,6 +306,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
             item.guid,
             slug,
             item['content:encoded'],
+            '',
             item["dc:creator"] ? item["dc:creator"] : defaultAuthorName,
             "",
             '',

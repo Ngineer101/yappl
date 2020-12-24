@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { getSession, Session } from 'next-auth/client';
 import { Component } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import axios from 'axios';
 import AdminContainer from '../../../../components/adminContainer';
 import { Post } from '../../../../models';
@@ -113,8 +113,11 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
   }
 
   componentDidMount() {
-    const post = this.props.post ? this.props.post : { htmlContent: '' };
-    if (post.htmlContent) {
+    const post = this.props.post ? this.props.post : { htmlContent: '', rawContent: '', };
+    if (post.rawContent) {
+      const contentState = convertFromRaw(JSON.parse(post.rawContent));
+      this.setState({ editorState: EditorState.createWithContent(contentState) });
+    } else if (post.htmlContent) {
       const contentState = this.convertContentFromHtml(post.htmlContent)
       this.setState({ editorState: EditorState.createWithContent(contentState) });
     }
@@ -148,10 +151,13 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       savedSuccess: false,
       savedFail: false
     });
+
+    const rawContent = convertToRaw(this.state.editorState.getCurrentContent());
     axios.post(`/api/publication/post?publicationId=${this.props.publicationId}&postId=${this.props.postId}`, {
       title: this.state.title,
       subTitle: this.state.subTitle,
       htmlContent: this.convertContentToHtml(this.state.editorState.getCurrentContent()),
+      rawContent: JSON.stringify(rawContent),
     })
       .then(() => {
         this.setState({
