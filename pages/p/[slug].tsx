@@ -49,7 +49,7 @@ export default function PostPage(props: any) {
                   </div>
                 </div>
                 <hr className='w-full' />
-                <div className='w-full post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></div>
+                <article className='w-full post-container' dangerouslySetInnerHTML={{ __html: post.htmlContent }}></article>
               </>
               :
               <div></div>
