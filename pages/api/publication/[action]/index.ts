@@ -140,7 +140,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     }
     case 'post': {
       const postRepository = connection.getRepository(Post);
-      const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
+      const post = await postRepository.findOne({ id: postId as string });
       if (method === 'POST') {
         if (post) {
           post.title = body.title;

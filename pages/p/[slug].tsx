@@ -8,7 +8,7 @@ import moment from 'moment';
 export default function PostPage(props: any) {
   const post: Post | undefined = props.post;
   return (
-    <Container>
+    <Container publicationName={props.publicationName}>
       <div className='flex flex-col justify-center items-center p-4 w-full'>
         <Head>
           <title>{post?.title}</title>
