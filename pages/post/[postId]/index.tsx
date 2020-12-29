@@ -14,7 +14,8 @@ import 'draftail/dist/draftail.css';
 import { DraftailEditor, INLINE_STYLE, BLOCK_TYPE, ENTITY_TYPE } from 'draftail';
 import { convertToHTML } from "draft-convert";
 import ImageSource from "../../../components/draftailEntities/imageSource";
-import ImageBlock from "../../../components/draftailEntities/ImageBlock";
+import ImageBlock from "../../../components/draftailEntities/imageBlock";
+import LinkSource from "../../../components/draftailEntities/linkSource";
 
 interface IEditPostProps {
   post: Post | null;
@@ -53,7 +54,7 @@ const exporterConfig = {
 
   entityToHTML: (entity: any, originalText: string) => {
     if (entity.type === ENTITY_TYPE.LINK) {
-      return <a href={entity.data.url}>{originalText}</a>
+      return <a href={entity.data.href}>{originalText}</a>
     }
 
     if (entity.type === ENTITY_TYPE.IMAGE) {
@@ -221,6 +222,15 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                   { type: INLINE_STYLE.UNDERLINE },
                 ]}
                 entityTypes={[
+                  {
+                    type: ENTITY_TYPE.LINK,
+                    description: 'Insert link',
+                    attributes: ['href'],
+                    whitelist: {
+                      href: "^(?![#/])",
+                    },
+                    source: LinkSource,
+                  },
                   {
                     type: ENTITY_TYPE.IMAGE,
                     description: 'Insert image',
