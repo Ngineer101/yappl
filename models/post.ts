@@ -46,6 +46,9 @@ export class Post {
   @Column({ type: 'varchar', nullable: false })
   source: 'rss' | 'yappl';
 
+  @Column({ type: 'varchar', nullable: true })
+  tileImageUrl: string | undefined;
+
   @Column({ type: 'uuid', nullable: false })
   publicationId: string;
 
