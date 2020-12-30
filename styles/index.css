@@ -96,6 +96,30 @@ ul {
   @apply ml-4;
 }
 
+th {
+  @apply text-left;
+}
+
+tr {
+  @apply border-t-2 border-b-2 px-2 h-16 hover:bg-gray-50;
+}
+
+.btn-success {
+  @apply bg-green-700 text-white px-4 py-2 rounded-lg;
+}
+
+.btn-success:hover {
+  @apply bg-green-500;
+}
+
+.btn-danger {
+  @apply bg-red-700 text-white px-4 py-2 rounded-lg;
+}
+
+.btn-danger:hover {
+  @apply bg-red-500;
+}
+
 .input-default {
   outline: none;
   @apply w-full p-2 shadow-2xl border border-gray-500 rounded-lg;
@@ -252,6 +276,19 @@ ul {
   height: 0;
   width: 0;
   z-index: -1;
+}
+
+.generic-modal {
+  @apply bg-white p-4 rounded-lg border-2 border-gray-400 outline-none shadow-2xl;
+}
+
+.overlay-generic-modal {
+  @apply fixed top-0 left-0 w-full h-full flex justify-center items-center;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.portal-generic-modal {
+  z-index: 50;
 }
 
 @media (min-width: 640px) {
