@@ -158,19 +158,16 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
     case 'publish-post': {
       if (method === 'POST') {
         const postRepository = connection.getRepository(Post);
-        const post = await postRepository.findOne({ id: postId as string, publicationId: publicationId as string });
+        const post = await postRepository.findOne({ id: postId as string });
         if (post && !post.isPublished) {
-          // TODO: Fix bug to save post first before publishing
           const slug = getSlug(post.title, post.slug);
-          post.title = body.title;
-          post.subtitle = body.subTitle;
-          post.htmlContent = body.htmlContent;
           post.isPublished = true;
           post.canonicalUrl = `${process.env.SITE_URL}/p/${slug}`;
           post.slug = slug;
           post.publishedAt = new Date();
-          post.authorName = session.user.name;
-          post.authorImage = session.user.image;
+          post.tileImageUrl = body.tileImageUrl;
+          post.authorName = session.user.name || '';
+          post.authorImage = session.user.image || '';
           await postRepository.save(post);
 
           const mailSettingsRepository = connection.getRepository(MailSettings);
@@ -180,77 +177,18 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
             break;
           }
 
-          const membersRepository = connection.getRepository(Member);
-          const members = await membersRepository.find({ emailVerified: true, publicationId: publicationId as string });
-          const emails = members.map(m => m.email);
+          if (body.sendEmailToMembers) {
+            const membersRepository = connection.getRepository(Member);
+            const members = await membersRepository.find({ emailVerified: true, publicationId: post.publicationId });
 
-          const publicationRepository = connection.getRepository(Publication);
-          const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
-          const htmlContent =
-            `
-            <div style="display: flex; justify-content: center;">
-              <div style="max-width: 600px;">
-                <div>
-                  <h1>${post.title}</h1>
-                  <label>${post.subtitle}</label>
-                </div>
-                <div style="text-align: right;">
-                  <small>
-                    <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
-                  </small>
-                </div>
-                <br />
-            ` +
-            post.htmlContent +
-            `
-                <hr />
-                <div style="display: flex; align-items: center;">
-                  <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" alt="author image" />
-                  <span style="margin: auto 0px;">- ${post.authorName}</span>
-                </div>
-                <br />
-                <br />
-                <div>
-                  <small>
-                    You received this email because you are subscribed to ${publication.name}.
-                  </small>
-                  <small>
-                    <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
-                  </small>
-                </div>
-              </div>
-            </div>`;
-
-          var recipientVariables: any = {};
-          members.forEach(m => {
-            const buff = Buffer.from(m.email)
-            const encodedEmail = buff.toString('base64');
-
-            recipientVariables[m.email] = {
-              unsubscribe_url: `${process.env.SITE_URL}/member/unsubscribe?e=${encodedEmail}&token=${m.verificationToken}`
-            }
-          });
-
-          const data = {
-            from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `hey@${mailSettings.mailgunDomain}`}>`, // TODO: Add publication email
-            to: emails.join(', '),
-            subject: post.title,
-            html: htmlContent,
-            'recipient-variables': JSON.stringify(recipientVariables),
+            const publicationRepository = connection.getRepository(Publication);
+            const publication = await publicationRepository.findOneOrFail({ id: post.publicationId });
+            await sendEmailToMembers(post, publication, members, mailSettings);
           }
 
-          const mg = mailgun({ apiKey: CryptoUtils.decryptKey(mailSettings.mailgunApiKey || ''), domain: mailSettings.mailgunDomain || '', host: mailSettings.mailgunHost });
-          await mg.messages().send(data, (error, response) => {
-            if (error) {
-              console.log(`Error publishing post: ${JSON.stringify(error)}`);
-            } else {
-              console.log(`Email response: ${JSON.stringify(response)}`);
-            }
-          });
-
-          res.status(200).json(post)
+          res.status(200).json(post);
         } else {
-          res.status(400).end('An error occurred while sending the post to members')
+          res.status(400).end('This post is already published.')
         }
       }
 
@@ -337,6 +275,71 @@ function getSlug(title: string, existingSlug: string): string {
     const randomId = crypto.randomBytes(8).toString('hex');
     return `${titleWithoutSpaces}-${randomId}`;
   }
+}
+
+async function sendEmailToMembers(post: Post, publication: Publication, members: Member[], mailSettings: MailSettings) {
+  const emails = members.map(m => m.email);
+  const htmlContent =
+    `
+    <div style="display: flex; justify-content: center;">
+      <div style="max-width: 600px;">
+        <div>
+          <h1>${post.title}</h1>
+          <label>${post.subtitle}</label>
+        </div>
+        <div style="text-align: right;">
+          <small>
+            <a href="${post.canonicalUrl}" target="_blank">View post online &#8594;</a>
+          </small>
+        </div>
+        <br />
+    ` +
+    post.htmlContent +
+    `
+        <hr />
+        <div style="display: flex; align-items: center;">
+          <img src="${post.authorImage}" style="border-radius: 50%; height: 50px; width: 50px; margin-right: 10px;" alt="author image" />
+          <span style="margin: auto 0px;">- ${post.authorName}</span>
+        </div>
+        <br />
+        <br />
+        <div>
+          <small>
+            You received this email because you are subscribed to ${publication.name}.
+          </small>
+          <small>
+            <a href="%recipient.unsubscribe_url%" target="_blank">Click here to unsubscribe</a>
+          </small>
+        </div>
+      </div>
+    </div>`;
+
+  var recipientVariables: any = {};
+  members.forEach(m => {
+    const buff = Buffer.from(m.email)
+    const encodedEmail = buff.toString('base64');
+
+    recipientVariables[m.email] = {
+      unsubscribe_url: `${process.env.SITE_URL}/member/unsubscribe?e=${encodedEmail}&token=${m.verificationToken}`
+    }
+  });
+
+  const data = {
+    from: `${publication.name} <${process.env.DEFAULT_EMAIL ? process.env.DEFAULT_EMAIL : `hey@${mailSettings.mailgunDomain}`}>`, // TODO: Add publication email
+    to: emails.join(', '),
+    subject: post.title,
+    html: htmlContent,
+    'recipient-variables': JSON.stringify(recipientVariables),
+  }
+
+  const mg = mailgun({ apiKey: CryptoUtils.decryptKey(mailSettings.mailgunApiKey || ''), domain: mailSettings.mailgunDomain || '', host: mailSettings.mailgunHost });
+  await mg.messages().send(data, (error, response) => {
+    if (error) {
+      console.log(`Error publishing post: ${JSON.stringify(error)}`);
+    } else {
+      console.log(`Email response: ${JSON.stringify(response)}`);
+    }
+  });
 }
 
 interface IRssFeed {

@@ -16,16 +16,19 @@ import { convertToHTML } from "draft-convert";
 import ImageSource from "../../../components/draftailEntities/imageSource";
 import ImageBlock from "../../../components/draftailEntities/imageBlock";
 import LinkSource from "../../../components/draftailEntities/linkSource";
+import { Router, withRouter } from "next/router";
 
 interface IEditPostProps {
   post: Post | null;
   postId: string;
+  router: Router;
 }
 
 interface IEditPostState {
   isSaving: boolean;
   savedSuccess: boolean;
   savedFail: boolean;
+  savingBeforePublishing: boolean;
   title: string;
   subTitle: string;
   editorState: EditorState;
@@ -69,7 +72,7 @@ const exporterConfig = {
   },
 }
 
-export default class EditPost extends Component<IEditPostProps, IEditPostState> {
+class EditPost extends Component<IEditPostProps, IEditPostState> {
 
   timeout: any = null;
 
@@ -83,6 +86,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
       isSaving: false,
       savedSuccess: false,
       savedFail: false,
+      savingBeforePublishing: false,
       title: props.post ? props.post.title : '',
       subTitle: props.post ? props.post.subtitle : '',
       editorState: EditorState.createEmpty(),
@@ -199,6 +203,7 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
 
             <div className='mb-4 flex-1'>
               <DraftailEditor
+                placeholder='Write something...'
                 editorState={this.state.editorState}
                 enableHorizontalRule={true}
                 stripPastedStyles={false}
@@ -260,13 +265,27 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
                 {
                   this.props.post && !this.props.post.isPublished &&
                   <SpinnerButton
-                    loading={false}
-                    disabled={false}
+                    loading={this.state.savingBeforePublishing}
+                    disabled={this.state.savingBeforePublishing}
                     type='button'
                     text='Publish'
                     onClick={(evt) => {
                       clearTimeout(this.timeout);
-                      // TODO: Add publish flow
+                      const rawContent = convertToRaw(this.state.editorState.getCurrentContent());
+                      const htmlContent = convertToHTML(exporterConfig)(this.state.editorState.getCurrentContent());
+                      this.setState({ savingBeforePublishing: true });
+                      axios.post(`/api/publication/post?postId=${this.props.postId}`, {
+                        title: this.state.title,
+                        subTitle: this.state.subTitle,
+                        rawContent: JSON.stringify(rawContent),
+                        htmlContent: htmlContent,
+                      })
+                        .then(() => {
+                          this.props.router.push(`/post/${this.props.postId}/publish`);
+                        })
+                        .catch(() => {
+                          // TODO: Handle error - add toast message
+                        });
                     }} />
                 }
                 {
@@ -281,6 +300,8 @@ export default class EditPost extends Component<IEditPostProps, IEditPostState> 
     );
   }
 }
+
+export default withRouter(EditPost);
 
 export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
   const { postId } = context.params;
