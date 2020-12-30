@@ -9,6 +9,15 @@ import Tooltip from "../components/tooltip";
 import Modal from 'react-modal';
 import { useState } from "react";
 import axios from "axios";
+import { toast, ToastContainer, ToastOptions } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.min.css';
+
+const toastConfig: ToastOptions = {
+  position: 'top-right',
+  autoClose: 3000,
+  closeOnClick: true,
+  pauseOnHover: true,
+};
 
 export default function Members(props: {
   members: Member[],
@@ -108,16 +117,23 @@ export default function Members(props: {
                   .then(() => {
                     const memberIndex = members.indexOf(memberToDelete as any);
                     if (memberIndex > -1) {
+                      toast.success(`Member '${memberToDelete?.email}' deleted successfully.`, toastConfig);
                       members.splice(memberIndex, 1);
                       setMembers(members);
                       setDeleteMemberLoading(false);
                       setMemberToDelete(undefined);
                       setShowDeleteModal(false);
-                      // TODO: Show confirmation in toast
                     }
                   })
                   .catch(error => {
-                    // TODO: Show error in toast
+                    setDeleteMemberLoading(false);
+                    setMemberToDelete(undefined);
+                    setShowDeleteModal(false);
+                    if (error.response.data) {
+                      toast.error(error.response.data, toastConfig);
+                    } else {
+                      toast.error('An error occurred while deleting member.', toastConfig);
+                    }
                   })
               }}>
               {
@@ -160,13 +176,20 @@ export default function Members(props: {
                 axios.get(`/api/member/resend-verification-mail?memberId=${memberToResendEmail?.id}`,
                   { withCredentials: true })
                   .then(() => {
+                    toast.success(`Verification email sent to ${memberToResendEmail?.email}`, toastConfig);
                     setResendEmailLoading(false);
                     setMemberToResendEmail(undefined);
                     setShowResendModal(false);
-                    // TODO: Show confirmation
                   })
                   .catch(error => {
-                    // TODO: Show error (toast)
+                    setResendEmailLoading(false);
+                    setMemberToResendEmail(undefined);
+                    setShowResendModal(false);
+                    if (error.response.data) {
+                      toast.error(error.response.data, toastConfig);
+                    } else {
+                      toast.error('An error occurred while sending verification mail.', toastConfig);
+                    }
                   })
               }}>
               {
@@ -183,6 +206,8 @@ export default function Members(props: {
           </div>
         </div>
       </Modal>
+
+      <ToastContainer />
     </AdminPageContainer>
   );
 }

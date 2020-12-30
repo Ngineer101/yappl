@@ -291,6 +291,14 @@ tr {
   z-index: 50;
 }
 
+.Toastify__toast--success {
+  @apply bg-green-700 !important;
+}
+
+.Toastify__toast--error {
+  @apply bg-red-700 !important;
+}
+
 @media (min-width: 640px) {
 
   h1 {
