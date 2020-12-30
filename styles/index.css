@@ -256,7 +256,7 @@ tr {
 }
 
 .image-modal {
-  @apply bg-white p-4 rounded-lg;
+  @apply bg-white p-4 rounded-lg border border-gray-400;
 }
 
 .overlay-image-modal {
