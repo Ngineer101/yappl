@@ -8,7 +8,7 @@ import { emailRegex } from '../constants/emailRegex';
 import { dbConnection } from '../repository';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import IssueCard from '../components/issueCard';
+import PostCard from '../components/postCard';
 
 export default function Index(props: {
   publication: Publication,
@@ -109,7 +109,7 @@ export default function Index(props: {
               <hr className='my-8 border-t-2 border-black w-2/12' />
               <div className='flex flex-col justify-center items-center my-4 w-full'>
                 {
-                  (publication.posts || []).map((p, i) => <IssueCard post={p} key={i} />)
+                  (publication.posts || []).map((p, i) => <PostCard post={p} key={i} />)
                 }
               </div>
               <hr className='my-8 border-t-2 border-black w-2/12' />
