@@ -52,7 +52,7 @@ export default function Dashboard(props: any) {
                         axios.get(`/api/publication/new-post?publicationId=${publication.id}`,
                           { withCredentials: true })
                           .then(response => {
-                            router.push(`/publication/${publication.id}/post/${response.data}`);
+                            router.push(`/post/${response.data}`);
                           })
                           .catch(error => {
                             setLoading(false);
