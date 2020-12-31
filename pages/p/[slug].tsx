@@ -18,14 +18,21 @@ export default function PostPage(props: any) {
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:title" content={post?.title} />
           <meta name="twitter:description" content={post?.subtitle} />
-          {/* <meta name="twitter:image" content={} /> TODO: Add twitter image when post has cover image */}
 
           <meta property="og:title" content={post?.title} />
           <meta property="og:site_name" content={props.publicationName} />
           <meta property="og:description" content={post?.subtitle} />
-          {/* <meta property="og:image" content={} /> TODO: Add facebook image when post has cover image */}
           <meta property="og:url" content={process.env.SITE_URL} />
           <meta property="og:type" content="blog" />
+
+          {
+            post && post.tileImageUrl &&
+            <>
+              <meta name="twitter:image" content={post.tileImageUrl} />
+              <meta property="og:image" content={post.tileImageUrl} />
+            </>
+          }
+
         </Head>
         <div className='flex flex-col justify-center items-center adjusted-width'>
           {
