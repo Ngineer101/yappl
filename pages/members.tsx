@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import Head from "next/head";
 import AdminPageContainer from "../components/adminContainer";
-import { Member } from "../models";
+import { Member, Publication } from "../models";
 import { dbConnection } from "../repository";
 import moment from 'moment';
 import Tooltip from "../components/tooltip";
@@ -11,6 +11,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer, ToastOptions } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
+import Link from "next/link";
 
 const toastConfig: ToastOptions = {
   position: 'top-right',
@@ -21,6 +22,7 @@ const toastConfig: ToastOptions = {
 
 export default function Members(props: {
   members: Member[],
+  publicationId: string,
 }) {
   const [memberToDelete, setMemberToDelete] = useState<Member | undefined>();
   const [deleteMemberLoading, setDeleteMemberLoading] = useState(false);
@@ -35,8 +37,14 @@ export default function Members(props: {
         <title>Members ({props.members.length})</title>
       </Head>
       <div className='flex flex-col justify-center items-center px-1'>
-        <div className='flex w-4/5 mt-4'>
+        <div className='flex justify-between w-4/5 mt-4'>
           <h2>Members ({props.members.length})</h2>
+
+          <div className='flex justify-center items-center'>
+            <Link href={`/publication/${props.publicationId}/import-members`}>
+              <a className='btn-default'>Import members</a>
+            </Link>
+          </div>
         </div>
         <div className='w-4/5'>
           <table className='w-full table-auto'>
@@ -117,7 +125,7 @@ export default function Members(props: {
                   .then(() => {
                     const memberIndex = members.indexOf(memberToDelete as any);
                     if (memberIndex > -1) {
-                      toast.success(`Member '${memberToDelete?.email}' deleted successfully.`, toastConfig);
+                      toast.success(`Member '${memberToDelete?.email}' deleted.`, toastConfig);
                       members.splice(memberIndex, 1);
                       setMembers(members);
                       setDeleteMemberLoading(false);
@@ -222,12 +230,15 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
 
   const connection = await dbConnection('member');
   const memberRepository = connection.getRepository(Member);
-  const members = await memberRepository.find();
+  const members = await memberRepository.createQueryBuilder('members').orderBy('members.created_at', 'DESC').getMany();
+  const publicationRepository = connection.getRepository(Publication);
+  const publication = await publicationRepository.findOne();
   await connection.close();
 
   return {
     props: {
       members: JSON.parse(JSON.stringify(members)),
+      publicationId: publication?.id,
     }
   };
 }
