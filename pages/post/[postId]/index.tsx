@@ -1,4 +1,10 @@
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import {
+  ContentState,
+  convertFromHTML,
+  convertFromRaw,
+  convertToRaw,
+  EditorState,
+} from "draft-js";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import { Component } from "react";
@@ -99,9 +105,9 @@ class EditPost extends Component<IEditPostProps, IEditPostState> {
       const contentState = convertFromRaw(JSON.parse(post.rawContent));
       this.setState({ editorState: EditorState.createWithContent(contentState) });
     } else if (!post.rawContent && post.htmlContent) {
-      // const contentState = this.convertContentFromHtml(post.htmlContent)
-      // this.setState({ editorState: EditorState.createWithContent(contentState) });
-      // TODO: Figure something out here
+      const blocksFromHTML = convertFromHTML(post.htmlContent)
+      const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+      this.setState({ editorState: EditorState.createWithContent(contentState) });
     }
 
     document.addEventListener('keydown', this.savePostWithKeyBinding);
