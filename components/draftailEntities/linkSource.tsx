@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { RichUtils, EditorState, EntityInstance } from "draft-js";
+import { RichUtils, EditorState, EntityInstance, Modifier, Entity } from "draft-js";
 import Modal from 'react-modal';
 
 export default function LinkSource(props: {
@@ -44,16 +44,24 @@ export default function LinkSource(props: {
 
         <button className='btn-default w-full' type='button' onClick={() => {
           if (url) { // TODO: Validate url
-            const contentState = props.editorState.getCurrentContent();
             const data = {
               href: url.replace(/\s/g, ""),
             };
 
-            const contentStateWithEntity = contentState.createEntity(props.entityType.type, "MUTABLE",
-              data,
-            );
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const nextState = RichUtils.toggleLink(props.editorState, props.editorState.getSelection(), entityKey)
+            const entityKey = Entity.create('LINK', 'MUTABLE', data);
+            const selection = props.editorState.getSelection();
+            const contentState = Modifier.applyEntity(props.editorState.getCurrentContent(), selection, entityKey);
+            const linkState = EditorState.push(props.editorState, contentState, 'apply-entity');
+            const styledLinkState = RichUtils.toggleInlineStyle(linkState, "UNDERLINE");
+            const collapsed = selection.merge({
+              anchorOffset: selection.getEndOffset(),
+              focusOffset: selection.getEndOffset()
+            });
+
+            const newEditorState = EditorState.forceSelection(styledLinkState, collapsed);
+            const updatedSelection = newEditorState.getSelection();
+            const updatedContentState = Modifier.insertText(newEditorState.getCurrentContent(), updatedSelection, ' ');
+            const nextState = EditorState.push(newEditorState, updatedContentState, 'insert-characters');
             props.onComplete(nextState);
           }
         }}>Add</button>
