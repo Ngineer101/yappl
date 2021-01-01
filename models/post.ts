@@ -31,6 +31,9 @@ export class Post {
   @Column({ type: 'varchar', nullable: true })
   htmlContent: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  rawContent: string;
+
   @Column({ type: 'varchar', nullable: false })
   authorName: string;
 
@@ -42,6 +45,9 @@ export class Post {
 
   @Column({ type: 'varchar', nullable: false })
   source: 'rss' | 'yappl';
+
+  @Column({ type: 'varchar', nullable: true })
+  tileImageUrl: string | undefined;
 
   @Column({ type: 'uuid', nullable: false })
   publicationId: string;
@@ -63,6 +69,7 @@ export class Post {
     canonicalUrl: string,
     slug: string,
     htmlContent: string,
+    rawContent: string,
     authorName: string,
     authorImage: string,
     publicationId: string,
@@ -76,6 +83,7 @@ export class Post {
     this.canonicalUrl = canonicalUrl;
     this.slug = slug;
     this.htmlContent = htmlContent;
+    this.rawContent = rawContent;
     this.authorName = authorName;
     this.authorImage = authorImage;
     this.publicationId = publicationId;

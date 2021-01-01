@@ -11,6 +11,8 @@ module.exports = {
       colors: {
         'accent-1': '#333',
       },
+      opacity: ['disabled'],
+      tableLayout: ['hover', 'focus'],
     },
   },
   variants: {},

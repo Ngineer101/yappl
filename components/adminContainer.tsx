@@ -34,6 +34,11 @@ export default function AdminPageContainer(props: {
                   <a className='btn-nav'>Dashboard</a>
                 </Link>
               </li>
+              <li className='nav-item nav-item-border inline-block mr-2'>
+                <Link href='/members'>
+                  <a className='btn-nav text-gray-700 hover:text-black hover:bg-gray-300'>Members</a>
+                </Link>
+              </li>
               <li className='nav-item nav-item-border inline-block'>
                 <Link href='/mail-settings'>
                   <a className='btn-nav'>Mail settings</a>
