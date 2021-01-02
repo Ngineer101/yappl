@@ -2,7 +2,7 @@
 
 # Yet Another Publishing Platform
 
-## Host your own publication in 4 simple steps
+## Host your own publication in 5 simple steps
 
 __A PostgreSQL database is required__
 
@@ -12,11 +12,13 @@ __A Mailgun account is required if you want to send emails__
 
 ## Step 1
 
-Click this button
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2FNgineer101%2Fyappl&env=SITE_URL,NEXTAUTH_URL,POSTGRES_DATABASE,APP_SECRET,JWT_SECRET)
+Fork this repository by clicking the fork button in the top right-hand corner
 
 ## Step 2
+
+Create an account on [Vercel](https://vercel.com) and import your forked repository (more details [here](https://vercel.com/docs/git#deploying-a-git-repository))
+
+## Step 3
 
 Add these environment variables to your Vercel app
 
@@ -28,11 +30,11 @@ Add these environment variables to your Vercel app
 | APP_SECRET (required) | A random string | [Or copy this one](https://yappl.xyz/#appSecret) |
 | JWT_SECRET (required) | A random string | [Or copy this one](https://yappl.xyz/#jwtSecret) |
 
-## Step 3
+## Step 4
 
 Connect your domain on Vercel ([read more](https://vercel.com/docs/custom-domains))
 
-## Step 4
+## Step 5
 
 Go to yourdomain.com/signup and set up your publication
 
