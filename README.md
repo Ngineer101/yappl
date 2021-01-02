@@ -12,7 +12,7 @@ __A Mailgun account is required if you want to send emails__
 
 ## Step 1
 
-Fork this repository by clicking the fork button in the top right-hand corner
+Fork this repository
 
 ## Step 2
 
@@ -32,7 +32,7 @@ Add these environment variables to your Vercel app
 
 ## Step 4
 
-Connect your domain on Vercel ([read more](https://vercel.com/docs/custom-domains))
+Connect your domain on Vercel (more details [here](https://vercel.com/docs/custom-domains))
 
 ## Step 5
 
