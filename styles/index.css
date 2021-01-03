@@ -255,6 +255,14 @@ tr {
   background-color: white !important;
 }
 
+.Draftail-ToolbarGroup::before {
+  content: none !important;
+}
+
+.Draftail-ToolbarButton {
+  padding: 0.35rem !important;
+}
+
 .image-modal {
   @apply bg-white p-4 rounded-lg border border-gray-400;
 }
