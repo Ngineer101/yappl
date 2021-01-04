@@ -91,9 +91,12 @@ blockquote p {
   display: inline;
 }
 
-ol,
 ul {
-  @apply ml-4;
+  @apply ml-4 list-disc;
+}
+
+ol {
+  @apply ml-4 list-decimal;
 }
 
 th {
