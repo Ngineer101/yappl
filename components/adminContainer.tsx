@@ -4,8 +4,11 @@ import Link from 'next/link';
 import Unauthorized from './unauthorized';
 import SpinnerButton from './spinnerButton';
 import Head from 'next/head';
+import { FaviconUtils } from '../utils/favicon';
 
 export default function AdminPageContainer(props: {
+  publicationName?: string,
+  publicationImageUrl?: string,
   children: React.ReactNode,
 }) {
   const [session, loading] = useSession();
@@ -14,6 +17,10 @@ export default function AdminPageContainer(props: {
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Martel:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+        {
+          props.publicationImageUrl &&
+          FaviconUtils.getFaviconLink(props.publicationImageUrl)
+        }
       </Head>
       <nav className='flex justify-between w-full p-2 items-center border-b-2 border-gray-300 shadow-md'>
         {

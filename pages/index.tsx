@@ -21,7 +21,7 @@ export default function Index(props: {
   const router = useRouter();
   const publication: Publication | undefined = props.publication;
   return (
-    <Container publicationName={publication ? publication.name : ''}>
+    <Container publicationName={publication ? publication.name : ''} publicationImageUrl={publication?.imageUrl}>
       <Head>
         <title>{publication?.name}</title>
         <meta charSet="UTF-8" />

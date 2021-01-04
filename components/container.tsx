@@ -1,8 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
+import { FaviconUtils } from '../utils/favicon';
 
 export default function PageContainer(props: {
   publicationName?: string,
+  publicationImageUrl?: string,
   children: React.ReactNode,
 }) {
   return (
@@ -11,6 +13,10 @@ export default function PageContainer(props: {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=0" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Martel:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+        {
+          props.publicationImageUrl &&
+          FaviconUtils.getFaviconLink(props.publicationImageUrl)
+        }
       </Head>
       <main>
         {

@@ -5,10 +5,14 @@ import Head from 'next/head';
 import Container from '../../components/container';
 import moment from 'moment';
 
-export default function PostPage(props: any) {
-  const post: Post | undefined = props.post;
+export default function PostPage(props: {
+  publicationName?: string,
+  publicationImageUrl?: string,
+  post: Post,
+}) {
+  const post = props.post;
   return (
-    <Container publicationName={props.publicationName}>
+    <Container publicationName={props.publicationName} publicationImageUrl={props.publicationImageUrl}>
       <div className='flex flex-col justify-center items-center p-4 w-full'>
         <Head>
           <title>{post?.title}</title>
@@ -91,6 +95,7 @@ export const getStaticProps: GetStaticProps = async (context: any): Promise<any>
     return {
       props: {
         publicationName: publication ? publication.name : '',
+        publicationImageUrl: publication ? publication.imageUrl : '',
         post: JSON.parse(JSON.stringify(post))
       },
       revalidate: 300,
