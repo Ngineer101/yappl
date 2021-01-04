@@ -35,7 +35,7 @@ export default function AdminPageContainer(props: {
         {
           session && !loading &&
           <>
-            <ul className='m-0 p-0'>
+            <ul className='m-0 p-0 list-none'>
               <li className='nav-item nav-item-border inline-block mr-2'>
                 <Link href="/dashboard">
                   <a className='btn-nav'>Dashboard</a>
@@ -53,7 +53,7 @@ export default function AdminPageContainer(props: {
               </li>
             </ul>
             <div className='inline-flex'>
-              <ul className='flex flex-wrap text-sm md:text-base'>
+              <ul className='flex flex-wrap text-sm md:text-base list-none'>
                 <li className="relative group rounded-lg">
                   {
                     session.user.image ?
@@ -64,7 +64,7 @@ export default function AdminPageContainer(props: {
                           d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                   }
-                  <ul className="absolute right-0 top-0 mt-12 p-2 rounded-lg shadow-lg hidden bg-white z-10 group-hover:block">
+                  <ul className="absolute right-0 top-0 mt-12 p-2 rounded-lg shadow-lg hidden bg-white z-10 group-hover:block list-none">
                     <li className='nav-item nav-item-border'>
                       <button className='btn-nav' onClick={signOut as any}>Sign out</button>
                     </li>
