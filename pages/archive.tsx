@@ -9,7 +9,7 @@ export default function Archive(props: any) {
   const posts: Post[] = props.posts || [];
   const publication: Publication | undefined = props.publication;
   return (
-    <Container>
+    <Container publicationName={publication?.name} publicationImageUrl={publication?.imageUrl}>
       <Head>
         <title>Archive</title>
         <meta charSet="UTF-8" />
