@@ -179,7 +179,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
 
           if (body.sendEmailToMembers) {
             const membersRepository = connection.getRepository(Member);
-            const members = await membersRepository.find({ emailVerified: true, publicationId: post.publicationId });
+            const members = await membersRepository.find({ emailVerified: true });
 
             const publicationRepository = connection.getRepository(Publication);
             const publication = await publicationRepository.findOneOrFail({ id: post.publicationId });

@@ -31,7 +31,7 @@ export default async function GenericMemberHandler(req: NextApiRequest, res: Nex
           const existingMember = await memberRepository.findOne({ email: body.email });
           if (!existingMember) {
             const token = crypto.randomBytes(36).toString('hex');
-            const member = new Member(body.email, false, body.publicationId, token);
+            const member = new Member(body.email, false, token);
             await memberRepository.save(member);
 
             const publicationRepository = connection.getRepository(Publication);
@@ -64,7 +64,7 @@ export default async function GenericMemberHandler(req: NextApiRequest, res: Nex
         const member = await memberRepository.findOne({ id: memberId as string });
         if (member) {
           const publicationRepository = connection.getRepository(Publication);
-          const publication = await publicationRepository.findOneOrFail({ id: member.publicationId });
+          const publication = await publicationRepository.findOneOrFail();
           await sendVerificationMail(mailSettings, member.email, member.verificationToken || '', publication);
           res.status(201).end('Mail sent successfully.');
         } else {

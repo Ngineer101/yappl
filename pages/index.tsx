@@ -58,7 +58,6 @@ export default function Index(props: {
                       setLoading(true);
                       axios.post('/api/member/subscribe', {
                         email,
-                        publicationId: publication.id
                       })
                         .then(response => {
                           setEmail('');
