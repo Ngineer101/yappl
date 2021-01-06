@@ -24,10 +24,6 @@ export class Member {
   emailVerified: boolean;
 
   @Index()
-  @Column({ type: 'uuid', nullable: false })
-  publicationId: string;
-
-  @Index()
   @Column({ type: 'varchar', nullable: true })
   verificationToken: string | undefined;
 
@@ -37,10 +33,9 @@ export class Member {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date | undefined;
 
-  constructor(email: string, emailVerified: boolean, publicationId: string, verificationToken: string | undefined) {
+  constructor(email: string, emailVerified: boolean, verificationToken: string | undefined) {
     this.email = email;
     this.emailVerified = emailVerified;
-    this.publicationId = publicationId;
     this.verificationToken = verificationToken;
   }
 }
