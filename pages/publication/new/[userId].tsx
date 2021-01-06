@@ -38,9 +38,9 @@ export default function NewPublication() {
                   description,
                   imageUrl,
                 }, { withCredentials: true })
-                  .then(response => {
+                  .then(() => {
                     setErrorMessage('');
-                    window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;
+                    router.push(`/import-members`);
                   })
                   .catch(error => {
                     setLoading(false);

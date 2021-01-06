@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import Head from "next/head";
 import AdminPageContainer from "../components/adminContainer";
-import { Member, Publication } from "../models";
+import { Member } from "../models";
 import { dbConnection } from "../repository";
 import moment from 'moment';
 import Tooltip from "../components/tooltip";
@@ -22,7 +22,6 @@ const toastConfig: ToastOptions = {
 
 export default function Members(props: {
   members: Member[],
-  publicationId: string,
 }) {
   const [memberToDelete, setMemberToDelete] = useState<Member | undefined>();
   const [deleteMemberLoading, setDeleteMemberLoading] = useState(false);
@@ -41,7 +40,7 @@ export default function Members(props: {
           <h2>Members ({props.members.length})</h2>
 
           <div className='flex justify-center items-center'>
-            <Link href={`/publication/${props.publicationId}/import-members`}>
+            <Link href={`/import-members`}>
               <a className='btn-default'>Import members</a>
             </Link>
           </div>
@@ -231,14 +230,11 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
   const connection = await dbConnection('member');
   const memberRepository = connection.getRepository(Member);
   const members = await memberRepository.createQueryBuilder('members').orderBy('members.created_at', 'DESC').getMany();
-  const publicationRepository = connection.getRepository(Publication);
-  const publication = await publicationRepository.findOne();
   await connection.close();
 
   return {
     props: {
       members: JSON.parse(JSON.stringify(members)),
-      publicationId: publication?.id,
     }
   };
 }

@@ -3,20 +3,17 @@ import AdminContainer from '../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 export default function ImportMembers() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const router = useRouter();
-  const { publicationId } = router.query;
   const onDrop = useCallback(acceptedFiles => {
     setLoading(true);
     // TODO: Validate file format
     var formData = new FormData();
     formData.append('members', acceptedFiles[0]);
-    axios.post(`/api/publication/import-members?publicationId=${publicationId}`, formData, {
+    axios.post('/api/publication/import-members', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -48,7 +45,7 @@ export default function ImportMembers() {
     <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} alt='post' />
+          <img className='my-4 image-banner' src={require('../public/assets/post.svg')} alt='post' />
           <h2 className='text-center'>Import members using a CSV file</h2>
           <div className='my-4 relative'>
             {
