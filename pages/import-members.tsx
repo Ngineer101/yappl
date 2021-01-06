@@ -1,20 +1,22 @@
 import axios from 'axios';
-import AdminContainer from '../../../components/adminContainer';
+import AdminContainer from '../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-export default function ImportMembers(props: any) {
+export default function ImportMembers() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+  const { publicationId } = router.query;
   const onDrop = useCallback(acceptedFiles => {
     setLoading(true);
     // TODO: Validate file format
     var formData = new FormData();
     formData.append('members', acceptedFiles[0]);
-    axios.post(`/api/publication/import-members?publicationId=${props.publicationId}`, formData, {
+    axios.post(`/api/publication/import-members?publicationId=${publicationId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -88,13 +90,4 @@ export default function ImportMembers(props: any) {
       </div>
     </AdminContainer>
   );
-}
-
-export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
-  const { publicationId } = context.params;
-  return {
-    props: {
-      publicationId
-    }
-  };
 }
