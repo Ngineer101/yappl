@@ -8,6 +8,7 @@ import SpinnerButton from '../components/spinnerButton';
 import axios from 'axios';
 import { useRouter } from "next/router";
 import { CryptoUtils } from '../utils/crypto';
+import Link from 'next/link';
 
 export default function MailSettings(props: any) {
   const publication: Publication = props.publications ? props.publications[0] : null; // There should only be one publication anyway
@@ -18,13 +19,14 @@ export default function MailSettings(props: any) {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setup } = router.query;
 
   return (
     <AdminPageContainer>
       <div className='flex justify-center items-center full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/mail.svg')} alt='mail' />
-          <h2 className='text-center'>{publication.name} mail settings</h2>
+          <h2 className='text-center'>Configure mail settings</h2>
           <form onSubmit={(evt) => {
             evt.preventDefault();
             if (mailProvider !== MailProviders.NONE && (!mailgunApiKey || !mailgunDomain)) {
@@ -40,7 +42,11 @@ export default function MailSettings(props: any) {
               mailgunHost,
             })
               .then(response => {
-                router.push('/dashboard');
+                if (setup === 'true') {
+                  router.push('/import-members?setup=true');
+                } else {
+                  router.push('/dashboard');
+                }
               })
               .catch(error => {
                 setLoading(false);
@@ -98,6 +104,25 @@ export default function MailSettings(props: any) {
               </label>
             }
           </form>
+
+          <div className='text-center mt-4'>
+            {
+              setup === "true" &&
+              <Link href='/import-members?setup=true'>
+                <a>
+                  <strong>Skip this step</strong>
+                </a>
+              </Link>
+            }
+            {
+              setup !== "true" &&
+              <Link href='/dashboard'>
+                <a>
+                  <strong>Cancel</strong>
+                </a>
+              </Link>
+            }
+          </div>
         </div>
       </div>
     </AdminPageContainer>
