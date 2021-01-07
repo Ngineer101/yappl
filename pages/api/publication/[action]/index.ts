@@ -83,17 +83,15 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           mailgunHost,
         } = body;
 
-        const publicationRepository = connection.getRepository(Publication);
         const mailSettingsRepository = connection.getRepository(MailSettings);
-        const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
+        const mailSettings = await mailSettingsRepository.findOne();
 
         let encryptedApiKey = '';
         if (mailgunApiKey) {
           encryptedApiKey = CryptoUtils.encryptKey(mailgunApiKey);
         }
 
-        if (publication.mailSettingsId) {
-          const mailSettings = await mailSettingsRepository.findOneOrFail({ id: publication.mailSettingsId });
+        if (mailSettings) {
           mailSettings.provider = mailProvider;
           mailSettings.mailgunApiKey = encryptedApiKey;
           mailSettings.mailgunDomain = mailgunDomain;
@@ -105,8 +103,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           mailSettings.mailgunDomain = mailgunDomain;
           mailSettings.mailgunHost = mailgunHost;
           await mailSettingsRepository.save(mailSettings);
-          publication.mailSettingsId = mailSettings.id;
-          await publicationRepository.save(publication);
         }
 
         res.status(204).end('Mail settings saved');
