@@ -76,7 +76,8 @@ export class Post {
     isPublished: boolean,
     source: 'rss' | 'yappl',
     createdDate: Date | undefined,
-    updatedDate: Date | undefined
+    updatedDate: Date | undefined,
+    publishedAt: Date | undefined
   ) {
     this.title = title;
     this.subtitle = subtitle;
@@ -91,5 +92,6 @@ export class Post {
     this.source = source;
     this.createdAt = createdDate;
     this.updatedAt = updatedDate;
+    this.publishedAt = publishedAt;
   }
 }

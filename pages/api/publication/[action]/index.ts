@@ -129,7 +129,8 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           false,
           'yappl',
           new Date(),
-          new Date()
+          new Date(),
+          undefined,
         );
 
         await postRepository.save(newPost);
@@ -232,6 +233,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
               true,
               source,
               i.pubDate,
+              i.pubDate,
               i.pubDate)
           });
         } else {
@@ -250,6 +252,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
             '',
             true,
             source,
+            item.pubDate,
             item.pubDate,
             item.pubDate
           );
