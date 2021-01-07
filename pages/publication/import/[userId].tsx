@@ -30,7 +30,7 @@ export default function ImportPublication() {
                 }, { withCredentials: true })
                   .then(() => {
                     setErrorMessage('');
-                    router.push(`/import-members`);
+                    router.push(`/import-members?setup=true`);
                   })
                   .catch(error => {
                     setLoading(false);

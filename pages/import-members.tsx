@@ -3,11 +3,14 @@ import AdminContainer from '../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function ImportMembers() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+  const { setup } = router.query;
   const onDrop = useCallback(acceptedFiles => {
     setLoading(true);
     // TODO: Validate file format
@@ -22,7 +25,11 @@ export default function ImportMembers() {
         setLoading(false)
         setErrorMessage('');
         setSuccessMessage(response.data);
-        window.location.href = `${window.location.origin}/dashboard`;
+        if (router.asPath.indexOf("setup=true") > -1) {
+          router.push('/dashboard')
+        } else {
+          router.push('/members');
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -64,11 +71,22 @@ export default function ImportMembers() {
             </div>
 
             <div className='text-center mt-4'>
-              <Link href="/dashboard">
-                <a>
-                  <strong>Skip this step</strong>
-                </a>
-              </Link>
+              {
+                setup === "true" &&
+                <Link href="/dashboard">
+                  <a>
+                    <strong>Skip this step</strong>
+                  </a>
+                </Link>
+              }
+              {
+                setup !== "true" &&
+                <Link href='/members'>
+                  <a>
+                    <strong>Cancel</strong>
+                  </a>
+                </Link>
+              }
             </div>
           </div>
           {

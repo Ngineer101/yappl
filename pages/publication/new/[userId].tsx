@@ -40,7 +40,7 @@ export default function NewPublication() {
                 }, { withCredentials: true })
                   .then(() => {
                     setErrorMessage('');
-                    router.push(`/import-members`);
+                    router.push(`/import-members?setup=true`);
                   })
                   .catch(error => {
                     setLoading(false);
