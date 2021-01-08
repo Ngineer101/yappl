@@ -33,6 +33,7 @@
     "react-modal": "^3.12.1",
     "react-toastify": "^6.2.0",
     "reflect-metadata": "^0.1.13",
+    "rss": "^1.2.2",
     "typeorm": "^0.2.29"
   },
   "devDependencies": {
@@ -49,6 +50,7 @@
     "@types/react": "^16.9.50",
     "@types/react-draft-wysiwyg": "^1.13.0",
     "@types/react-modal": "^3.10.6",
+    "@types/rss": "0.0.28",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "^2.0.1",
