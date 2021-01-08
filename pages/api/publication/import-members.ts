@@ -16,7 +16,6 @@ export const config = {
 export default async function ImportPublicationMembersHandler(req: NextApiRequest, res: NextApiResponse) {
   const {
     method,
-    query: { publicationId }
   } = req;
 
   const session = await getSession({ req });
@@ -40,7 +39,7 @@ export default async function ImportPublicationMembersHandler(req: NextApiReques
         const membersJson = await csv().fromString(contents);
         let importedMemberCount = 0;
         if (membersJson.length > 0) {
-          const uploadedMembers = membersJson.map(m => new Member(m.email, true, publicationId as any, crypto.randomBytes(36).toString('hex')));
+          const uploadedMembers = membersJson.map(m => new Member(m.email, true, crypto.randomBytes(36).toString('hex')));
           const connection = await dbConnection('members');
           const memberRepository = connection.getRepository(Member);
 

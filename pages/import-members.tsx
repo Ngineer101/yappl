@@ -1,20 +1,22 @@
 import axios from 'axios';
-import AdminContainer from '../../../components/adminContainer';
+import AdminContainer from '../components/adminContainer';
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-export default function ImportMembers(props: any) {
+export default function ImportMembers() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+  const { setup } = router.query;
   const onDrop = useCallback(acceptedFiles => {
     setLoading(true);
     // TODO: Validate file format
     var formData = new FormData();
     formData.append('members', acceptedFiles[0]);
-    axios.post(`/api/publication/import-members?publicationId=${props.publicationId}`, formData, {
+    axios.post('/api/publication/import-members', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -23,7 +25,11 @@ export default function ImportMembers(props: any) {
         setLoading(false)
         setErrorMessage('');
         setSuccessMessage(response.data);
-        window.location.href = `${window.location.origin}/dashboard`;
+        if (router.asPath.indexOf("setup=true") > -1) {
+          router.push('/dashboard')
+        } else {
+          router.push('/members');
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -46,7 +52,7 @@ export default function ImportMembers(props: any) {
     <AdminContainer>
       <div className='full-page'>
         <div className='form-adjusted-width card-col mt-24'>
-          <img className='my-4 image-banner' src={require('../../../public/assets/post.svg')} alt='post' />
+          <img className='my-4 image-banner' src={require('../public/assets/post.svg')} alt='post' />
           <h2 className='text-center'>Import members using a CSV file</h2>
           <div className='my-4 relative'>
             {
@@ -65,11 +71,22 @@ export default function ImportMembers(props: any) {
             </div>
 
             <div className='text-center mt-4'>
-              <Link href="/dashboard">
-                <a>
-                  <strong>Skip this step</strong>
-                </a>
-              </Link>
+              {
+                setup === "true" &&
+                <Link href="/dashboard">
+                  <a>
+                    <strong>Skip this step</strong>
+                  </a>
+                </Link>
+              }
+              {
+                setup !== "true" &&
+                <Link href='/members'>
+                  <a>
+                    <strong>Cancel</strong>
+                  </a>
+                </Link>
+              }
             </div>
           </div>
           {
@@ -88,13 +105,4 @@ export default function ImportMembers(props: any) {
       </div>
     </AdminContainer>
   );
-}
-
-export const getServerSideProps: GetServerSideProps = async (context: any): Promise<any> => {
-  const { publicationId } = context.params;
-  return {
-    props: {
-      publicationId
-    }
-  };
 }

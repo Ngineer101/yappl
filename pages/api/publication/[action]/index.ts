@@ -83,17 +83,15 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           mailgunHost,
         } = body;
 
-        const publicationRepository = connection.getRepository(Publication);
         const mailSettingsRepository = connection.getRepository(MailSettings);
-        const publication = await publicationRepository.findOneOrFail({ id: publicationId as string });
+        const mailSettings = await mailSettingsRepository.findOne();
 
         let encryptedApiKey = '';
         if (mailgunApiKey) {
           encryptedApiKey = CryptoUtils.encryptKey(mailgunApiKey);
         }
 
-        if (publication.mailSettingsId) {
-          const mailSettings = await mailSettingsRepository.findOneOrFail({ id: publication.mailSettingsId });
+        if (mailSettings) {
           mailSettings.provider = mailProvider;
           mailSettings.mailgunApiKey = encryptedApiKey;
           mailSettings.mailgunDomain = mailgunDomain;
@@ -105,8 +103,6 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           mailSettings.mailgunDomain = mailgunDomain;
           mailSettings.mailgunHost = mailgunHost;
           await mailSettingsRepository.save(mailSettings);
-          publication.mailSettingsId = mailSettings.id;
-          await publicationRepository.save(publication);
         }
 
         res.status(204).end('Mail settings saved');
@@ -129,7 +125,8 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
           false,
           'yappl',
           new Date(),
-          new Date()
+          new Date(),
+          undefined,
         );
 
         await postRepository.save(newPost);
@@ -179,7 +176,7 @@ export default async function GenericPublicationHandler(req: NextApiRequest, res
 
           if (body.sendEmailToMembers) {
             const membersRepository = connection.getRepository(Member);
-            const members = await membersRepository.find({ emailVerified: true, publicationId: post.publicationId });
+            const members = await membersRepository.find({ emailVerified: true });
 
             const publicationRepository = connection.getRepository(Publication);
             const publication = await publicationRepository.findOneOrFail({ id: post.publicationId });
@@ -232,6 +229,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
               true,
               source,
               i.pubDate,
+              i.pubDate,
               i.pubDate)
           });
         } else {
@@ -250,6 +248,7 @@ async function getPublication(source: 'rss' | 'yappl', rssFeedUrl: string, userI
             '',
             true,
             source,
+            item.pubDate,
             item.pubDate,
             item.pubDate
           );

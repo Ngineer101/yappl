@@ -28,9 +28,9 @@ export default function ImportPublication() {
                   rssFeedUrl,
                   source: 'rss'
                 }, { withCredentials: true })
-                  .then(response => {
+                  .then(() => {
                     setErrorMessage('');
-                    window.location.href = `${window.location.origin}/publication/${response.data}/import-members`;
+                    router.push(`/mail-settings?setup=true`);
                   })
                   .catch(error => {
                     setLoading(false);

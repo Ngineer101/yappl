@@ -2,29 +2,32 @@ import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import { useState } from "react";
 import AdminPageContainer from "../components/adminContainer";
-import { MailProviders, Publication } from "../models";
+import { MailProviders, MailSettings } from "../models";
 import { dbConnection } from "../repository";
 import SpinnerButton from '../components/spinnerButton';
 import axios from 'axios';
 import { useRouter } from "next/router";
 import { CryptoUtils } from '../utils/crypto';
+import Link from 'next/link';
 
-export default function MailSettings(props: any) {
-  const publication: Publication = props.publications ? props.publications[0] : null; // There should only be one publication anyway
-  const [mailProvider, setMailProvider] = useState(publication.mailSettings ? publication.mailSettings.provider : MailProviders.NONE);
-  const [mailgunApiKey, setMailgunApiKey] = useState(publication.mailSettings ? publication.mailSettings.mailgunApiKey : '');
-  const [mailgunDomain, setMailgunDomain] = useState(publication.mailSettings ? publication.mailSettings.mailgunDomain : '');
-  const [mailgunHost, setMailgunHost] = useState(publication.mailSettings ? publication.mailSettings.mailgunHost : '');
+export default function MailSettingsPage(props: {
+  mailSettings: MailSettings,
+}) {
+  const [mailProvider, setMailProvider] = useState(props.mailSettings.provider);
+  const [mailgunApiKey, setMailgunApiKey] = useState(props.mailSettings.mailgunApiKey);
+  const [mailgunDomain, setMailgunDomain] = useState(props.mailSettings.mailgunDomain);
+  const [mailgunHost, setMailgunHost] = useState(props.mailSettings.mailgunHost);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setup } = router.query;
 
   return (
     <AdminPageContainer>
       <div className='flex justify-center items-center full-page'>
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/mail.svg')} alt='mail' />
-          <h2 className='text-center'>{publication.name} mail settings</h2>
+          <h2 className='text-center'>Configure mail settings</h2>
           <form onSubmit={(evt) => {
             evt.preventDefault();
             if (mailProvider !== MailProviders.NONE && (!mailgunApiKey || !mailgunDomain)) {
@@ -33,14 +36,18 @@ export default function MailSettings(props: any) {
             }
 
             setLoading(true);
-            axios.post(`/api/publication/update-mail-settings?publicationId=${publication.id}`, {
+            axios.post('/api/publication/update-mail-settings', {
               mailProvider,
               mailgunApiKey,
               mailgunDomain,
               mailgunHost,
             })
               .then(response => {
-                router.push('/dashboard');
+                if (setup === 'true') {
+                  router.push('/import-members?setup=true');
+                } else {
+                  router.push('/dashboard');
+                }
               })
               .catch(error => {
                 setLoading(false);
@@ -98,6 +105,25 @@ export default function MailSettings(props: any) {
               </label>
             }
           </form>
+
+          <div className='text-center mt-4'>
+            {
+              setup === "true" &&
+              <Link href='/import-members?setup=true'>
+                <a>
+                  <strong>Skip this step</strong>
+                </a>
+              </Link>
+            }
+            {
+              setup !== "true" &&
+              <Link href='/dashboard'>
+                <a>
+                  <strong>Cancel</strong>
+                </a>
+              </Link>
+            }
+          </div>
         </div>
       </div>
     </AdminPageContainer>
@@ -113,20 +139,21 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
   }
 
   const connection = await dbConnection('mailSettings');
-  const publicationRepository = connection.getRepository(Publication);
-  const publications = await publicationRepository.find({ relations: ["mailSettings"] });
+  const mailSettingsRepository = connection.getRepository(MailSettings);
+  let mailSettings = await mailSettingsRepository.findOne();
   await connection.close();
 
-  for (let i = 0; i < publications.length; i++) {
-    let publication = publications[i];
-    if (publication.mailSettingsId && publication.mailSettings && publication.mailSettings.mailgunApiKey) {
-      publication.mailSettings.mailgunApiKey = CryptoUtils.decryptKey(publication.mailSettings.mailgunApiKey);
+  if (mailSettings) {
+    if (mailSettings.mailgunApiKey) {
+      mailSettings.mailgunApiKey = CryptoUtils.decryptKey(mailSettings.mailgunApiKey);
     }
-  };
+  } else {
+    mailSettings = new MailSettings(MailProviders.NONE);
+  }
 
   return {
     props: {
-      publications: JSON.parse(JSON.stringify(publications))
+      mailSettings: JSON.parse(JSON.stringify(mailSettings))
     }
   }
 }

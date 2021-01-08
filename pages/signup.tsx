@@ -3,6 +3,7 @@ import axios from 'axios';
 import Container from '../components/container';
 import { csrfToken } from "next-auth/client";
 import SpinnerButton from "../components/spinnerButton";
+import { useRouter } from "next/router";
 
 export default function SignUp(props: any) {
   const [image, setImage] = useState('');
@@ -12,6 +13,7 @@ export default function SignUp(props: any) {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
   return (
     <Container>
@@ -40,7 +42,7 @@ export default function SignUp(props: any) {
                       password
                     })
                       .then(response => {
-                        window.location.href = `${window.location.origin}/publication/setup/${userId}`;
+                        router.push(`/publication/setup/${userId}`);
                       })
                       .catch(error => {
                         setLoading(false);
