@@ -31,7 +31,7 @@ const getPublicationWithPosts = async (): Promise<{
   const publicationRepository = connection.getRepository(Publication);
   const publication = await publicationRepository.findOne();
   const postRepository = connection.getRepository(Post);
-  const posts = await postRepository.find();
+  const posts = await postRepository.find({ isPublished: true });
   await connection.close();
   return {
     publication,

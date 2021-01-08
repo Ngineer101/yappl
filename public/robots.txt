@@ -5,3 +5,6 @@ Disallow: /signup
 Disallow: /dashboard
 Disallow: /auth/*
 Disallow: /api/*
+Disallow: /members
+Disallow: /import-members
+Disallow: /mail-settings
