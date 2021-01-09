@@ -7,8 +7,11 @@
     "revert-migration": "ts-node ./node_modules/typeorm/cli.js migration:revert -f ./ormconfig.ts",
     "dev": "npm run run-migration && next",
     "build": "npm run run-migration && next build",
-    "start": "next start"
+    "start": "next start -p $PORT"
   },
+  "cacheDirectories": [
+    ".next/cache"
+  ],
   "dependencies": {
     "autoprefixer": "^10.0.2",
     "axios": "^0.20.0",
