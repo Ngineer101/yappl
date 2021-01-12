@@ -31,7 +31,9 @@ export default function EditPublication(props: any) {
             imageUrl={imageUrl}
             setImageUrl={setImageUrl}
             errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
             loading={loading}
+            imageUploadEnabled={props.imageUploadEnabled}
             savePublication={
               (evt) => {
                 evt.preventDefault();
@@ -80,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
   if (publication) {
     return {
       props: {
+        imageUploadEnabled: process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET ? true : false,
         publication: JSON.parse(JSON.stringify(publication))
       }
     };

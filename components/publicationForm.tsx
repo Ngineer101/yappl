@@ -3,6 +3,7 @@ import {
   FormEvent,
   SetStateAction
 } from "react";
+import ImageUpload from "./imageUpload";
 import SpinnerButton from "./spinnerButton";
 
 export default function PublicationForm(props: {
@@ -13,8 +14,10 @@ export default function PublicationForm(props: {
   imageUrl: string | undefined,
   setImageUrl: Dispatch<SetStateAction<string | undefined>>,
   errorMessage: string,
+  setErrorMessage?: Dispatch<SetStateAction<string>>,
   loading: boolean,
   savePublication: (evt: FormEvent<HTMLFormElement>) => void,
+  imageUploadEnabled?: boolean,
 }) {
   return (
     <form onSubmit={props.savePublication}>
@@ -30,12 +33,24 @@ export default function PublicationForm(props: {
           onChange={(evt) => props.setDescription(evt.currentTarget.value)}></textarea>
       </div>
 
-      {/* TODO: add functionality to upload image */}
-      <div className='my-4'>
-        <label htmlFor='imageUrl'>Cover image URL</label>
-        <input className='input-default' type='text' name='imageUrl' value={props.imageUrl} placeholder='This image will be displayed on the home page'
-          onChange={(evt) => props.setImageUrl(evt.currentTarget.value)} />
-      </div>
+      {
+        props.imageUploadEnabled ?
+          <div className='my-4'>
+            <label>Cover image</label>
+            <ImageUpload
+              imageUrl={props.imageUrl}
+              setImageUrl={props.setImageUrl}
+              subPath='publication_info/cover_image'
+              setErrorMessage={props.setErrorMessage}
+            />
+          </div>
+          :
+          <div className='my-4'>
+            <label htmlFor='imageUrl'>Cover image URL</label>
+            <input className='input-default' type='text' name='imageUrl' value={props.imageUrl} placeholder='This image will be displayed on the home page'
+              onChange={(evt) => props.setImageUrl(evt.currentTarget.value)} />
+          </div>
+      }
 
       <SpinnerButton
         text='Save'

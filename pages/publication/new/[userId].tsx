@@ -3,8 +3,11 @@ import { FormEvent, useState } from "react"
 import axios from 'axios';
 import AdminContainer from '../../../components/adminContainer';
 import PublicationForm from '../../../components/publicationForm';
+import { GetServerSideProps } from "next";
 
-export default function NewPublication() {
+export default function NewPublication(props: {
+  imageUploadEnabled: boolean,
+}) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -26,7 +29,9 @@ export default function NewPublication() {
             imageUrl={imageUrl}
             setImageUrl={setImageUrl as any} // :(
             errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
             loading={loading}
+            imageUploadEnabled={props.imageUploadEnabled}
             savePublication={(evt) => {
               evt.preventDefault();
               if (name && description) {
@@ -56,4 +61,12 @@ export default function NewPublication() {
       </div>
     </AdminContainer>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = (context): any => {
+  return {
+    props: {
+      imageUploadEnabled: process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET ? true : false,
+    }
+  };
 }
