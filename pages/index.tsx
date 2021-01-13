@@ -108,7 +108,14 @@ export default function Index(props: {
               <hr className='my-8 border-t-2 border-black w-2/12' />
               <div className='flex flex-col justify-center items-center my-4 w-full'>
                 {
-                  (publication.posts || []).map((p, i) => <PostCard post={p} key={i} />)
+                  publication.posts && publication.posts.length > 0 ?
+                    publication.posts.map((p, i) => <PostCard post={p} key={i} />)
+                    :
+                    <div className='issue-card adjusted-width text-current'>
+                      <div className='flex justify-center items-center w-full'>
+                        <h3 className='text-xl sm:text-xl md:text-2xl lg:text-2xl xl:text-2xl'>First post coming soon</h3>
+                      </div>
+                    </div>
                 }
               </div>
               <hr className='my-8 border-t-2 border-black w-2/12' />
