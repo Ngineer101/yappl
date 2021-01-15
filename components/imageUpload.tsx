@@ -35,7 +35,7 @@ export default function ImageUpload(props: {
 
     var formData = new FormData();
     formData.append('image', images[0]);
-    axios.post(`/api/upload?subPath=${props.subPath}`, formData, {
+    axios.post(`/api/upload?subPath=${props.subPath}/${images[0].name}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

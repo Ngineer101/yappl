@@ -28,6 +28,7 @@ interface IEditPostProps {
   post: Post | null;
   postId: string;
   router: Router;
+  imageUploadEnabled: boolean;
 }
 
 interface IEditPostState {
@@ -213,7 +214,7 @@ class EditPost extends Component<IEditPostProps, IEditPostState> {
                 editorState={this.state.editorState}
                 enableHorizontalRule={
                   {
-                    icon: <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" fillRule="evenodd" height="24" width="24" /><g><rect fill-rule="evenodd" height="2" width="16" x="4" y="11" /></g></g></svg>,
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" fillRule="evenodd" height="24" width="24" /><g><rect fillRule="evenodd" height="2" width="16" x="4" y="11" /></g></g></svg>,
                   }
                 }
                 stripPastedStyles={false}
@@ -297,7 +298,7 @@ class EditPost extends Component<IEditPostProps, IEditPostState> {
                     whitelist: {
                       src: '^(?!(data:|file:))',
                     },
-                    source: ImageSource,
+                    source: (props: any) => <ImageSource {...props} imageUploadEnabled={this.props.imageUploadEnabled} postId={this.props.postId} />,
                     block: ImageBlock,
                   },
                 ]}
@@ -373,6 +374,7 @@ export const getServerSideProps: GetServerSideProps = async (context: any): Prom
 
   return {
     props: {
+      imageUploadEnabled: process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET ? true : false,
       postId,
       post: JSON.parse(JSON.stringify(post))
     }

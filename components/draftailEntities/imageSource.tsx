@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { AtomicBlockUtils, EditorState, EntityInstance } from "draft-js";
 import Modal from 'react-modal';
+import ImageUpload from "../imageUpload";
 
 export default function ImageSource(props: {
   editorState: EditorState,
@@ -11,6 +12,8 @@ export default function ImageSource(props: {
   },
   entity?: EntityInstance,
   entityKey?: string,
+  postId?: string,
+  imageUploadEnabled?: boolean,
 }) {
   const { src, alt } = props.entity ? props.entity.getData() : { src: '', alt: '' };
   const [imageSrc, setImageSrc] = useState(src);
@@ -18,7 +21,7 @@ export default function ImageSource(props: {
   const srcInputRef = useRef<HTMLInputElement | null>();
   return (
     <Modal
-      className='image-modal'
+      className='image-modal adjusted-width'
       overlayClassName='overlay-image-modal'
       ariaHideApp={false}
       portalClassName="portal-image-modal"
@@ -37,12 +40,23 @@ export default function ImageSource(props: {
       isOpen
       contentLabel="Insert image">
       <div>
-        <input
-          name='imageSrc'
-          className='input-default mb-2'
-          placeholder='Image URL *'
-          onChange={(evt) => setImageSrc(evt.currentTarget.value)}
-          ref={(inputRef) => srcInputRef.current = inputRef} />
+
+        {
+          props.imageUploadEnabled ?
+            <div className='mb-2'>
+              <ImageUpload
+                imageUrl={imageSrc}
+                setImageUrl={setImageSrc}
+                subPath={`posts/${props.postId}`} />
+            </div>
+            :
+            <input
+              name='imageSrc'
+              className='input-default mb-2'
+              placeholder='Image URL *'
+              onChange={(evt) => setImageSrc(evt.currentTarget.value)}
+              ref={(inputRef) => srcInputRef.current = inputRef} />
+        }
 
         <input
           name='imageAlt'
