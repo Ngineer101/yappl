@@ -39,7 +39,19 @@ export default function ImageSource(props: {
       }}
       isOpen
       contentLabel="Insert image">
-      <div>
+      <form onSubmit={(evt) => {
+        evt.preventDefault();
+        if (imageSrc) { // TODO: Validate image url
+          const contentState = props.editorState.getCurrentContent();
+          const contentStateWithEntity = contentState.createEntity(props.entityType.type, 'IMMUTABLE', {
+            src: imageSrc,
+            alt: imageAlt,
+          });
+          const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+          const updatedEditorState = AtomicBlockUtils.insertAtomicBlock(props.editorState, entityKey, ' ');
+          props.onComplete(updatedEditorState);
+        }
+      }}>
 
         {
           props.imageUploadEnabled ?
@@ -64,19 +76,8 @@ export default function ImageSource(props: {
           placeholder='Image caption'
           onChange={(evt) => setImageAlt(evt.currentTarget.value)} />
 
-        <button className='btn-default w-full' type='button' onClick={() => {
-          if (imageSrc) { // TODO: Validate image url
-            const contentState = props.editorState.getCurrentContent();
-            const contentStateWithEntity = contentState.createEntity(props.entityType.type, 'IMMUTABLE', {
-              src: imageSrc,
-              alt: imageAlt,
-            });
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const updatedEditorState = AtomicBlockUtils.insertAtomicBlock(props.editorState, entityKey, ' ');
-            props.onComplete(updatedEditorState);
-          }
-        }}>Add</button>
-      </div>
+        <button className='btn-default w-full' type='submit'>Add</button>
+      </form>
     </Modal>
   );
 }
