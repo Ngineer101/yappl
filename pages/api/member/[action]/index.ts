@@ -35,7 +35,7 @@ export default async function GenericMemberHandler(req: NextApiRequest, res: Nex
             await memberRepository.save(member);
 
             const publicationRepository = connection.getRepository(Publication);
-            const publication = await publicationRepository.findOneOrFail({ id: body.publicationId });
+            const publication = await publicationRepository.findOneOrFail();
             await sendVerificationMail(mailSettings, member.email, token, publication);
           }
 
