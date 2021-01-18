@@ -55,10 +55,11 @@ export default function ImageSource(props: {
 
         {
           props.imageUploadEnabled ?
-            <div className='mb-2'>
+            <div className='mb-2 h-28 rounded-lg overflow-hidden'>
               <ImageUpload
                 imageUrl={imageSrc}
                 setImageUrl={setImageSrc}
+                label='Drag and drop image here'
                 subPath={`posts/${props.postId}`} />
             </div>
             :

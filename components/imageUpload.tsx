@@ -20,6 +20,7 @@ export default function ImageUpload(props: {
   setImageUrl: Dispatch<SetStateAction<string | undefined>>,
   subPath?: string,
   setErrorMessage?: Dispatch<SetStateAction<string>>,
+  label?: string,
 }) {
   const [loading, setLoading] = useState(false);
   const onDrop = useCallback(images => {
@@ -66,23 +67,27 @@ export default function ImageUpload(props: {
   } = useDropzone({ onDrop, maxFiles: 1, maxSize: 20000000 });
 
   return (
-    <div className='relative'>
+    <div className='relative h-full w-full'>
       {
         loading &&
         <div className='w-full h-full absolute flex justify-center items-center bg-black'>
           <svg className="animate-spin h-10 w-10 m-1 rounded-full border-2" style={{ borderColor: 'white white black black' }} viewBox="0 0 24 24"></svg>
         </div>
       }
-      <div {...getRootProps()} className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} cursor-pointer px-4 py-12 flex justify-center items-center border-dotted border-4 border-black outline-none`}
+      <div {...getRootProps()} className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} cursor-pointer flex flex-col justify-center items-center outline-none h-full w-full`}
         style={{
           backgroundImage: props.imageUrl ? `url(${props.imageUrl})` : undefined,
           backgroundSize: 'cover',
         }}>
         <input {...getInputProps()} />
+        <span className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} bg-gray-100 rounded-lg`}>
+          <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </span>
         {
-          isDragActive ?
-            <span className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} rounded-lg p-4`}>Drop image</span> :
-            <span className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} rounded-lg p-4`}>Drag and drop image here</span>
+          props.label && !props.imageUrl &&
+          <span className={`${isDragActive ? 'bg-gray-500' : 'bg-gray-300'} rounded-lg px-4 pb-4 pt-2`}>{props.label}</span>
         }
       </div>
     </div>

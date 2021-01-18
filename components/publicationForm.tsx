@@ -37,12 +37,15 @@ export default function PublicationForm(props: {
         props.imageUploadEnabled ?
           <div className='my-4'>
             <label>Cover image</label>
-            <ImageUpload
-              imageUrl={props.imageUrl}
-              setImageUrl={props.setImageUrl}
-              subPath='publication_info/cover_image'
-              setErrorMessage={props.setErrorMessage}
-            />
+            <div className='h-28 rounded-lg overflow-hidden'>
+              <ImageUpload
+                imageUrl={props.imageUrl}
+                setImageUrl={props.setImageUrl}
+                subPath='publication_info/cover_image'
+                setErrorMessage={props.setErrorMessage}
+                label='Drag and drop image here'
+              />
+            </div>
           </div>
           :
           <div className='my-4'>
