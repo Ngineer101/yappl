@@ -52,7 +52,7 @@ export default function PublishPost(props: {
             {
               props.imageUploadEnabled ?
                 <div className='my-4'>
-                  <label htmlFor='tileImageUrl'>Cover image URL</label>
+                  <label htmlFor='tileImageUrl'>Cover image</label>
                   <div className='mb-2 h-28 rounded-lg overflow-hidden'>
                     <ImageUpload
                       imageUrl={tileImageUrl}
