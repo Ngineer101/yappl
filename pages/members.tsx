@@ -33,11 +33,11 @@ export default function Members(props: {
   return (
     <AdminPageContainer>
       <Head>
-        <title>Members ({props.members.length})</title>
+        <title>Members ({(props.members || []).length})</title>
       </Head>
       <div className='flex flex-col justify-center items-center px-1'>
         <div className='flex justify-between w-4/5 mt-4'>
-          <h2>Members ({props.members.length})</h2>
+          <h2>Members ({(props.members || []).length})</h2>
 
           <div className='flex justify-center items-center'>
             <Link href={`/import-members`}>

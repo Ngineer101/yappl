@@ -16,7 +16,7 @@ export default function LinkSource(props: {
   const urlInputRef = useRef<HTMLInputElement | null>();
   return (
     <Modal
-      className='image-modal'
+      className='image-modal adjusted-width'
       overlayClassName='overlay-image-modal'
       ariaHideApp={false}
       portalClassName='portal-image-modal'
@@ -34,7 +34,30 @@ export default function LinkSource(props: {
       }}
       isOpen
       contentLabel='Insert link'>
-      <div>
+      <form onSubmit={(evt) => {
+        evt.preventDefault();
+        if (url) { // TODO: Validate url
+          const data = {
+            href: url.replace(/\s/g, ""),
+          };
+
+          const entityKey = Entity.create('LINK', 'MUTABLE', data);
+          const selection = props.editorState.getSelection();
+          const contentState = Modifier.applyEntity(props.editorState.getCurrentContent(), selection, entityKey);
+          const linkState = EditorState.push(props.editorState, contentState, 'apply-entity');
+          const styledLinkState = RichUtils.toggleInlineStyle(linkState, "UNDERLINE");
+          const collapsed = selection.merge({
+            anchorOffset: selection.getEndOffset(),
+            focusOffset: selection.getEndOffset()
+          });
+
+          const newEditorState = EditorState.forceSelection(styledLinkState, collapsed);
+          const updatedSelection = newEditorState.getSelection();
+          const updatedContentState = Modifier.insertText(newEditorState.getCurrentContent(), updatedSelection, ' ');
+          const nextState = EditorState.push(newEditorState, updatedContentState, 'insert-characters');
+          props.onComplete(nextState);
+        }
+      }}>
         <input
           name='linkUrl'
           className='input-default mb-2'
@@ -42,30 +65,8 @@ export default function LinkSource(props: {
           onChange={(evt) => setUrl(evt.currentTarget.value)}
           ref={(inputRef) => urlInputRef.current = inputRef} />
 
-        <button className='btn-default w-full' type='button' onClick={() => {
-          if (url) { // TODO: Validate url
-            const data = {
-              href: url.replace(/\s/g, ""),
-            };
-
-            const entityKey = Entity.create('LINK', 'MUTABLE', data);
-            const selection = props.editorState.getSelection();
-            const contentState = Modifier.applyEntity(props.editorState.getCurrentContent(), selection, entityKey);
-            const linkState = EditorState.push(props.editorState, contentState, 'apply-entity');
-            const styledLinkState = RichUtils.toggleInlineStyle(linkState, "UNDERLINE");
-            const collapsed = selection.merge({
-              anchorOffset: selection.getEndOffset(),
-              focusOffset: selection.getEndOffset()
-            });
-
-            const newEditorState = EditorState.forceSelection(styledLinkState, collapsed);
-            const updatedSelection = newEditorState.getSelection();
-            const updatedContentState = Modifier.insertText(newEditorState.getCurrentContent(), updatedSelection, ' ');
-            const nextState = EditorState.push(newEditorState, updatedContentState, 'insert-characters');
-            props.onComplete(nextState);
-          }
-        }}>Add</button>
-      </div>
+        <button className='btn-default w-full' type='submit'>Add</button>
+      </form>
     </Modal>
   );
 }

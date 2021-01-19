@@ -2,8 +2,8 @@ import { useState } from "react"
 import axios from 'axios';
 import Container from '../components/container';
 import { csrfToken } from "next-auth/client";
-import SpinnerButton from "../components/spinnerButton";
 import { useRouter } from "next/router";
+import UserForm from "../components/userForm";
 
 export default function SignUp(props: any) {
   const [image, setImage] = useState('');
@@ -21,7 +21,7 @@ export default function SignUp(props: any) {
         <div className='form-adjusted-width card-col mt-24'>
           <img className='my-4 image-banner' src={require('../public/assets/welcome.svg')} alt='welcome banner' />
           <h2 className='text-center'>Sign up to create your publication</h2>
-          <form onSubmit={
+          <UserForm onSubmit={
             (evt) => {
               evt.preventDefault();
               if (email && password && password === passwordConfirmation) {
@@ -63,52 +63,21 @@ export default function SignUp(props: any) {
                   });
               }
             }
-          }>
-            <div className='my-4'>
-              <label>Name</label>
-              <input className='input-default' name='name' type='text' value={name} placeholder='Name'
-                onChange={(evt) => setName(evt.currentTarget.value)} />
-            </div>
-
-            <div className='my-4'>
-              <label htmlFor='email'>Email</label>
-              <input className='input-default' name='email' type='text' value={email} placeholder='Email'
-                onChange={(evt) => setEmail(evt.currentTarget.value)} />
-            </div>
-
-            {/* TODO: add functionality to upload image */}
-            <div className='my-4'>
-              <label htmlFor='image'>Gravatar URL</label>
-              <input className='input-default' name='image' type='text' value={image} placeholder='Gravatar URL'
-                onChange={(evt) => setImage(evt.currentTarget.value)} />
-            </div>
-
-            <div className='my-4'>
-              <label htmlFor='password'>Password</label>
-              <input className='input-default' name='password' type='password' autoComplete='new-password' placeholder='Password'
-                value={password} onChange={(evt) => setPassword(evt.currentTarget.value)} />
-            </div>
-
-            <div className='my-4'>
-              <label htmlFor='passwordConfirmation'>Confirm password</label>
-              <input className='input-default' name='passwordConfirmation' type='password' autoComplete='new-password' placeholder='Confirm password'
-                value={passwordConfirmation} onChange={(evt) => setPasswordConfirmation(evt.currentTarget.value)} />
-            </div>
-
-            <SpinnerButton
-              text='Sign up'
-              type='submit'
-              loading={loading}
-              disabled={loading}
-              className='mt-4' />
-
-            {
-              errorMessage &&
-              <label className='text-red-500 mt-4 ml-2'>
-                <strong>{errorMessage}</strong>
-              </label>
-            }
-          </form>
+          }
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            imageUrl={image}
+            setImageUrl={setImage}
+            password={password}
+            setPassword={setPassword}
+            passwordConfirmation={passwordConfirmation}
+            setPasswordConfirmation={setPasswordConfirmation}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+            loading={loading}
+            imageUploadEnabled={props.imageUploadEnabled} />
         </div>
       </div>
     </Container>
@@ -118,6 +87,7 @@ export default function SignUp(props: any) {
 SignUp.getInitialProps = async (context: any) => {
   // TODO: Only render this page if no users exist
   return {
+    imageUploadEnabled: process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET ? true : false,
     csrfToken: await csrfToken(context)
   }
 }
