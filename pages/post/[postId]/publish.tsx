@@ -4,8 +4,12 @@ import AdminPageContainer from "../../../components/adminContainer";
 import SpinnerButton from "../../../components/spinnerButton";
 import axios from 'axios';
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import ImageUpload from "../../../components/imageUpload";
 
-export default function PublishPost() {
+export default function PublishPost(props: {
+  imageUploadEnabled: boolean,
+}) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [sendEmailToMembers, setSendEmailToMembers] = useState(false);
@@ -45,12 +49,25 @@ export default function PublishPost() {
                 });
             }
           }>
-            <div className='my-4'>
-              <label htmlFor='tileImageUrl'>Cover image URL</label>
-              <input className='input-default' name='tileImageUrl' type='text' value={tileImageUrl}
-                onChange={(evt) => setTileImageUrl(evt.currentTarget.value)} />
-            </div>
-
+            {
+              props.imageUploadEnabled ?
+                <div className='my-4'>
+                  <label htmlFor='tileImageUrl'>Cover image URL</label>
+                  <div className='mb-2 h-28 rounded-lg overflow-hidden'>
+                    <ImageUpload
+                      imageUrl={tileImageUrl}
+                      setImageUrl={setTileImageUrl as any}
+                      label='Drag and drop image here'
+                      subPath={`posts/${postId}/cover_image`} />
+                  </div>
+                </div>
+                :
+                <div className='my-4'>
+                  <label htmlFor='tileImageUrl'>Cover image URL</label>
+                  <input className='input-default' name='tileImageUrl' type='text' value={tileImageUrl}
+                    onChange={(evt) => setTileImageUrl(evt.currentTarget.value)} />
+                </div>
+            }
             <div className='my-4'>
               <label htmlFor='sendEmailToMembers' className='flex cursor-pointer'
                 onClick={() => {
@@ -86,4 +103,12 @@ export default function PublishPost() {
       </div>
     </AdminPageContainer>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = (context): any => {
+  return {
+    props: {
+      imageUploadEnabled: process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET ? true : false,
+    }
+  };
 }
