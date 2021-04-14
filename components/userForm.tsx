@@ -3,6 +3,7 @@ import {
   FormEvent,
   SetStateAction,
 } from "react";
+import ImageUpload from "./imageUpload";
 import SpinnerButton from "./spinnerButton";
 
 export default function UserForm(props: {
@@ -27,7 +28,15 @@ export default function UserForm(props: {
 
       {
         props.imageUploadEnabled ?
-          <></>
+          <div className='w-full flex justify-center items-center flex-col my-4'>
+            <div className='w-32 h-32 rounded-full overflow-hidden'>
+              <ImageUpload
+                imageUrl={props.imageUrl}
+                setImageUrl={props.setImageUrl as any}
+                subPath='profile_pictures'
+                label='Picture' />
+            </div>
+          </div>
           :
           <div className='my-4'>
             <label htmlFor='image'>Gravatar URL</label>

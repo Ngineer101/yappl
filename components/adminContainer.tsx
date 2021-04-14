@@ -41,6 +41,12 @@ export default function AdminPageContainer(props: {
                   <a className='btn-nav'>Dashboard</a>
                 </Link>
               </li>
+              {/* TODO: Add pages and activate routes
+              <li className='nav-item nav-item-border inline-block'>
+                <Link href='/publication'>
+                  <a className='btn-nav text-gray-700 hover:text-black hover:bg-gray-300'>Publication</a>
+                </Link>
+              </li>*/}
               <li className='nav-item nav-item-border inline-block mr-2'>
                 <Link href='/members'>
                   <a className='btn-nav text-gray-700 hover:text-black hover:bg-gray-300'>Members</a>
@@ -65,6 +71,11 @@ export default function AdminPageContainer(props: {
                       </svg>
                   }
                   <ul className="absolute right-0 top-0 mt-12 p-2 rounded-lg shadow-lg hidden bg-white z-10 group-hover:block list-none">
+                    {/* <li className='nav-item nav-item-border'>
+                      <Link href="/profile">
+                        <a className='btn-nav'>Profile</a>
+                      </Link>
+                    </li> */}
                     <li className='nav-item nav-item-border'>
                       <button className='btn-nav' onClick={signOut as any}>Sign out</button>
                     </li>
